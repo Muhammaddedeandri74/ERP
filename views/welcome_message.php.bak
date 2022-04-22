@@ -1,0 +1,82 @@
+﻿
+
+
+<!DOCTYPE html>
+<html>
+
+<style type="text/css">
+  
+  .left,.right{
+    height: 100vh;
+    width: 100%;
+  }
+
+
+  .left{
+    background: white;
+    padding: 20%;
+  }
+
+  .right{
+    background: purple;
+    padding: 25%;
+
+  }
+
+</style>
+
+
+
+<head>
+  <title>Daffina</title>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="icon" type="image/x-icon" href="<?php echo base_url('/assets/img/logo_daffina.ico') ?>">
+
+</head>
+<body>
+
+  <div class="row no-gutters">
+    
+      <div class="col" >
+        
+          <div class="left">
+            <img src="<?php echo base_url('assets/img/daffina_logo_300x 1.png') ?>">
+            <h1 style="margin-top: 20px"><b>ERP SYSTEM</b></h1>
+            <h2 style="color: orange"><b>SOLUTIONS</b></h2>
+            <img src="<?php echo base_url('assets/img/map_world 2@2x.png') ?>">
+            <p style="font-size: 10px; margin-top: 50px"><b>POWERED BY</b></p>
+          </div>
+
+      </div>
+
+      <div class="col">
+        
+          <div class="right">
+
+            <form action="<?php echo base_url('AuthControler/login') ?>" method="post">
+              <p style="color: white; font-size: 40px"><b>SELAMAT DATANG</b></p>
+              <?php echo $this->session->flashdata('message'); ?> 
+              <?php $this->session->set_flashdata('message',''); ?>
+              <p style="color: white ; font-size:  15px"> SILAHKAN MASUK UNTUK MENGAKSES MENU</p>
+              <p style="color: white ; font-size:  15px; margin-top: 20px" ><b>NAMA PENGGUNA</b></p>
+              <input type="text" name="username" class="form-control">
+              <p style="color: white ; font-size:  15 ; margin-top: 20px"><b>KATA SANDI</b></p>
+               <input type="password" name="password" class="form-control">
+              <!-- <p style="float: right; margin-top: 10px"><b style="color: white ; font-size:  15px">LUPA KATA SANDI ?</b> <a href="" style="color: gold; font-size: 15px">KLIK DISINI</a></p> -->
+              <br><br>
+               <button class="form-control" style="background-color: orange ; color: white" type="submit" ><b>MASUK</b></button>
+            </form>
+           
+
+          </div>
+      </div>
+
+
+  </div>
+
+
+</body>
+</html>
+
