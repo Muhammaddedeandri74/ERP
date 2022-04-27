@@ -204,7 +204,7 @@ if ($data != "Not Found") {
       crossorigin="anonymous"
     ></script>
 	<script>
-		document.getElementById('typec').addEventListener('change', function() {
+		document.getElementById('type').addEventListener('change', function() {
 			if (this.value =="") {
 				document.getElementById('email').readOnly = true;
 				document.getElementById('telepon').readOnly = true;
@@ -220,22 +220,4 @@ if ($data != "Not Found") {
 			}
 		});
 
-		 function hide1() {
-			var x = document.getElementById("myInput1");
-			if (x.type === "password") {
-			x.type = "text";
-			} else {
-			x.type = "password";
-			}
-		}
-
-		function hide2() {
-			var x = document.getElementById("myInput2");
-			if (x.type === "password") {
-			x.type = "text";
-			} else {
-			x.type = "password";
-			}
-		}
-		
 	</script>

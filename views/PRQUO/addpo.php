@@ -431,6 +431,7 @@
 			e.preventDefault();
 		}
 	});
+
 	$(document).on('keypress', '.disc', function(e) {
 		if (e.keyCode == 13) {
 			var xid = $(this).attr('id').replace("transaksi_", "").replace("_disc", "");
@@ -658,7 +659,7 @@
 		tabel += '<td style="border:none"height:1px"><input style="width:80px;text-align:center" type="text" id="transaksi_' + xid + '_disc"  class="form-control disc"name="transaksi_' + xid + '_disc" value="0"/></td>';
 		tabel += '<td style="border:none"height:1px"><input style="width:80px;text-align:center" type="text" id="transaksi_' + xid + '_disnom"  class="form-control disnom"name="transaksi_' + xid + '_disnom" value="0"/></td>';
 		tabel += '<td style="border:none"height:1px"><input style="width:80px;text-align:center" class="form-control " readonly type="text" id="transaksi_' + xid + '_pph" name="transaksi_' + xid + '_pph" value="0"><input type="hidden" style="width:80px;text-align:center" class="form-control " readonly type="text" id="transaksi_' + xid + '_pph22" name="transaksi_' + xid + '_pph22" > </td>'
-		tabel += '<td style="border:none"height:1px"><input style="width:170px;text-align:center" readonly type="text" id="transaksi_' + xid + '_subpo"  class="form-control"name="transaksi_' + xid + '_subpo" value="0"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:170px;text-align:center" readonly type="text" id="transaksi_' + xid + '_subpo"  class="form-control" name="transaksi_' + xid + '_subpo" value="0"/></td>';
 		tabel += '<td style="border:none"height:1px" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control" type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		//return tabel;
@@ -690,6 +691,8 @@
 			xdisc = 0;
 			$('#disc').val('0');
 		}
+	
+	
 		var tdisc = 0;
 		var xtppn = 0;
 		var xid = 0;

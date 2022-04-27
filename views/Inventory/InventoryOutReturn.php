@@ -34,20 +34,21 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb m-0">
     <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Inventory Management </a></li>
-    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Inventory In</li>
+    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Inventory Out</li>
   </ol>
-  <h3 class="text-white">Register Ingoing</h3>
+  <h3 class="text-white">Register Outgoing</h3>
 </nav>
 </div>
 <div class="content bg-white  mx-4">
 <div class="container-fluid">
 	<div class="row no-gutters">
 		<div class="col-12 bays">
-			<div class="biodata">
-				<div class="row">
-					<?php echo $this->session->flashdata('message'); ?>
-					<?php $this->session->set_flashdata('message', ''); ?>
-				</div>
+		<div class="biodata">
+		<div class="row">
+			<?php echo $this->session->flashdata('message'); ?>
+			<?php $this->session->set_flashdata('message', ''); ?>
+		</div>
+		<form action="<?php echo base_url('MasterDataControler/AddInventoryin') ?>" method="POST" enctype="multipart/form-data" id="form">
 		<div class="row">
 			<div class="col-3">
 				<div class="col d-flex align-middle mb-3" style="align-items:center"><i
@@ -56,7 +57,6 @@
 				</div>
 			</div>
 		</div>
-		<form action="<?php echo base_url('MasterDataControler/AddInventoryin') ?>" method="POST" enctype="multipart/form-data" id="form">
         <div class="row mb-4">
           <div class="col-1"></div>
           <div class="col-3">
@@ -71,15 +71,15 @@
 
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-2" style="width:50%;">
-                  <label for="" >Tipe Ingoing</label>
+                  <label for="" >Tipe Outgoing</label>
                   <select name="tipeingoing" id="tipeingoing" class="form-select" onchange="location = this.options[this.selectedIndex].value;">
-                    <option value="Supplier">Supplier</option>
-                    <option value="Return" selected>Return</option>
-                    <option value="MoveWarehouse">Move Warehouse</option>
+                    <option value="Sales">Sales</option>
+                    <option value="returns" selected>Return</option>
+                    <option value="movewarehouses">Move Warehouse</option>
                   </select>
              </div>
            </div>
-           <div class="me-3" style="width:50%;">
+           <div class="me-3 w-50">
                   <label for="">Customer</label>
                   <input type="text" name="customer" class="form-control" style="font-size:1rem;" readonly>
              </div>
@@ -87,38 +87,47 @@
 
           <div class="col-3">
            <h5>Informasi Gudang & Mata Uang </h5>
-           <div class="d-flex mb-3">
+           <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
-                <label for="">Gudang Penerima</label>
+                  <label for="">Gudang Pengirim</label>
                   <select name="namewarehouse" id="" class="form-select" required>
                     <option value="">Pilih</option>
                     <option value="Gudang 1">Gudang 1</option>
                   </select>
              </div>
              <div class="" style="width:50%;">
-                  <label for="">Tanggal Masuk</label>
-                  <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+             <label for="">Gudang Penerima</label>
+                  <select name="namewarehouse" id="" class="form-select" required>
+                    <option value="">Pilih</option>
+                    <option value="Gudang 1">Gudang 1</option>
+                  </select>
              </div>
            </div>
 
-            <div class="me-3 mb-3" style="width:50%;">
-                <label for="">Tanggal Masuk</label>
-                  <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-             </div>
+           <div class="d-flex mb-2" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
-                <label for="">Mata Uang</label>
+                  <label for="">Mata Uang</label>
                   <select name="currency" id="" class="form-select" required>
                     <option value="">Pilih</option>
-					<?php if($data1 !="Not Found"):?>
-					 <?php foreach($data1 as $key):?>
-                       <option value="<?php echo $key["namecomm"]?>"><?php echo $key["namecomm"]?></option>
-					 <?php endforeach?>
-					<?php endif?>
                   </select>
              </div>
+             <div class="" style="width:50%;">
+             <label for="">Tanggal Keluar</label>
+                  <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+             </div>
+           </div>
+           <br>
+		   <label for="" style="font-size:20px;">Pajak</label>
+			 <div class="d-flex mb-3" style="align-items: flex-end;">
+             <div class="me-3" style="width:50%;">
+                  <label for="">Gunakan VAT</label>
+             </div>
+			 <div class="form-check form-switch">
+                    <input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" >
+                </div>
+           </div>
           </div>
-
-          <div class="col-4">
+          <div class="col-3">
            <h5>Cetak & Download</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3">
@@ -140,10 +149,12 @@
 			<tr>
 			<th style="background:#1143d8;color:white;text-align:right;">SKU</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Qty Order</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Expired Date</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Qty In</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Balance</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Unit</th>
+			<th style="background:#1143d8;color:white;text-align:right;">QTY Out</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Discount</th>
+			<th style="background:#1143d8;color:white;text-align:right;">VAT</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Subtotal</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Action</th>
 			</tr>
 			</thead>
@@ -163,7 +174,6 @@
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      ...
     </div>
   </div>
 </div>
@@ -270,11 +280,12 @@
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi_' + xid + '_expireddate" objtype="_expireddate" class="form-control  _qty" name="transaksi_expireddate[]" /></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_qtyin" objtype="_qtyin" class="form-control  _qty" name="transaksi_qtyin[]" /></td>';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_balance"  class="form-control _balance" name="transaksi_unit[]"  value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty" name="transaksi_qty[]" / autocomplete="off"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_qtyin" objtype="_qtyin" class="form-control  _qty" name="transaksi_qtyin[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_qtyin" objtype="_qtyin" class="form-control  _qty" name="transaksi_qtyin[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" readonly autocomplete="off" type="text" id="transaksi_' + xid + '_balance"  class="form-control _balance" name="transaksi_unit[]"  value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty" name="transaksi_qty[]" / autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		//return tabel;
 		$('#line-transaksi').val(xid);
 		$('#detailx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);

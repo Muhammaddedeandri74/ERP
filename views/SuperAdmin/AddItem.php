@@ -75,19 +75,6 @@
 		rel="stylesheet">
 	<title>S-ERP</title>
 </head>
-<?php
-
-$idnew;
-if ($data != "Not Found") {
-	foreach ($data as $key) {
-		$idnew = $key["codecomm"];
-		$idnew++;
-	}
-} else {
-	$idnew = "CR0001";
-}
-?>
-
 <body class="body">
 	<div class="header px-4 pt-2" style="height: 196px;">
 		<nav aria-label="breadcrumb">
@@ -107,9 +94,8 @@ if ($data != "Not Found") {
 							<?php echo $this->session->flashdata('message'); ?>
 							<?php $this->session->set_flashdata('message', ''); ?>
 						</div>
-						<form action="<?php echo base_url('MasterDataControler/additem') ?>" method="POST"
-							enctype="multipart/form-data">
-							<div class="row ">
+						<form action="<?php echo base_url('MasterDataControler/additem') ?>" method="POST" enctype="multipart/form-data" id="form">
+							<div class="row">
 								<div class="col-3">
 								<div class="col d-flex align-middle mb-3" style="align-items:center"><i
 										class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
@@ -117,7 +103,6 @@ if ($data != "Not Found") {
 								  </div>
 								</div>
 								<div class="col-3">
-							 	 
 								</div>
 							</div>
 							<div class="row">
@@ -130,9 +115,9 @@ if ($data != "Not Found") {
 									<div class="mb-3">
 										<p class="m-0">Item Group</p>
 										<div class="col">
-											<select name="itemtype" class="form-control" id="item_group" onchange="location = this.options[this.selectedIndex].value;" required >
+											<select name="itemgroup" class="form-control" id="item_group" onchange="location = this.options[this.selectedIndex].value;" required >
 												<option value="">Pilih..</option>
-												<option value="Produk"><a href="<?php echo base_url('SuperAdminControler/Produk')?>">Produk</a></option>
+												<option value="Produk" selected><a href="<?php echo base_url('SuperAdminControler/Produk')?>">Produk</a></option>
 												<option value="BahanMaterial"><a href="<?php echo base_url('SuperAdminControler/Bahan')?>">Bahan Baku/Material</a></option>
 											</select>
 										</div>
@@ -140,20 +125,22 @@ if ($data != "Not Found") {
 									<div class="mb-3">
 										<p class="m-0">Nama Item</p>
 										<div class="col">
-											<input type="text" name="nameitem" id="nameitem" class="form-control" autocomplete="off" required readonly="true"/>
+											<input type="text" name="nameitem" id="nameitem" class="form-control" autocomplete="off" required>
+											<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+											<input type="hidden" name="iditem" class="form-control">
 										</div>
 									</div>
 									<div class="mb-3">
 										<label class="mb-3">Jenis Qty</label>
 										<div class="row">
 									    	<div class="col-3">
-												<input type="radio" name="jenisqty"  value="stock" class="form-check-input" checked>
+												<input type="radio" name="jenisqty"  value="stock" class="form-check-input" >
 												<label class="form-check-label" for="flexRadioDefault1">
 													Stock
 												</label>
 											</div>
 											<div class="col-3">
-												<input type="radio" class="form-check-input" name="jenisqty" value="service">
+												<input type="radio" class="form-check-input" name="jenisqty" id="jenisqty" value="service" checked>
 												<label class="form-check-label" for="flexRadioDefault1">
 													Service
 												</label>
@@ -171,31 +158,29 @@ if ($data != "Not Found") {
 											</div>
 											<div class="col-3">
 												<div class="form-check form-switch">
-													<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+													<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
 												</div>
 											</div>
-
 										</div>
-
 									</div>
 								</div>
 								<div class="col-3">
 									<div class="mb-3">
 										<p class="m-0">SKU Item</p>
 										<div class="col">
-											<input name="sku" type="text" id="sku" class="form-control" readonly="true" autocomplete="off" required>
+											<input name="sku" type="text" id="sku" class="form-control" autocomplete="off" required>
 										</div>
 									</div>
 									<div class="mb-3">
 										<p class="m-0">Harga</p>
 										<div class="col">
-											<input name="namaitem" type="text" id="rupiah" name="itemname" class="form-control" autocomplete="off" required readonly="true"/>
+											<input name="hargaitem" type="text" id="rupiah"  class="form-control" autocomplete="off" required>
 										</div>
 									</div>
 									<div class="mb-3">
-										<p class="m-0">Spesifikasi</p>
+										<p class="m-0">Deskripsi</p>
 										<div class="col">
-											<textarea name="deskripsi" id="spesifikasi" cols="6" rows="4" class="form-control" readonly="true"></textarea>
+											<textarea name="deskripsi" id="spesifikasi" cols="6" rows="4" class="form-control" style="font-size:13px;" placeholder="Nasi goreng + beef premium + rempah pilihan"></textarea>
 										</div>
 									</div>
 								</div>
@@ -207,7 +192,7 @@ if ($data != "Not Found") {
 							  </div>
 							  <div class="col-3">
 							</div>
-							<div class="row" id="service">
+							<div class="row" id="stock">
 							<div class="row">
 							  <div class="col-2">
 								<p></p>
@@ -232,11 +217,13 @@ if ($data != "Not Found") {
 							  <table class="table m-0" >
 					         	<thead class="border-0">
 									<tr>
-									<th style="background:#1143d8;color:white;">Nama Item</th>
-									<th style="background:#1143d8;color:white;">SKU</th>
-									<th style="background:#1143d8;color:white;">Deskripsi</th>
-									<th style="background:#1143d8;color:white;">Qty</th>
-									<th style="background:#1143d8;color:white;">Action</th>
+									<th style="background:#1143d8;color:white;width: 1%">No</th>
+									<th style="background:#1143d8;color:white;width: 3%">SKU</th>
+									<th style="background:#1143d8;color:white;width: 6%">Nama Item</th>
+									<th style="background:#1143d8;color:white;width: 6%">Deskripsi</th>
+									<th style="background:#1143d8;color:white;width: 5%">Satuan/Unit</th>
+									<th style="background:#1143d8;color:white;width: 4%">Qty</th>
+									<th style="background:#1143d8;color:white;width: 3%">Action</th>
 									</tr>
 								</thead>
 							   </table>
@@ -255,7 +242,7 @@ if ($data != "Not Found") {
 							  <div class="col-3">
 							  </div>
 							  <div class="col-3">
-							     <button type="submit" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:19px;">Simpan</button>
+							     <button type="button" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:19px;" onclick="addorder()">Buat Item</button>
 							  </div>
 							</div>
 						</form>
@@ -267,40 +254,89 @@ if ($data != "Not Found") {
 	</div>
 	</div>
 	<datalist id="xitem">
+	<?php
+	if ($data != 'Not Found') {
+		foreach ($data as $key) {
+	?>
+			<option value="<?php echo $key["sku"]. ' - ' . $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditembom"]; ?>" data-price="<?php echo $key["nameitem"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] ; ?></option>
+	<?php }
+	} ?>
+</datalist>
+<datalist id="xunit">
 	<!--<option value="" disabled selected>Select Item</option>-->
 	<?php
 	if ($data1 != 'Not Found') {
 		foreach ($data1 as $key) {
 	?>
-			<option value="<?php echo $key["nameitem"]. '             Rp. ' . $key["hargaitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["hargaitem"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>" data-qty="<?php echo $key["qty"]; ?>"><?php echo $key["sku"] ; ?></option>
+			<option value="<?php echo $key["nameunit"]?>" nameunit="<?php echo $key["nameunit"]; ?>" data-idunit="<?php echo $key["idunit"]; ?>" data-nameunit="<?php echo $key["nameunit"]; ?>" data-unitvoume="<?php echo $key["unitvolume"]; ?>"></option>
 	<?php }
 	} ?>
 </datalist>
 	<script type="text/javascript">
+		add_row_transaksi(0)
 		var xitem = '';
 	    xitem = '<?php
 				$x = '';
-				if ($data1 != 'Not Found') {
-					foreach ($data1 as $key) {
-						$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["hargaitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
+				if ($data != 'Not Found') {
+					foreach ($data as $key) {
+						$x = $x . '<option value="' . $key["iditembom"] . '" price="' . $key["hargaitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
 					}
 				}
 				echo $x;
 				?>';
 
+		var xunit = '';
+	    xunit = '<?php
+				$x = '';
+				if ($data1 != 'Not Found') {
+					foreach ($data1 as $key) {
+						$x = $x . '<option value="' . $key["nameunit"] . '" nameunit="' . $key["nameunit"] . '" nameunit="' . $key["nameunit"] . '">' . $key["nameunit"] . ' - ' . $key["nameunit"] . '</option>';
+					}
+				}
+				echo $x;
+				?>';
+
+
         $('input[type="radio"]').click(function () {
           var inputValue = $(this).attr("value");
-          if (inputValue == "service") {
+          if (inputValue == "stock") {
             $("#service").hide();
             $("#stock").show();
+			add_row_transaksi(0);
 
           } else {
             $("#stock").hide();
             $("#service").show();
             $("#detailx").html("");
-			add_row_transaksi(0)
+			add_row_transaksi(0);
           }
         });
+
+		function calc() {
+		var xcnt = 0;
+		var xqty = 0;
+		var xid = 0;
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
+				xcnt++;
+				xqty += parseFloat($('#transaksi_' + xid + '_qty').val().replaceAll(',', ''));
+			}
+			//$(this).val(i+1);
+		});
+	}
+
+		function reorder() {
+		$('input[objtype=nourut]').each(function(i, obj) {
+			$(this).val(i + 1);
+		});
+	   }
+
+		function del_row_transaksi(xid) {
+		$('#transaksi-' + xid + '').remove();
+		reorder();
+		calc();
+	     }
 
 		function readURL(input) {
 			if (input.files && input.files[0]) {
@@ -316,21 +352,6 @@ if ($data != "Not Found") {
 				reader.readAsDataURL(input.files[0]);
 			}
 		}
-
-		document.getElementById('item_group').addEventListener('change', function() {
-			if (this.value !="") {
-				document.getElementById('nameitem').readOnly = false;
-				document.getElementById('sku').readOnly = false;
-				document.getElementById('rupiah').readOnly = false;
-				document.getElementById('spesifikasi').readOnly = false;
-			} else {
-				document.getElementById('nameitem').readOnly = true;
-				document.getElementById('sku').readOnly = true;
-				document.getElementById('rupiah').readOnly = true;
-				document.getElementById('spesifikasi').readOnly = true;
-			}
-		});
-
 		var rupiah = document.getElementById('rupiah');
 		rupiah.addEventListener('keyup', function(e){
 			// tambahkan 'Rp.' pada saat form di ketik
@@ -365,10 +386,12 @@ if ($data != "Not Found") {
 		lastid++;
 		var tabel = '';
 		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_nameitem"  class="form-control nameitem" name="transaksi_' + xid + '_nameitem" placeholder="Search" list="xitem"  value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" type="text" readonly class="form-control " objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_' + xid + '_sku" value=""></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input type="text" readonly id="transaksi_' + xid + '_deskripsi" objtype="_deskripsi" class="form-control  _deskripsi"name="transaksi_' + xid + '_deskripsi" /></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input type="text" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty"name="transaksi_' + xid + '_qty" /></td>';
+		tabel += '<td class="p-0" style="border:none;width: 1%"><input style="text-align:center" readonly type="text" id="transaksi_' + xid + '_nourut"  class="form-control  nourut" objtype="nourut" name="transaksi_nourut[]" /><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
+		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
+		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;width: 6%"><input type="text" readonly id="transaksi_' + xid + '_deskripsi" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;width: 5%"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_unit"  class="form-control _unit" name="transaksi_unit[]" placeholder="Search" list="xunit"  value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;width: 4%"><input type="text" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty" name="transaksi_qty[]" / autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;width: 3%;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		//return tabel;
@@ -382,26 +405,46 @@ if ($data != "Not Found") {
 		}
 	}
 
-	$(document).on('change', '_nameitem', function() {
-		var xid = $(this).attr('id').replace("transaksi_", "").replace("_nameitem", "");
+	$(document).on('change', '.sku', function() {
+		var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 		var val = $(this).val();
 		var xobj = $('#xitem option').filter(function() {
 			return this.value == val;
-			
 		});
-		console.log(xobj)
-		
 		if ((val == "") || (xobj.val() == undefined)) {
-			$('#transaksi_' + xid + '_nameitem').val("");
 			$('#transaksi_' + xid + '_sku').val("");
+			$('#transaksi_' + xid + '_iditem').val("");
+			$('#transaksi_' + xid + '_nameitem').val("");
 			$('#transaksi_' + xid + '_deskripsi').val("");
-			$('#transaksi_' + xid + '_qty').val("");
+			$('#transaksi_' + xid + '_qty').val(0);
 		} else {
-			$('#transaksi_' + xid + '_nameitem').val("");
-			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_deskripsi').val("");
-			$('#transaksi_' + xid + '_qty').val("");
+			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+			$('#transaksi_' + xid + '_qty').val(0);
+
 		}
 		calc();
 	});
+
+	function addorder() {
+		var cx = $('#form').serialize();
+			$.post("<?php echo base_url('MasterDataControler/additem') ?>", cx,
+				function(data) {
+					if (data == 'Success') {
+						alert('Input Data Berhasil');
+						cancelorder();
+					} else {
+						alert('Input Data Gagal. ' + data);
+					}
+				});
+	}
+
+	function cancelorder() {
+		location.reload();
+		//return false;
+	}
+
+	
 	</script>

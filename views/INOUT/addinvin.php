@@ -836,6 +836,7 @@
 	$(document).on('focus', 'input', function() {
 		$(this).select();
 	});
+	
 	$('form button').on("click", function(e) {
 		if ($(this).attr('id') == 'cancelorder') {
 			if (confirm("Batalkan Transaksi?")) {

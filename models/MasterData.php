@@ -126,6 +126,25 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getpo()
+	{
+		$query = "SELECT * FROM po";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"]    =  $key->idpo;
+				$f["idpr"]    =  $key->idpr;
+				$f["codepo"]  =  $key->codepo;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getcustomer()
 	{
 		$query = "SELECT * FROM common_detail WHERE idgroup = '2'";
@@ -2014,17 +2033,15 @@ class MasterData extends CI_Model
 
 	function getsupplier()
 	{
-		$query = "SELECT * FROM common_detail WHERE idgroup = '1'";
+		$query = "SELECT * FROM tb_supplier";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["codecomm"] =  $key->codecomm;
-				$f["namecomm"] =  $key->namecomm;
-				$f["isactive"] =  $key->isactive;
-				$f["attrib1"] =  $key->attrib1;
-				$f["attrib2"] =  $key->attrib2;
-
+				$f["idsupp"] =  $key->idsupp;
+				$f["codesupp"] =  $key->codesupp;
+				$f["namesupp"] =  $key->namesupp;
+				$f["addressup"] =  $key->addressup;
 				array_push($respon, $f);
 			}
 		} else {
@@ -4294,6 +4311,180 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistpo()
+	{
+		$query = "SELECT * FROM po AS a INNER JOIN podet AS b ON a.idpo = b.idpo INNER JOIN tb_itembom AS c ON b.iditembom = c.iditembom";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"]	    = $key->idpo;
+				$f["codepo"]	    = $key->codepo;
+				$f["datepo"]	    = $key->datepo;
+				$f["nameitem"]	    = $key->nameitem;
+				$f["sku"]	        = $key->sku;
+				$f["itemgroup"]	    = $key->itemgroup;
+				$f["unitsatuan"]	= $key->unitsatuan;
+				$f["qty"]	        = $key->qty;
+				$f["price"]	        = $key->price;
+				$f["hargaitem"]	    = $key->hargaitem;
+				$f["supplier"]	    = $key->supplier;
+				$f["statuspo"]	    = $key->statuspo;
+				$f["expiredate"]	= $key->expiredate;
+				$f["subpo"]     	= $key->subpo;
+
+				$data = array($f["idpo"]);
+				$query1 = "SELECT * FROM podet, tb_itembom  WHERE podet.idpo = ? AND podet.iditembom = tb_itembom.iditembom";
+				$eksekusi1 = $this->db->query($query1, $data)->result_object();
+				if (count($eksekusi1) > 0) {
+					$f["data"] = array();
+					foreach ($eksekusi1 as $keyx) {
+						$g["iditembom"] = $keyx->iditembom;
+						$g["nameitem"]  = $keyx->nameitem;
+						$g["sku"]       = $keyx->sku;
+						$g["hargaitem"] = $keyx->hargaitem;
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$f["data"] = "Not Found";
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getlistpoheader()
+	{
+		$query = "SELECT * FROM po AS a INNER JOIN podet AS b ON a.idpo = b.idpodet INNER JOIN tb_itembom AS c ON b.iditembom = c.iditembom";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"]	    = $key->idpo;
+				$f["codepo"]	    = $key->codepo;
+				$f["datepo"]	    = $key->datepo;
+				$f["qty"]	        = $key->qty;
+
+				$data = array($f["idpo"]);
+				$query1 = "SELECT * FROM podet, tb_itembom  WHERE podet.idpo = ? AND podet.iditembom = tb_itembom.iditembom";
+				$eksekusi1 = $this->db->query($query1, $data)->result_object();
+				if (count($eksekusi1) > 0) {
+					$f["data"] = array();
+					foreach ($eksekusi1 as $keyx) {
+						$g["iditembom"] = $keyx->iditembom;
+						$g["nameitem"]  = $keyx->nameitem;
+						$g["sku"]       = $keyx->sku;
+						$g["hargaitem"] = $keyx->hargaitem;
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$f["data"] = "Not Found";
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function readheaderpo($idtrans)
+	{
+		$data = array($idtrans);
+		$query = "SELECT * from po  where idpo = ?";
+
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"]	= $key->idpo;
+				$f["codepo"]	= $key->codepo;
+				$f["idcurr"]	= $key->idcurr;
+				$f["datepo"]	= $key->datepo;
+				$f["qtypo"]   	= $key->qtypo;
+				$f["statuspo"]	= $key->statuspo;
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function readdetailposum($idtrans)
+	{
+		$data = array($idtrans);
+		$query = "SELECT b.*,a.sku,a.nameitem,a.unitsatuan,qty,b.expiredate FROM  (SELECT idpo,iditembom,MAX(idpodet) AS idpodet,SUM(qty) AS qty,expiredate FROM podet 
+							WHERE idpo = ?
+							GROUP BY idpo,iditembom ) AS b
+							INNER JOIN tb_itembom AS a ON b.iditembom=a.iditembom 
+							ORDER BY idpodet";
+
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			$urut = 0;
+			foreach ($eksekusi as $key) {
+				$urut++;
+				$f["nourut"]	= $urut;
+				$f["idpo"]	    = $key->idpo;
+				$f["idpodet"]	= $key->idpodet;
+				$f["iditembom"]	= $key->iditembom;
+				$f["sku"]	    = $key->sku;
+				$f["nameitem"]	= $key->nameitem;
+				$f["nameitem"]	= $key->nameitem;
+				$f["unitsatuan"]	= $key->unitsatuan;
+				$f["qty"]	= $key->qty;
+				$f["expiredate"]	= $key->expiredate;
+				$f["qtystd"]	= $f["qty"];
+
+				$datax = array($f["iditembom"], $f["idpo"]);
+				$queryx = "SELECT * FROM podet WHERE iditembom = ? AND idpo = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["price"] = $keyx->price;
+						$f["subpo"] = $keyx->subpo;
+					}
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getlistinvin()
+	{
+		$query = "SELECT * FROM invin";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"]	    = $key->idin;
+				$f["idpo"]  	    = $key->idpo;
+				$f["codein"]	    = $key->codein;
+				$f["datein"]	    = $key->datein;
+				$f["typein"]	    = $key->typein;
+				$f["qtyin"]	        = $key->qtyin;
+				$f["status"]	    = $key->status;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
 	function getjasapengirimbydate($finish)
 	{
 		$data = array($finish, $finish, $finish, $finish, $finish, $finish);
@@ -4755,7 +4946,6 @@ class MasterData extends CI_Model
 					for ($i = 0; $i < count($transaksi_iditem); $i++) {
 						$dataxx     = array($key->iditem, $transaksi_iditem[$i],$transaksi_unit[$i], $transaksi_qty[$i],date('Y-m-d H:i:s'));
 						$queryxx    ="INSERT INTO tb_itemdetail (iditem,iditembom,satuanunit,qty,madelog)VALUES(?,?,?,?,?)";
-						// $queryxx    ="INSERT INTO tb_itemqty(iditem,iditembom,beginqty,inqty,outqty,endqty)VALUES(?,0,0,0,0,0)";
 						$eksekusixx = $this->db->query($queryxx, $dataxx);
 						if ($eksekusixx == true) {
 						$data1  = array($key->iditem);
@@ -4859,11 +5049,11 @@ class MasterData extends CI_Model
 
 
 
-	function addsupplier($namecustomer, $phonecustomer, $addresscustomer, $codecustomer, $userid)
+	function addsupplier($codesupp, $namesupp, $addressupp, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array('1', $codecustomer, $namecustomer, '1', $addresscustomer, $phonecustomer, date('Y-m-d H:i:s'), $userid);
-		$query = "INSERT INTO common_detail (idgroup,codecomm,namecomm,isactive,attrib1,attrib2,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
+		$data = array($codesupp, $namesupp, $addressupp, date('Y-m-d H:i:s'), $userid);
+		$query = "INSERT INTO tb_supplier (codesupp,namesupp,addressup,madelog,madeuser)VALUES(?,?,?,?,?)";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -5489,74 +5679,74 @@ class MasterData extends CI_Model
 	}
 
 
+	function addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation,$userid)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$data  = array($namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation,date('Y-m-d H:i:s'),$userid);
+		$query = "INSERT INTO tb_company (namecomp,email,nokantor,nohandphone,alamat,bank,norekening,beneficiary,remarkinvoice,remarkquotation,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+		$eksekusi = $this->db->query($query, $data);
+
+		if ($eksekusi == true) {
+		    $respon = "Success";
+		}else {
+			$respon = "Failed";
+		}
+	
+	     return $respon;
+	}
+
 	// function addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation)
 	// {
-	// 	date_default_timezone_set('Asia/Jakarta');
-	// 	$data  = array($namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation,date('Y-m-d H:i:s'));
-	// 	$query = "INSERT INTO tb_company (namecomp,email,nokantor,nohandphone,alamat,bank,norekening,beneficiary,remarkinvoice,remarkquotation,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-	// 	$eksekusi = $this->db->query($query, $data);
+	// 	if ($idcomp == "") {
+	// 		$data;
+	// 		$query;
+	// 		if ($photo != "") {
+	// 			$img = "./assets/img/comp/" . date('YmdHis') . ".jpg";
+	// 			$data = array($namecomp, $phone, $fax, $addr, $email, $website, $titleremark, $bodyremark, $imgm, $dir);
+	// 			$query = "INSERT INTO tb_company (namecomp,phone,fax,addr,email,website,titleremark,bodyremark,logo,director)VALUES(?,?,?,?,?,?,?,?,?,?)";
+	// 		} else {
+	// 			$data = array($namecomp, $phone, $fax, $addr, $email, $website, $titleremark, $bodyremark, $dir);
+	// 			$query = "INSERT INTO tb_company (namecomp,phone,fax,addr,email,website,titleremark,bodyremark,director)VALUES(?,?,?,?,?,?,?,?,?)";
+	// 		}
 
-	// 	if ($eksekusi == true) {
-	// 	    $respon = "Success";
-	// 	}else {
-	// 		$respon = "Failed";
+	// 		$eksekusi = $this->db->query($query, $data);
+	// 		if ($eksekusi == true) {
+	// 			if ($photo != "") {
+	// 				if (move_uploaded_file($photo, $img)) {
+	// 					$respon = "Success";
+	// 				} else {
+	// 					$respon = "Failed";
+	// 				}
+	// 			} else {
+	// 				$respon = "Success";
+	// 			}
+	// 		} else {
+	// 			$respon = "Failed";
+	// 		}
+	// 	} else {
+	// 		$query;
+	// 		$data;
+	// 		if ($photo != "") {
+	// 			$img = "./assets/img/user/" . date('YmdHis') . ".jpg";
+	// 			$data = array($namecomp, $phone, $fax, $addr, $website, $email, $titleremark, $bodyremark, $img, $dir, $idcomp);
+	// 			$query = "UPDATE tb_company SET namecomp = ? , phone = ? , fax =? , addr =?, website  = ? , email = ?, titleremark = ? , bodyremark = ?, logo= ?, director = ? WHERE idcomp = ?";
+	// 			move_uploaded_file($photo, $img);
+	// 		} else {
+	// 			$data = array($namecomp, $phone, $fax, $addr, $website, $email, $titleremark, $bodyremark, $dir, $idcomp);
+	// 			$query = "UPDATE tb_company SET namecomp = ? , phone = ? , fax =? , addr =?, website  = ? , email = ?, titleremark = ? , bodyremark = ? , director = ? WHERE idcomp = ?";
+	// 		}
+
+
+	// 		$eksekusi = $this->db->query($query, $data);
+	// 		if ($eksekusi == true) {
+	// 			$respon = "Success";
+	// 		} else {
+	// 			$respon = "Failed";
+	// 		}
 	// 	}
-	
-	//      return $respon;
+
+	// 	return $respon;
 	// }
-
-	function addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation)
-	{
-		if ($idcomp == "") {
-			$data;
-			$query;
-			if ($photo != "") {
-				$img = "./assets/img/comp/" . date('YmdHis') . ".jpg";
-				$data = array($namecomp, $phone, $fax, $addr, $email, $website, $titleremark, $bodyremark, $imgm, $dir);
-				$query = "INSERT INTO tb_company (namecomp,phone,fax,addr,email,website,titleremark,bodyremark,logo,director)VALUES(?,?,?,?,?,?,?,?,?,?)";
-			} else {
-				$data = array($namecomp, $phone, $fax, $addr, $email, $website, $titleremark, $bodyremark, $dir);
-				$query = "INSERT INTO tb_company (namecomp,phone,fax,addr,email,website,titleremark,bodyremark,director)VALUES(?,?,?,?,?,?,?,?,?)";
-			}
-
-			$eksekusi = $this->db->query($query, $data);
-			if ($eksekusi == true) {
-				if ($photo != "") {
-					if (move_uploaded_file($photo, $img)) {
-						$respon = "Success";
-					} else {
-						$respon = "Failed";
-					}
-				} else {
-					$respon = "Success";
-				}
-			} else {
-				$respon = "Failed";
-			}
-		} else {
-			$query;
-			$data;
-			if ($photo != "") {
-				$img = "./assets/img/user/" . date('YmdHis') . ".jpg";
-				$data = array($namecomp, $phone, $fax, $addr, $website, $email, $titleremark, $bodyremark, $img, $dir, $idcomp);
-				$query = "UPDATE tb_company SET namecomp = ? , phone = ? , fax =? , addr =?, website  = ? , email = ?, titleremark = ? , bodyremark = ?, logo= ?, director = ? WHERE idcomp = ?";
-				move_uploaded_file($photo, $img);
-			} else {
-				$data = array($namecomp, $phone, $fax, $addr, $website, $email, $titleremark, $bodyremark, $dir, $idcomp);
-				$query = "UPDATE tb_company SET namecomp = ? , phone = ? , fax =? , addr =?, website  = ? , email = ?, titleremark = ? , bodyremark = ? , director = ? WHERE idcomp = ?";
-			}
-
-
-			$eksekusi = $this->db->query($query, $data);
-			if ($eksekusi == true) {
-				$respon = "Success";
-			} else {
-				$respon = "Failed";
-			}
-		}
-
-		return $respon;
-	}
 
 
 
@@ -5777,5 +5967,96 @@ class MasterData extends CI_Model
 		$this->db->where('statusorder', 'Finish');
 		$this->db->group_by('tb_salesorder.statusorder');
 		$query = $this->db->get();
+	}
+
+	function addpo($codepo,$typeingoing,$judulpurchase,$namewarehouse,$tanggalmasuk,$matauang,$vat,$norekening,$transaksi_iditembom,$transaksi_sku,$transaksi_nameitem,$transaksi_harga, $transaksi_qty,$transaksi_expiredate,$transaksi_typedisc,$transaksi_disc,$transaksi_total,$iduser)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$fail   = 0;
+		$data1  = array($codepo);
+		$query1 = "SELECT * FROM po WHERE codepo = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+		if (count($eksekusi1) > 0) {
+			$respon = "Code Po telah terdaftar";
+		}else {
+			$data     = array($codepo,$typeingoing,$judulpurchase,$namewarehouse,$tanggalmasuk,$matauang,$vat,$norekening,date('Y-m-d H:i:s'),$iduser);
+			$query    = "INSERT INTO po (codepo,supplier,deskripsi,idwh,datepo,idcurr,vat,norekening,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,'Outstanding',?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+			$datax = array($codepo);
+			$queryx = "SELECT * FROM po WHERE codepo = ?";
+			$eksekusix = $this->db->query($queryx, $datax)->result_object();
+			if (count($eksekusix) > 0) {
+				foreach ($eksekusix as $key) {
+					$idpo = $key->idpo;
+					for ($i = 0; $i < count($transaksi_iditembom); $i++) {
+						$dataxx     = array($idpo,$transaksi_iditembom[$i],$transaksi_harga[$i], $transaksi_qty[$i],$transaksi_expiredate[$i],$transaksi_typedisc[$i],$transaksi_disc[$i],$transaksi_total[$i],date('Y-m-d H:i:s'));
+						$queryxx    ="INSERT INTO podet (idpo,iditembom,price,qty,expiredate,typedisc,disc,subpo,madelog)VALUES(?,?,?,?,?,?,?,?,?)";
+						$eksekusixx = $this->db->query($queryxx, $dataxx);
+						if ($eksekusixx == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Detail";
+						}
+					}
+				}
+			}
+			
+			 else {
+				$respon = "Failed on Detail";
+			}
+		} else {
+			$respon = "Failed on Detail";
+		}
+		return $respon;
+	 }
+
+	
+	}
+
+	function AddInventoryIn($codein, $tipeingoing,$codepo,$namesupp, $namewarehouse,$datein,$currency,$transaksi_iditembom,$transaksi_sku,$transaksi_nameitem,
+	$transaksi_unitsatuan,$transaksi_harga,$transaksi_qtypo,$transaksi_qtyin,$transaksi_balance,$transaksi_expiredate,$userid)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$fail   = 0;
+		$data1  = array($codein);
+		$query1 = "SELECT * FROM invin WHERE codein = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+		if (count($eksekusi1) > 0) {
+			$respon = "Code Invin telah terdaftar";
+		}else {
+			$data     = array($codein, $tipeingoing,$codepo, $namesupp, $namewarehouse,$datein,$currency,date('Y-m-d H:i:s'),$userid);
+			$query    = "INSERT INTO invin (codein,typein,idpo,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+			$datax = array($codein);
+			$queryx = "SELECT * FROM invin WHERE codein = ?";
+			$eksekusix = $this->db->query($queryx, $datax)->result_object();
+			if (count($eksekusix) > 0) {
+				foreach ($eksekusix as $key) {
+					$idin = $key->idin;
+					for ($i = 0; $i < count($transaksi_iditembom); $i++) {
+						$dataxx     = array($idin,$transaksi_iditembom[$i],$transaksi_unitsatuan[$i],$transaksi_harga[$i],$transaksi_qtypo[$i],$transaksi_qtyin[$i],$transaksi_balance[$i],$transaksi_expiredate[$i]);
+						$queryxx    ="INSERT INTO invindet (idin,iditembom,unit,harga,qtypo,qty,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
+						$eksekusixx = $this->db->query($queryxx, $dataxx);
+						if ($eksekusixx == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Detail";
+						}
+					}
+				}
+			}
+			
+			 else {
+				$respon = "Failed on Detail";
+			}
+		} else {
+			$respon = "Failed on Detail";
+		}
+		return $respon;
+	 }
+
+	
 	}
 }

@@ -56,46 +56,46 @@
 				</div>
 			</div>
 		</div>
-        <div class="row mb-4">
+        <div class="row mb-3">
           <div class="col-1"></div>
           <div class="col-3">
            <h5>Filter Status</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3">
-                <label for="">Pilih Gudang</label>
-                <div style="width:145%;">
-                <select name="tipeingoing" id="tipeingoing" class="form-select">
+             <div class="me-3" style="width:50%;">
+                  <label for="">Pilih Gudang</label>
+                  <select name="tipeingoing" id="tipeingoing" class="form-select">
                     <option value="">Pilih Gudang</option>
                     <?php if($data !="Not Found") :?>
                     <?php foreach($data as $key) :?>
-                        <option value=""><?php echo $key["namewarehouse"]?></option>
+                        <option value="<?php echo $key["namewarehouse"]?>"><?php echo $key["namewarehouse"]?></option>
                     <?php endforeach?>
                     <?php endif?>
                   </select>
-                </div>
+             </div>
+             <div class="">
              </div>
            </div>
 
-           <div class="d-flex mb-2" style="align-items: flex-end;">
-             <div class="me-3">
+           <div class="d-flex mb-3" style="align-items: flex-end;">
+             <div class="me-3" style="width:50%;">
                   <label for="">Mulai Dari</label>
                   <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')" style="width:100%;" placeholder="Pilih Tanggal">
              </div>
-             <div class="">
+             <div class="" style="width:50%;">
                   <label for="">Sampai Dengan</label>
                   <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')" style="width:100%;" placeholder="Pilih Tanggal">
              </div>
            </div>
-           <div class="me-3 w-50">
+           <div class="me-3" style="width:50%;">
                   <label for="">Item</label>
                   <input type="text" name="customer" class="form-control" style="font-size:1rem;width:95%;" placeholder="Pilih item yang dicari" readonly>
-             </div>
+           </div>
           </div>
         
           <div class="col-3">
            <h5>&nbsp;</h5>
-           <div class="d-flex mb-2" style="align-items: flex-end;">
-             <div class="me-3 mb-2">
+           <div class="d-flex" style="align-items: flex-end;">
+             <div class="me-3 mb-3" style="width:50%;">
                   <label for="">Tipe Ingoing</label>
                   <select name="tipeingoing" id="tipeingoing" class="form-select">
                     <option value="">Pilih</option>
@@ -105,7 +105,7 @@
                   </select>
              </div>
            </div>
-           <div class="me-3 mb-3" style="width:fit-content;width:55%;">
+           <div class="me-3 mb-3" style="width:fit-content;width:50%;">
             <label for="">Supplier</label>
                 <select name="tipeingoing" id="tipeingoing" class="form-select">
                 <option value="">Pilih</option>
@@ -116,7 +116,7 @@
                 <?php endif?>
                 </select>
             </div>
-            <div class="me-3" style="width:fit-content;width:41%;">
+            <div class="me-3" style="width:fit-content;width:50%;">
                <label for="">Tipe Item</label>
                  <select name="tipeingoing" id="tipeingoing" class="form-select">
                    <option value="">Pilih</option>

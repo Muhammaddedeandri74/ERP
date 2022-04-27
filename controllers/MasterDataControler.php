@@ -200,28 +200,7 @@ class MasterDataControler extends CI_Controller
 	}
 
 
-	function additem()
-	{
-		$itemgroup           = $this->input->post("itemgroup");
-		$nameitem            = $this->input->post("nameitem");
-		$jenisqty            = $this->input->post("jenisqty");
-		$sku                 = $this->input->post("sku");
-		$hargaitem           = $this->input->post("hargaitem");
-		$deskripsi           = $this->input->post("deskripsi");
-		$status              = $this->input->post("status");
-
-		$transaksi_iditem    = $this->input->post("transaksi_iditem");
-		$transaksi_sku       = $this->input->post("transaksi_sku");
-		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
-		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
-		$transaksi_unit      = $this->input->post("transaksi_unit");
-		$transaksi_qty       = $this->input->post("transaksi_qty");
-		$userid              = $this->input->post("iduser");
-		$cek                 = $this->MasterData->additem($itemgroup, $nameitem, $jenisqty, $sku,$hargaitem,$deskripsi,$status,$transaksi_iditem,
-		                                                  $transaksi_sku,$transaksi_nameitem ,$transaksi_deskripsi,$transaksi_unit,$transaksi_qty,$userid);
-		echo $cek;
-		
-	}
+	
 
 	function additembom()
 	{
@@ -236,6 +215,33 @@ class MasterDataControler extends CI_Controller
 		$cek        = $this->MasterData->additembom($itemgroup, $nameitem, $unitsatuan, $sku,$hargaitem,$deskripsi,$userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/BahanMaterial');
+	}
+
+	function AddInventoryin()
+	{
+		$f             = $this->session->userdata("data");
+		$userid        = $this->input->post("userid");
+		$codein        = $this->input->post("codein");
+		$tipeingoing   = $this->input->post("tipeingoing");
+		$codepo        = $this->input->post("idpo");
+		$namesupp      = $this->input->post("namesupp");
+		$namewarehouse = $this->input->post("namewarehouse");
+		$datein        = $this->input->post("datein");
+		$currency      = $this->input->post("currency");
+
+		$transaksi_iditembom   = $this->input->post("transaksi_iditembom");
+		$transaksi_sku         = $this->input->post("transaksi_sku");
+		$transaksi_nameitem    = $this->input->post("transaksi_nameitem");
+		$transaksi_unitsatuan  = $this->input->post("transaksi_unitsatuan");
+		$transaksi_harga       = $this->input->post("transaksi_harga");
+		$transaksi_qtypo       = $this->input->post("transaksi_qtypo");
+		$transaksi_qtyin       = $this->input->post("transaksi_qtyin");
+		$transaksi_balance     = $this->input->post("transaksi_balance");
+		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
+
+		$cek                   = $this->MasterData->AddInventoryIn($codein, $tipeingoing,$codepo, $namesupp, $namewarehouse,$datein,$currency,$transaksi_iditembom,$transaksi_sku,$transaksi_nameitem,
+		$transaksi_unitsatuan,$transaksi_harga,$transaksi_qtypo,$transaksi_qtyin,$transaksi_balance,$transaksi_expiredate,$userid);
+		echo $cek;
 	}
 
 	function addbundling()
@@ -265,11 +271,10 @@ class MasterDataControler extends CI_Controller
 	function addsupplier()
 	{
 		$userid = $this->input->post("userid");
-		$namecustomer = $this->input->post("namecustomer");
-		$phonecustomer = $this->input->post("phonecustomer");
-		$addresscustomer = $this->input->post("addresscustomer");
-		$codecustomer = $this->input->post("codecustomer");
-		$cek = $this->MasterData->addsupplier($namecustomer, $phonecustomer, $addresscustomer, $codecustomer, $userid);
+		$codesupp = $this->input->post("codesupp");
+		$namesupp = $this->input->post("namesupp");
+		$addressup = $this->input->post("addressupp");
+		$cek = $this->MasterData->addsupplier($codesupp, $namesupp, $addressup,$userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/addsupplier');
 	}
@@ -685,5 +690,53 @@ class MasterDataControler extends CI_Controller
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 			redirect('MasterDataControler/getdatawarehousebyid?id=' . $id);
 		}
+	}
+
+	function addpo(){
+      $codepo        = $this->input->post("codepo");
+      $typeingoing   = $this->input->post("typeingoing");
+      $judulpurchase = $this->input->post("judulpurchase");
+      $namewarehouse = $this->input->post("namewarehouse");
+      $tanggalmasuk  = $this->input->post("tanggalmasuk");
+      $matauang      = $this->input->post("matauang");
+      $vat           = $this->input->post("vat");
+      $norekening    = $this->input->post("norekening");
+
+	  $transaksi_iditembom      = $this->input->post("transaksi_iditembom");
+	  $transaksi_sku       = $this->input->post("transaksi_sku");
+	  $transaksi_nameitem  = $this->input->post("transaksi_nameitem");
+	  $transaksi_harga     = $this->input->post("transaksi_harga");
+	  $transaksi_qty       = $this->input->post("transaksi_qty");
+	  $transaksi_expiredate       = $this->input->post("transaksi_expiredate");
+	  $transaksi_typedisc  = $this->input->post("transaksi_typedisc");
+	  $transaksi_disc      = $this->input->post("transaksi_disc");
+	  $transaksi_total     = $this->input->post("transaksi_total");
+      $iduser              = $this->input->post("userid");
+	  $cek                 = $this->MasterData->addpo($codepo,$typeingoing,$judulpurchase,$namewarehouse,$tanggalmasuk,$matauang,$vat,$norekening,$transaksi_iditembom,$transaksi_sku,$transaksi_nameitem,$transaksi_harga, $transaksi_qty,$transaksi_expiredate,$transaksi_typedisc,$transaksi_disc,$transaksi_total,$iduser);
+	  echo $cek;
+	}
+
+	function additem()
+	{
+		$itemgroup           = $this->input->post("itemgroup");
+		$nameitem            = $this->input->post("nameitem");
+		$jenisqty            = $this->input->post("jenisqty");
+		$sku                 = $this->input->post("sku");
+		$hargaitem           = $this->input->post("hargaitem");
+		$deskripsi           = $this->input->post("deskripsi");
+		$status              = $this->input->post("status");
+
+		$transaksi_iditem    = $this->input->post("transaksi_iditem");
+		$transaksi_sku       = $this->input->post("transaksi_sku");
+		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
+		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
+		$transaksi_unit      = $this->input->post("transaksi_unit");
+		$transaksi_qty       = $this->input->post("transaksi_qty");
+		$userid              = $this->input->post("iduser");
+		$cek                 = $this->MasterData->additem($itemgroup, $nameitem, $jenisqty, $sku,$hargaitem,$deskripsi,$status,$transaksi_iditem,$transaksi_sku,$transaksi_nameitem ,$transaksi_deskripsi,$transaksi_unit,$transaksi_qty,$userid);
+		echo $cek;
+
+
+		
 	}
 }

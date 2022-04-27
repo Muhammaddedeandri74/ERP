@@ -19,29 +19,34 @@ class InventoryController extends CI_Controller
 		$this->load->model("MasterData");
 	}
 
-	function ingoingstatus()
-	{
-        $this->load->model("MasterData");
-		$f["title"]   = "Register Inventory In";
-		$f["data"]    = $this->MasterData->getwarehouse();
-		$f["data1"]    = $this->MasterData->getcustomer();
-		$this->load->view("Superadmin/Header");
-		$this->load->view("Inventory/IngoingStatus",$f);
-		$this->load->view("SuperAdmin/Footer");
-        $f = $this->session->userdata("data");
-	}
-
     function Supplier()
 	{
         $this->load->model("MasterData");
+        $f = $this->session->userdata("data");
 		$f["title"]   = "Register Inventory In";
-		$f["data"]    = $this->MasterData->getitem();
+		$f["data"]    = $this->MasterData->getitemmaterial();
 		$f["data1"]   = $this->MasterData->getcurrency();
+		$f["data2"]   = $this->MasterData->getwarehouse();
+		$f["data3"]   = $this->MasterData->getlistinvin();
+		$f["data4"]   = $this->MasterData->getsupplier();
+		$f["data5"]   = $this->MasterData->getlistpoheader();
+		$f["data6"]   = $this->MasterData->getlistinvin();
+		$f["order"]   = $this->MasterData->getlistpoheader();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/Addinventoryin",$f);
 		$this->load->view("SuperAdmin/Footer");
-        $f = $this->session->userdata("data");
 	}
+
+	function getpo()
+	{
+		$id = $this->input->post("id");
+		$f["headertrans"] = $this->MasterData->readheaderpo($id);
+		$f["detailtrans"] = $this->MasterData->readdetailposum($id);
+		echo json_encode($f);
+		$f = $this->session->userdata("data");
+		$this->MasterData->userlog($f["iduser"], "Get Purchase Order Data");
+	}
+	
 
 	function addinventoryin()
 	{
@@ -79,13 +84,110 @@ class InventoryController extends CI_Controller
         $f = $this->session->userdata("data");
 	}
 
+	function ingoingstatus()
+	{
+        $this->load->model("MasterData");
+		$f["title"]   = "Register Inventory In";
+		$f["data"]    = $this->MasterData->getwarehouse();
+		$f["data1"]    = $this->MasterData->getcustomer();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/IngoingStatus",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
 	function getdatainventorybyid(){
-		// $id = $this->input->get("id");
 		$f = $this->session->userdata("data");
 		$this->load->model("MasterData");
-		// $f["data"] = $this->MasterData->getdatauserbyid($id);
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("Inventory/EditInventoryIn", $f);
+	}
+
+	function inventoryout()
+	{
+        $this->load->model("MasterData");
+		$f["title"]   = "Register Inventory Out";
+		$f["data"]    = $this->MasterData->getitem();
+		$f["data1"]    = $this->MasterData->getcustomer();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/InventoryOutSales",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	function Sales()
+	{
+        $this->load->model("MasterData");
+		$f["title"]   = "Register Inventory Out";
+		$f["data"]    = $this->MasterData->getitem();
+		$f["data1"]    = $this->MasterData->getcustomer();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/InventoryOutSales",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	function returns()
+	{
+        $this->load->model("MasterData");
+		$f["title"]   = "Register Inventory Out";
+		$f["data"]    = $this->MasterData->getitem();
+		$f["data1"]    = $this->MasterData->getcustomer();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/InventoryOutReturn",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	function movewarehouses()
+	{
+        $this->load->model("MasterData");
+		$f["title"]   = "Register Inventory Out";
+		$f["data"]    = $this->MasterData->getitem();
+		$f["data1"]    = $this->MasterData->getcustomer();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/InventoryOutMoveWh",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	// ================================================================
+
+	function AddPo()
+	{
+        $this->load->model("MasterData");
+		$f            = $this->session->userdata("data");
+		$f["title"]   = "Register Purchase Order";
+		$f["data"]    = $this->MasterData->getitemmaterial();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$f["data2"]   = $this->MasterData->getcurrency();
+		$f["data3"]   = $this->MasterData->getpo();
+		$f["data4"]   = $this->MasterData->getlistpo();
+		$f["data5"]   = $this->MasterData->getsupplier();
+		$f["data6"]   = $this->MasterData->getcompany();
+		
+		$f["stat"] = "";
+		$f["headertrans"] = "Not Found";
+		$f["detailtrans"] = "Not Found";
+		
+		$this->load->view("Superadmin/Header");
+		$this->load->view("PO/AddPurchaseOrder",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	function PoStatus()
+	{
+        $this->load->model("MasterData");
+		$f            = $this->session->userdata("data");
+		$f["title"]   = "Status Purchase Order";
+		$f["data"]    = $this->MasterData->getlistpo();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$f["data1"]   = $this->MasterData->getsupplier();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("PO/PurchaseOrderStatus",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
 	}
 
 }

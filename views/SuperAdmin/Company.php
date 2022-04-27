@@ -99,7 +99,7 @@
 					<?php echo $this->session->flashdata('message'); ?>
 					<?php $this->session->set_flashdata('message', ''); ?>
 				</div>
-				<form action="<?php echo base_url('SuperAdminControler/addcompany') ?>" method="POST" enctype="multipart/form-data">
+				<form action="<?php echo base_url('SuperAdminControler/addcompany') ?>" method="POST" enctype="multipart/form-data" id="form">
 				<div class="row">
 					<div class="col-3">
 					 <div class="col d-flex align-middle" style="align-items:center"><i class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
@@ -168,10 +168,10 @@
 							<table class="table m-0">
 								<thead class="border-0">
 									<tr>
-									<th style="background:#1143d8;color:white;">Pilih Bank</th>
-									<th style="width:30%;background:#1143d8;color:white;">Nomor Rekening</th>
-									<th style="width:30%;background:#1143d8;color:white;">Attn/Beneficiary</th>
-									<th style="background:#1143d8;color:white;">Action</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Pilih Bank</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Nomor Rekening</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Attn/Beneficiary</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Action</th>
 									</tr>
 								</thead>
 							</table>
@@ -204,7 +204,7 @@
 					<div class="col-3">
 					</div>
 					<div class="col-3">
-					<button type="submit" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:19px;">Simpan</button>
+					<button type="button" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:15px;" onclick="addorder()">Simpan</button>
 					</div>
 				</div>
 				</form>
@@ -218,17 +218,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-	<datalist id="xitem">
-	<!--<option value="" disabled selected>Select Item</option>-->
-	<?php
-	if ($data != 'Not Found') {
-		foreach ($data as $key) {
-	?>
-			<option value="<?php echo $key["bank"]; ?>" data-bank="<?php echo $key["bank"]; ?>" data-norekening="<?php echo $key["norekening"]; ?>" data-beneficiary="<?php echo $key["beneficiary"]; ?>"><?php echo $key["bank"]?></option>
-	<?php }
-	} ?>
-</datalist>
 	<script type="text/javascript">
+		add_row_transaksi(0);
 		function add_row_transaksi(xxid) {
 		var lastid = 0;
 		if (parseInt(xxid) != 0) {
@@ -237,10 +228,11 @@
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control nameitem" name="transaksi_' + xid + '_bank" placeholder="Search" list="xitem"  value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input style="text-align:center" type="text" readonly class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="transaksi_' + xid + '_norekening" value=""></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%"><input type="text" readonly id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary"name="transaksi_' + xid + '_beneficiary" /></td>';
-		tabel += '<td class="p-0" style="border:none;width: 3%;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="transaksi_bank[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="transaksi_norekening[]" value=""></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="transaksi_beneficiary[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		//return tabel;
 		$('#line-transaksi').val(xid);
@@ -274,5 +266,34 @@
 		}
 		calc();
 	});
-		
+
+	function addorder() {
+		var cx = $('#form').serialize();
+			$.post("<?php echo base_url('SuperAdminControler/addcompany') ?>", cx,
+				function(data) {
+					if (data == 'Success') {
+						alert('Input Data Berhasil');
+						cancelorder();
+					} else {
+						alert('Input Data Gagal. ' + data);
+					}
+				});
+	}
+
+	function del_row_transaksi(xid) {
+		$('#transaksi-' + xid + '').remove();
+		reorder();
+		calc();
+	     }
+	
+		 function reorder() {
+		$('input[objtype=nourut]').each(function(i, obj) {
+			$(this).val(i + 1);
+		});
+	   }
+
+	function cancelorder() {
+		location.reload();
+		//return false;
+	}
 	</script>

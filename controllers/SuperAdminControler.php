@@ -83,13 +83,11 @@ class SuperAdminControler extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
-		$f["data"]  = $this->MasterData->getitemtype();
-		$f["data1"] = $this->MasterData->getitem();
+		$f["data"]   = $this->MasterData->getitemmaterial();
+		$f["data1"]  = $this->MasterData->getunitmaterial();
 		$this->load->model("MasterData");
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/AddItem", $f);
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "additem");
+		$this->load->view("SuperAdmin/Produk", $f);
 	}
 
 	function Produk()
@@ -354,6 +352,7 @@ class SuperAdminControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$f["data"] = $this->MasterData->getsupplier();
 		$this->load->model("MasterData");
+		$this->load->view("SuperAdmin/Header", $f);
 		$this->load->view("SuperAdmin/AddSupplier", $f);
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "addsupplier");
@@ -448,7 +447,9 @@ class SuperAdminControler extends CI_Controller
 
 	function addcompany()
 	{
+		$f = $this->session->userdata("data");
 		$this->load->Model("MasterData");
+		$userid          = $this->input->post("userid");
 		$idcomp         = $this->input->post("idcomp");
 		$logo           = $this->input->post("logo");
 		$namecomp       = $this->input->post("namecomp");
@@ -456,14 +457,14 @@ class SuperAdminControler extends CI_Controller
 		$nokantor       = $this->input->post("nokantor");
 		$nohandphone    = $this->input->post("nohandphone");
 		$alamat         = $this->input->post("alamat");
-		$bank           = $this->input->post("bank");
-		$norekening     = $this->input->post("norekening");
-		$beneficiary    = $this->input->post("beneficiary");
+		$bank           = $this->input->post("transaksi_bank");
+		$norekening     = $this->input->post("transaksi_norekening");
+		$beneficiary    = $this->input->post("transaksi_beneficiary");
 		$remarkinvoice  = $this->input->post("remarkinvoice");
 		$remarkquotation = $this->input->post("remarkquotation");
-		$cek = $this->MasterData->addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation);
-		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('SuperAdminControler/company');
+
+		$cek = $this->MasterData->addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation,$userid);
+		echo $cek;
 	}
 
 	function editcompany()

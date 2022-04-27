@@ -5,12 +5,18 @@
   <link rel="stylesheet" href="https://use.typekit.net/vke3pqz.css">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Link Font dari adobe -->
+	<link rel="stylesheet" href="https://use.typekit.net/vke3pqz.css">
+	<!-- Link Box Icon -->
+	<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+	<link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="<?= base_url('assets/css/indexxxx.css') ?>" />
 
 <!-- Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"  rel="stylesheet"/>
 <!-- MDB -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.0.0/mdb.min.css" rel="stylesheet"/>
-
 <!-- MDB -->
 <script
   type="text/javascript"
@@ -87,6 +93,9 @@
     .nav-link{
 		font-size:20px;
 	}
+  .list-akses thead tr td{
+        font-weight: bolder;min-width:196px;
+    }
   </style>
   <body class="body" >
 
@@ -178,39 +187,25 @@
             Purchase Management
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <li>
-            <a class="dropdown-item" href="#">Action</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Another action</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              Submenu &raquo;
+        <li>
+            <a class="dropdown-item " href="#">
+              <div class="row mt-2">
+                  <div class="col-2">
+                      <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png')?>" alt="">
+                  </div>
+                  <div class="col-6 ms-3">
+                      <h6>Request PO</h6>
+                      <p>Membuat permintaan belanja</p>
+                  </div>
+              </div>
             </a>
-            <ul class="dropdown-menu dropdown-submenu">
+            <ul class="dropdown-menu dropdown-submenu mt-2">
               <li>
-                <a class="dropdown-item" href="#">Submenu item 1</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/AddPo')?>">Register Request PO</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#">Submenu item 2</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/PoStatus')?>">Status PO List</a>
               </li>
-              <li>
-                <a class="dropdown-item" href="#">Submenu item 3 &raquo; </a>
-                <ul class="dropdown-menu dropdown-submenu">
-                  <li>
-                    <a class="dropdown-item" href="#">Multi level 1</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Multi level 2</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Submenu item 4</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Submenu item 5</a>
               </li>
             </ul>
           </li>
@@ -235,10 +230,10 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu mt-2">
               <li>
-                <a class="dropdown-item" href="#">Register Request PO</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/AddPo')?>">Register Request PO</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#">Register PO List</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/PoStatus')?>">Register PO List</a>
               </li>
               </li>
             </ul>
@@ -257,7 +252,7 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu mt-2">
               <li>
-                <a class="dropdown-item" href="<?php echo base_url('InventoryController/addinventoryin')?>">Register Ingoing</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/Supplier')?>">Register Ingoing</a>
               </li>
               <li>
                 <a class="dropdown-item" href="<?php echo base_url('InventoryController/ingoingstatus')?>">Ingoing Status</a>
@@ -279,7 +274,7 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu mt-2">
               <li>
-                <a class="dropdown-item" href="#">Register Outgoing</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/inventoryout')?>">Register Outgoing</a>
               </li>
               <li>
                 <a class="dropdown-item" href="#">Outgoing List</a>

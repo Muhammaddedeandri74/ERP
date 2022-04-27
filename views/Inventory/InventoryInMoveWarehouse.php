@@ -62,7 +62,7 @@
           <div class="col-3">
            <h5>Informasi Dasar</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3">
+             <div class="me-3" style="width:50%;">
                   <label for="">No. Transaksi</label>
                   <input type="text" name="notransaksi" class="form-control" style="font-size:1rem;" readonly>
              </div>
@@ -80,7 +80,7 @@
              </div>
              <button class="btn btn-primary" style="height:36px;font-size:13px;">Cari Data</button>
            </div>
-           <div class="me-3 w-50">
+           <div class="me-3" style="width:50%;">
                   <label for="">Customer</label>
                   <input type="text" name="customer" class="form-control" style="font-size:1rem;" readonly>
              </div>
@@ -89,14 +89,14 @@
           <div class="col-3">
            <h5>Informasi Gudang & Mata Uang </h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3">
+             <div class="me-3" style="width:50%;">
                   <label for="">Gudang Penerima</label>
                   <select name="namewarehouse" id="" class="form-select" required>
                     <option value="">Pilih</option>
                     <option value="Gudang 1">Gudang 1</option>
                   </select>
              </div>
-             <div class="me-3">
+             <div class="me-3" style="width:50%;">
                   <label for="">Gudang Penerim</label>
                   <select name="namewarehouse" id="" class="form-select" required>
                     <option value="">Pilih</option>
@@ -105,8 +105,8 @@
              </div>
            </div>
 
-            <div class="me-3" style="width:fit-content;">
-                <div class="mb-3">
+            <div class="me-3" style="width:50%;">
+                <div class="mb-3" >
                     <label for="">Tanggal Masuk</label>
                     <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>" placeholder="Pilih Tanggal"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
                 </div>

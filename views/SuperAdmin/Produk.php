@@ -134,13 +134,13 @@
 										<label class="mb-3">Jenis Qty</label>
 										<div class="row">
 									    	<div class="col-3">
-												<input type="radio" name="jenisqty"  value="stock" class="form-check-input" >
+												<input type="radio" name="jenisqty"  value="stock" class="form-check-input" checked>
 												<label class="form-check-label" for="flexRadioDefault1">
 													Stock
 												</label>
 											</div>
 											<div class="col-3">
-												<input type="radio" class="form-check-input" name="jenisqty" id="jenisqty" value="service" checked>
+												<input type="radio" class="form-check-input" name="jenisqty" id="jenisqty" value="service" >
 												<label class="form-check-label" for="flexRadioDefault1">
 													Service
 												</label>
@@ -392,7 +392,6 @@
 		tabel += '<td class="p-0" style="border:none;width: 4%"><input type="text" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty" name="transaksi_qty[]" / autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;width: 3%;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		//return tabel;
 		$('#line-transaksi').val(xid);
 		$('#detailx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
@@ -441,6 +440,7 @@
 
 	function cancelorder() {
 		location.reload();
-		//return false;
 	}
+
+	
 	</script>

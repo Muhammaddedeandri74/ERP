@@ -1,123 +1,67 @@
 <style type="text/css">
-	.biodata,
-	.photo {
-		height: 80vh;
-		width: 100%;
+	* {
+		font-family: proxima-nova, sans-serif !important;
 	}
+	.header {
+      background: #1143d8 0% 0% no-repeat padding-box;
+    }
 
+	
 
-	.photo {
-		background: purple;
-		padding: 20%;
-	}
-
-	.biodata {
-		background: white;
-		padding: 2%;
-
-	}
-
-	.custom-br {
-		display: block;
-		width: 100%;
-		height: 5px;
-		background-color: purple;
-		/*change color*/
-
-	}
-
-	.switch {
-		position: relative;
-		display: inline-block;
-		width: 60px;
-		height: 34px;
-	}
-
-	.switch input {
-		opacity: 0;
-		width: 0;
-		height: 0;
-	}
-
-	.slider {
-		position: absolute;
-		cursor: pointer;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: #ccc;
-		-webkit-transition: .4s;
-		transition: .4s;
-	}
-
-	.slider:before {
-		position: absolute;
-		content: "";
-		height: 26px;
-		width: 26px;
-		left: 4px;
-		bottom: 4px;
-		background-color: white;
-		-webkit-transition: .4s;
-		transition: .4s;
-	}
-
-	input:checked+.slider {
-		background-color: #2196F3;
-	}
-
-	input:focus+.slider {
-		box-shadow: 0 0 1px #2196F3;
-	}
-
-	input:checked+.slider:before {
-		-webkit-transform: translateX(26px);
-		-ms-transform: translateX(26px);
-		transform: translateX(26px);
-	}
-
-	/* Rounded sliders */
-	.slider.round {
-		border-radius: 34px;
-	}
-
-	.slider.round:before {
-		border-radius: 50%;
-	}
-
-	.bays {
-		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
-		-webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
-		-moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
-		background-color: white;
+    .bc-active {
+        color: white;
+    }
+    .content {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: 1px solid #0000001E;
+        border-radius: 12px;
+        opacity: 1;
+        min-height: 70vh;
+        transform: translateY(-5.75rem);
+        padding: 2rem;
+    }
+    .body {
+        background: #F8FAFC 0% 0% no-repeat padding-box;
+        opacity: 1;
+		
+    }
+	.nav-link{
+		font-size:24px;
 	}
 </style>
 
-<?php
-$idnew;
-if ($data != "Not Found") {
-	foreach ($data as $key) {
-		$idnew = $key["codecomm"];
-		$idnew++;
+
+<script type="text/javascript">
+	
+	function logout() {
+		window.location.href = "<?php echo base_url('AuthControler/logout') ?>";
 	}
-} else {
-	$idnew = "SR0001";
-}
-?>
+
+	function move() {
+		window.location.href = "<?php echo base_url('AuthControler/employe') ?>";
+	}
+</script>
+
 
 <!DOCTYPE html>
+
+
 <html>
 
 <head>
+
+	<!-- Link Font dari adobe -->
+	<link rel="stylesheet" href="https://use.typekit.net/vke3pqz.css">
+	<!-- Link Box Icon -->
+	<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
 	<link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="<?= base_url('assets/css/indexxxx.css') ?>" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+	<link rel="icon" type="image/x-icon" href="http://103.251.44.143:8099/ERP/assets/img/logo_daffina.ico">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<script src="<?= base_url('assets/js/Chart.js') ?>"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -132,100 +76,114 @@ if ($data != "Not Found") {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<title>ERP</title>
+	<link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+	<link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+	<title>S-ERP</title>
 </head>
+<?php
+$idnew;
+if ($data != "Not Found") {
+	foreach ($data as $key) {
+		$idnew = $key["codesupp"];
+		$idnew++;
+	}
+} else {
+	$idnew = "SR001";
+}
+?>
 
-<body>
-	<form action="<?php echo base_url('MasterDataControler/addsupplier') ?>" method="POST" enctype="multipart/form-data">
-		<div class="container-xxl text-white pt-3" style="background-color: purple;">
-			<div class="row d-flex justify-content-between">
-				<div class="col-1">
-					<a class="text-white" style="font-size: 2rem;cursor: pointer;" onclick="back()"> <i class="fa fa-arrow-left" style="padding-top: 2.5rem;padding-left:5rem" aria-hidden="true"></i> </a>
+
+
+<body class="body" >
+<div class="header px-4 pt-2" style="height: 196px;">
+   
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Dashboard</a></li>
+    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Master Menu</li>
+  </ol>
+  <h3 class="text-white">Register Supplier</h3>
+</nav>
+
+</div>
+
+<div class="content bg-white  mx-4">
+<div class="container-fluid">
+	<div class="row no-gutters">
+		<div class="col-12 bays">
+			<div class="biodata">
+				<div class="row">
+					<?php echo $this->session->flashdata('message'); ?>
+					<?php $this->session->set_flashdata('message', ''); ?>
 				</div>
-				<div class="col-7">
-					<p class="tu font-weight-bold " style="font-size: 13px">Admin/Supplier/Buat Baru</p>
-					<p class="tu font-weight-bold upc" style="font-size: 25px">Tambah Supplier Baru</p>
-				</div>
-				<div class="col-4">
-				</div>
-			</div>
-		</div>
-		<div class="main py-4" style="margin-left:10%;margin-right:10%;">
-			<div class="row no-gutters">
-				<div class="col-12 bays">
-					<div class="biodata">
-						<div class="row">
-							<?php echo $this->session->flashdata('message'); ?>
-							<?php $this->session->set_flashdata('message', ''); ?>
-						</div>
-						<div class="row">
-							<div class="col">
-								<p><b>INFORMASI DASAR</b></p>
-							</div>
-							<div class="col-2" style="margin-top: 5px">
-								<p style="font-size: 16px">Status</p>
-							</div>
-							<div class="col-2">
-								<label class="switch">
-									<input type="checkbox" checked disabled>
-									<span class="slider round"></span>
-								</label>
-							</div>
-						</div>
-						<span class="custom-br"></span>
-						<div class="row" style="margin-top: 10px">
-							<div class="col">
-								<p style="text-align: center">Code Supplier</p>
-							</div>
-							<div class="col">
-								<input type="text" name="codecustomer" class="form-control" required value="<?php echo $idnew ?>" readonly>
-								<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-							</div>
-						</div>
-						<div class="row" style="margin-top: 10px">
-							<div class="col">
-								<p style="text-align: center">Nama Supplier</p>
-							</div>
-							<div class="col">
-								<input type="text" name="namecustomer" class="form-control" required>
-								<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-							</div>
-						</div>
-						<div class="row" style="margin-top: 10px">
-							<div class="col">
-								<p style="text-align: center">Phone Supplier</p>
-							</div>
-							<div class="col">
-								<input type="text" name="phonecustomer" class="form-control" required>
-							</div>
-						</div>
-						<div class="row" style="margin-top: 10px">
-							<div class="col">
-								<p style="text-align: center">Address Supplier</p>
-							</div>
-							<div class="col">
-								<input type="text" name="addresscustomer" class="form-control" required>
-							</div>
-						</div>
-						<button class="btn btn-outline-success" style="float: right; margin-top: 30px;" type="submit"> <i class="fa fa-save"></i> Simpan</button>
+				<form action="<?php echo base_url('MasterDataControler/addsupplier') ?>" method="POST" enctype="multipart/form-data">
+				<div class="row">
+					<div class="col-3">
+					 <div class="col d-flex align-middle" style="align-items:center"><i class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
+					   <a style="text-decoration:none;color:black;" href="<?php echo base_url('AuthControler/mainpage')?>">Kembali</a>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Code Supplier</div>
+					
+                </div>
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+						<input type="text" name="codesupp" class="form-control" value="<?php echo $idnew ?>" required readonly>
+						<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+					</div>
+                </div>
+                <div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Nama Supplier</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<input type="text" name="namesupp" class="form-control" placeholder="Masukan Nama Supplier" required autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Alamat Supplier</div>
+                </div>
+				
+				<div class="row mb-2">
+				<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<textarea name="addressupp" id="" cols="5" rows="3" class="form-control" placeholder="Masukan Alamat Lengkap"></textarea>
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<button type="submit" class="btn btn-primary" style="float: right; margin-top: 30px;" >Simpan</button>
+					</div>
+                </div>
+				</form>
 			</div>
 		</div>
-	</form>
-</body>
-
-</html>
-<script type="text/javascript">
-	function back() {
-		window.location.href = "<?php echo base_url('SuperAdminControler/supplier') ?>";
-	}
-
-
-	photo.onchange = evt => {
-		const [file] = photo.files
-		if (file) {
-			img.src = URL.createObjectURL(file)
-		}
-	}
-</script>
+	</div>
+</div>
+</div>
+</div>
