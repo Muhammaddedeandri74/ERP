@@ -709,6 +709,7 @@
 
 			}
 		});
+		
 		if (xdisc > 0) {
 			tdisc = xttl * xdisc / 100;
 			$('#disnom').val(tdisc);

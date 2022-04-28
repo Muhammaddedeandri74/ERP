@@ -5990,8 +5990,8 @@ class MasterData extends CI_Model
 				foreach ($eksekusix as $key) {
 					$idpo = $key->idpo;
 					for ($i = 0; $i < count($transaksi_iditembom); $i++) {
-						$dataxx     = array($idpo,$transaksi_iditembom[$i],$transaksi_harga[$i], $transaksi_qty[$i],$transaksi_expiredate[$i],$transaksi_typedisc[$i],$transaksi_disc[$i],$transaksi_total[$i],date('Y-m-d H:i:s'));
-						$queryxx    ="INSERT INTO podet (idpo,iditembom,price,qty,expiredate,typedisc,disc,subpo,madelog)VALUES(?,?,?,?,?,?,?,?,?)";
+						$dataxx     = array($idpo,$transaksi_iditembom[$i],$transaksi_harga[$i], $transaksi_qty[$i],$transaksi_expiredate[$i],$transaksi_typedisc[$i],$transaksi_disc[$i],$transaksi_total[$i]);
+						$queryxx    ="INSERT INTO podet (idpo,iditembom,price,qty,expiredate,typedisc,disc,subpo)VALUES(?,?,?,?,?,?,?,?)";
 						$eksekusixx = $this->db->query($queryxx, $dataxx);
 						if ($eksekusixx == true) {
 							$respon = "Success";

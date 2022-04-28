@@ -128,7 +128,8 @@
 			<?php echo $this->session->flashdata('message'); ?>
 			<?php $this->session->set_flashdata('message', ''); ?>
 		</div>
-		
+		<input type="hidden" name="idpo" id="idpo">
+		<input type="hidden" name="codepo" id="codepo">
 		<div class="row">
 			<div class="col-3">
 				<div class="col d-flex align-middle mb-3" style="align-items:center"><i class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
@@ -153,7 +154,7 @@
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-2" style="width:50%;">
                   <label for="">Supplier</label>
-                  <select name="typeingoing"class="form-select">
+                  <select name="typeingoing" id="supplier" class="form-select">
                     <option value="">Pilih</option>
 					<?php if($data5 !="Not Found"):?>
 				    	<?php foreach($data5 as $key):?>
@@ -175,7 +176,7 @@
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
                   <label for="">Gudang Penerima</label>
-                  <select name="namewarehouse" id="" class="form-select" required>
+                  <select name="namewarehouse" id="namewarehouse" class="form-select" required>
                     <option value="">Pilih</option>
 					<?php if($data1 !="Not Found"):?>
 						<?php foreach($data1 as $key) :?>
@@ -186,13 +187,13 @@
              </div>
              <div class="">
                   <label for="">Tanggal Masuk</label>
-                  <input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+                  <input type="text" name="tanggalmasuk" id="datepo" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
              </div>
            </div>
 
            <div class="me-3 mb-3" style="width:fit-content;width:50%;">
                   <label for="">Mata Uang</label>
-                  <select name="matauang" id="" class="form-select" required>
+                  <select name="matauang" id="matauang" class="form-select" required>
                     <option value="">Pilih</option>
 					<?php if($data2 !="Not Found"):?>
 						<?php foreach($data2 as $key) :?>
@@ -267,11 +268,11 @@
 				  <input type="text" id="subtotal" value="0" class="form-control">
 				  <input type="text" id="discount" value="0" class="form-control">
 				  <input type="text" id="pph22" value="0" class="form-control">
-				  <input type="text" id="grandtotal" value="0" class="form-control">
+				  <input type="text" id="_total" value="0" class="form-control" onchange="count('+ xid +')">
 			  </div>
 		  </div>
           <div class="mr-4 mt-3" style="text-align:right;">
-            <button type="button" class="btn btn-primary" style="font-size:13px;" onclick="addorder()">Buat Transaksi</button>
+            <button type="button" class="btn btn-primary" style="font-size:13px;" id="addorder" onclick="addorder()">Buat Transaksi</button>
           </div>
       </div>
   </div>
@@ -331,7 +332,6 @@
 				?>';
 
 		var xunit = '';
-
 	    xunit = '<?php
 				$x = '';
 				if ($data != 'Not Found') {
@@ -350,10 +350,10 @@
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
 				xcnt++;
-				xqty += parseFloat($('#transaksi_' + xid + '_qty').val().replaceAll(',', ''));
+				xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
 			}
 		});
-	  }
+	}
 
 		function reorder() {
 		$('input[objtype=nourut]').each(function(i, obj) {
@@ -437,6 +437,88 @@
 		calc();
 	});
 
+	$('form button').on("click", function(e) {
+		if ($(this).attr('id') == "addorder") {
+			var xask = '';
+			if ($("#idpo").val() == "") {
+				xask = "Simpan Transaksi?";
+			} else {
+				xask = "Ubah Transaksi?";
+			}
+			if (confirm(xask)) {
+				if (validasi()) {
+					addorder();
+				}
+			}
+		} 
+		e.preventDefault();
+	});
+
+	function validasi() {
+		var xval = 0;
+		var sts = 1;
+		
+		xval = $("#supplier").val();
+		if (xval == "") {
+			alert('Input Supplier');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#namewarehouse").val();
+		if (xval == "") {
+			alert('Input Gudang Penerima');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#datepo").val();
+		if ($("#datepo").val() == '') {
+			alert('Input Tanggal Masuk');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#mataung").val();
+		if ($("#matauang").val() == '') {
+			alert('Input Matauang');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#_qty").val();
+		if ($("#_qty").val() == 0) {
+			alert('Input QTY');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#_expiredate").val();
+		if ($("#_expiredate").val() == "") {
+			alert('Input Expiredate');
+			sts = 0;
+			return false;
+		}
+
+		$('input[objtype=expiredate]').each(function(i, obj) {
+
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_expiredate", "");
+			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+				if ($("#datepo").val() >= $(this).val()) {
+					alert('Tanggal Expired Dibawah Atau Sama Dengan Tanggal Transaksi');
+					sts = 0;
+					return false;
+				}
+			}
+		});
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
+		//return 'ok';
+	}
+
 	function count(xid)
 	{
 		var harga  = $('#transaksi_' + xid + '_harga').val();
@@ -463,123 +545,6 @@
 					}
 			});
 	}
-
-	function konfirmorder(x) {
-
-        var data = <?php echo json_encode($data) ?>;
-        console.log(data)
-        for (var i = 0; i < data.length; i++) {
-            if (data[i]["idmove"] == x) {
-
-                var idrequest = 0;
-                if (data[i]["norequest"] != null) {
-                    idrequest = data[i]["norequest"];
-                }
-
-                console.log(data[i]["idmove"] + " " + x);
-                if (data[i]["status"] != "Waiting") {
-                    $('#footer').hide();
-                } else {
-                    $('#footer').show();
-                }
-
-                $('#footer').html('<a href="<?php echo base_url('InOut/changemovewh?idtrans=') ?>' + btoa(data[i]["idmove"]) + '&from=counter&xxx=' + idrequest + '" class="btn btn-warning text-white"><i class="fa fa-pencil"> Confirm</i></a>')
-
-                // console.log(data[i])
-                var baris = `
-                                <div class="card-header border-0 bg-white">
-                                        <div class="row d-flex justify-content-between">
-                                            <div class="col-10" >`;
-
-                if (data[i]["nopesanan"] == null) {
-                    baris += ` <p class="fw">No. Ingoing ` + data[i]["codemove"] + `<br>
-                                                            
-                                                        </p>`
-                } else {
-                    baris += `
-                                                         <p class="fw">No. Ingoing ` + data[i]["codemove"] + `<br>
-                                                            
-                                                        </p>
-                                                     `
-                }
-
-                baris += `</div>
-                                         <input type="hidden" name="idso" value="` + data[i]["idmove"] + `">
-                                           
-                                            <div class="col-12">
-                                                <p class="fw">Tanggal Ingoing<br>
-                                                    <span style="color: #3C2E8F" class="fn">` + data[i]["datemove"] + `</span>
-                                                </p>
-                                            </div>
-                                            <div class="d-flex justify-content-between" style="width: 100%;">
-                                                <div style="width: 40%;">
-                                                    <p class="fw p-3">Warehouse Pengirim<br>
-                                                        <span style="color: #3C2E8F" class="fn">` + data[i]["namecomm"] + `</span>
-                                                    </p>
-                                                </div>
-                                               
-                                                <div style="width: 40%;">
-                                                    <p class="fw p-3"> <i class="ms-Icon ms-Icon--ProductVariant"></i> Qty. Product<br>
-                                                        <span style="color: #3C2E8F" class="fn">` + data[i]["qtymove"] + ` Product</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            `;
-
-                var barisx = `
-                                         <p class="fw">DAFTAR ITEM YANG DIPESAN</p>
-                                        <table class="table cn">
-                                            <thead style="background-color: orange;color: white">
-                                                <tr>
-                                                    <th scope="col">Nama Produk</th>
-                                                    <th scope="col">SKU</th>
-                                                    <th scope="col">Qty</th>
-                                                    <th scope="col">Exp Date</th>
-                                                    
-                                                    
-                                                </tr>
-                                            </thead>
-                                            <tbody style="background-color: whtie">`;
-                for (var x = 0; x < data[i]["data"].length; x++) {
-                    if (x % 2 == 0) {
-                        barisx += `<tr>`
-                    } else {
-                        barisx += `<tr style = "background : #eeeeee">`
-                    }
-
-
-                    barisx += `
-                                                                        <td>` + data[i]["data"][x]["nameitem"] + `</td>
-                                                                        <td>` + data[i]["data"][x]["sku"] + `</td>
-                                                                        <td>` + data[i]["data"][x]["qty"].replace(".0000", "") + `</td>
-                                                                        <td>` + data[i]["data"][x]["expdate"] + `</td>
-                                                                      
-                                                                        
-                                                                    </tr>
-
-
-                                                          `
-
-                }
-                barisx += `
-                                                                </tbody>
-                                                            </table>
-                                                      `
-
-
-
-
-
-                $('#header').html(baris);
-                // console.log(barisx);
-                $('#dataitem').html(barisx);
-
-                break;
-            }
-        }
-    }
 
 	function cancelorder() {
 		location.reload();
