@@ -173,7 +173,20 @@
                   </div>
                   <div class="col-6 ms-3">
                       <h6>Buat Quotation</h6>
-                      <p>Membuat penawaran produk</p>
+                      <p>Membuat Penawaran Produk</p>
+                  </div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item " href="<?php echo base_url('OrderManagementController/addsalesorder')?>">
+              <div class="row mt-2">
+                  <div class="col-2">
+                      <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png')?>" alt="">
+                  </div>
+                  <div class="col-6 ms-3">
+                      <h6>Buat Salesorder</h6>
+                      <p>Membuat Salesorder Produk</p>
                   </div>
               </div>
             </a>
@@ -297,13 +310,16 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu mt-2">
               <li>
-                <a class="dropdown-item" href="#">In / Out Report</a>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/InOutReport')?>">In / Out Report</a>
               </li>
               <li>
                 <a class="dropdown-item" href="#">Safety Stock Report</a>
               </li>
               <li>
                 <a class="dropdown-item" href="#">Expired Report</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<?php echo base_url('InventoryController/StockCardReport')?>">Stock Card Report</a>
               </li>
               </li>
             </ul>

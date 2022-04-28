@@ -30,93 +30,16 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')?>">
 		<title>S-ERP</title>
 	</head>
-<?php
-    $idnew;
-    if ($data3 != "Not Found") {
-        foreach ($data3 as $key) {
-            $idnew = $key["codepo"];
-            $idnew++;
-        }
-    } else {
-        $idnew = "20220101-PO-001";
-    }
-?>
+
 <body class="body" >
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header" style="background:#1143d8;color:white;">
-        <h5 class="modal-title" id="exampleModalLabel">PILIH DATA PURCHASE ORDER</h5>
-        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
-      </div>
-      <div class="modal-body">
-		<div class="row mx-3">
-			<div class="col-3 mb-3">
-				<label for="">Pencarian</label>
-				<input type="text" class="form-control" placeholder="Cari berdasarkan customer">
-			</div>
-			<div class="col-2"></div>
-			<div class="col-2">
-				<label for="">Mulai Dari</label>
-				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-			</div>
-			<div class="col-2">
-				<label for="">Sampai Dengan</label>
-				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-			</div>
-			<div class="col-2 mt-4"> 
-				<button type="button" class="btn btn-primary">Terapkan</button>
-			</div>
-		</div>
-		<div class="row mx-3" style="overflow-x: auto;">
-			<table class="table table-bordered table-striped" id="table-user">
-				<thead>
-					<tr>
-						<td>#</td>
-						<td>No. PO</td>
-						<td>Tanggal Order</td>
-						<td>Due Date</td>
-						<td>Qty Item</td>
-						<td>Total Amount</td>
-						<td>Status</td>
-						<td>Action</td>
-					</tr>
-                </thead>
-				<tbody>
-					<?php if($data4 !="Not Found"):?>
-						 <?php $no=1;?>
-						  <?php foreach($data4 as $key):?>
-					<tr>
-							<td><?php echo $no++;?></td>
-							<td><?php echo $key["codepo"]?></td>
-							<td><?php echo $key["datepo"]?></td>
-							<td><?php echo $key["datepo"]?></td>
-							<td><?php echo $key["qty"]?></td>
-							<td><?php echo $key["subpo"]?></td>
-							<td><?php echo $key["statuspo"]?></td>
-							<td><a href="">Pilih</a></td>
-					</tr>
-					<?php endforeach?>
-					<?php endif?>
-				</tbody>
-			</table>
-		</div>
-	  </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 <form action="<?php echo base_url('MasterDataControler/addpo') ?>" method="POST" enctype="multipart/form-data" id="form">
 <div class="header px-4 pt-2" style="height: 196px;">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb m-0">
-    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Purchase Management </a></li>
-    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Purchase Order</li>
+    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Order Management </a></li>
+    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Sales Order</li>
   </ol>
-  <h3 class="text-white">Register Purchase Order</h3>
+  <h3 class="text-white">Register Order Confirmation</h3>
 </nav>
 </div>
 <div class="content bg-white  mx-4">
@@ -143,67 +66,81 @@
            <h5>Informasi Dasar</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
-                  <label for="">No. Purchase Order</label>
-                  <input type="text" name="codepo" class="form-control" value="<?php echo $idnew ?>" readonly>
-                  <input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+                  <label for="">No. Sales Order</label>
+                  <input type="text" name="codepo" class="form-control" value="" readonly>
+                  <input type="hidden" name="userid" class="form-control" value="">
                   <input type="hidden" name="idpo" class="form-control">
              </div>
-			 <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button>
            </div>
 
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-2" style="width:50%;">
-                  <label for="">Supplier</label>
-                  <select name="typeingoing" id="supplier" class="form-select">
-                    <option value="">Pilih</option>
-					<?php if($data5 !="Not Found"):?>
-				    	<?php foreach($data5 as $key):?>
-                         <option value="<?php echo $key["namesupp"]?>"><?php echo $key["namesupp"]?></option>
-					    <?php  endforeach?>
-					    <?php  endif?>
-                  </select>
+                  <label for="">No Quotation</label>
+                  <input type="text" name="codepo" class="form-control" value="">
              </div>
              &nbsp;&nbsp;<button class="btn btn-primary" style="height:36px;font-size:13px;">Cari Data</button>
            </div>
-           <div class="me-3" style="width:75%;">
-                  <label for="">Judul Purchase</label>
-                  <textarea name="judulpurchase" id="" cols="7" rows="4" class="form-control" placeholder="Contoh : Penawaran PT. ABC" style="font-size:13px;"></textarea>
-             </div>
+           <div class="me-3 mb-3" style="width:50%;" >
+                <label for="">Tipe Order</label>
+                <select name="" id="" class="form-select">
+                    <option value="">Pilih</option>
+                    <option value="">E-Commerce</option>
+                    <option value="">B2B</option>
+                </select>
+            </div>
+            <div class="me-3 mb-3" style="width:50%;" >
+                <label for="">Customer</label>
+                <select name="" id="" class="form-select">
+                    <option value="">Pilih</option>
+                    <option value="">E-Commerce</option>
+                    <option value="">B2B</option>
+                </select>
+            </div>
+            <div class="me-3" style="width:50%;" >
+               <a style="font-size:13px;" href="" class="btn btn-primary">+ Customer Baru</a>
+            </div>
           </div>
 
           <div class="col-3">
-           <h5>Informasi Gudang & Mata Uang </h5>
+           <h5>Informasi Detail Pesanan </h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
-                  <label for="">Gudang Penerima</label>
-                  <select name="namewarehouse" id="namewarehouse" class="form-select" required>
-                    <option value="">Pilih</option>
-					<?php if($data1 !="Not Found"):?>
-						<?php foreach($data1 as $key) :?>
-                           <option value="<?php echo $key["namewarehouse"]?>"><?php echo $key["namewarehouse"]?></option>
-						<?php endforeach?>
-					<?php endif?>
-                  </select>
+             <label for="">Tanggal Order</label>
+                 <input type="text" name="tanggalmasuk" id="datepo" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
              </div>
              <div class="" style="width:50%;">
-                  <label for="">Tanggal Masuk</label>
+                  <label for="">Tanggal Pengiriman</label>
                   <input type="text" name="tanggalmasuk" id="datepo" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
              </div>
            </div>
-
            <div class="me-3 mb-3" style="width:fit-content;width:50%;">
-                  <label for="">Mata Uang</label>
-                  <select name="matauang" id="matauang" class="form-select" required>
-                    <option value="">Pilih</option>
-					<?php if($data2 !="Not Found"):?>
-						<?php foreach($data2 as $key) :?>
-                           <option value="<?php echo $key["idcomm"]?>"><?php echo $key["namecomm"]?></option>
-						<?php endforeach?>
-					<?php endif?>
+              <label for="">No Pesanan (E-Commerce)</label>
+                 <input type="text" name="" class="form-control">
+           </div>
+           <div class="me-3 mb-3" style="width:fit-content;width:100%;">
+              <label for="">Alamat Pengiriman</label>
+                 <textarea name="" id="" cols="4" rows="4" class="form-control"></textarea>
+           </div>
+          </div>
+          <div class="col-1"></div>
+          <div class="col-3">
+           <h5>Metode Pembayaran </h5>
+           <div class="d-flex mb-3" style="align-items: flex-end;">
+             <div class="me-3" style="width:50%;">
+                 <label for="">Metode Pembayaran</label>
+                 <input type="text" name="tanggalmasuk" id="datepo" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+             </div>
+             <div class="" style="width:50%;">
+                  <label for="">Rekening Bank</label>
+                  <select name="" id="" class="form-select">
+                      <option value="">Pilih</option>
                   </select>
              </div>
-			 <label for="" style="font-size:20px;">Pajak</label>
-			 <div class="d-flex mb-3" style="align-items: flex-end;">
+           </div>
+           <div class="me-3 mb-3" style="width:fit-content;;">
+              <h5>Pajak</h5>
+           </div>
+           <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
                   <label for="">Gunakan VAT</label>
              </div>
@@ -211,19 +148,17 @@
                     <input type="checkbox" name="vat"  value="11" class="form-check-input"  id="flexSwitchCheckDefault" >
                 </div>
            </div>
-             
+           <div class="me-3 mb-3" style="width:fit-content;;">
+              <h5>Cetak & Download</h5>
+           </div>
+           <div class="d-flex" style="align-items: flex-end;">
+             <div class="me-3 mb-3">
+               <button class="btn btn-light"><i class='bx bxs-download' >Download</i></button> 
+               <button class="btn btn-light"><i class='bx bx-printer'>Cetak</i></button> 
+             </div>
+           </div>     
+           </div>
           </div>
-			<div class="col-3">
-			<h5>Akun Perbankan</h5>
-			<div class="d-flex mb-3" style="align-items: flex-end;">
-			<div class="border px-3 py-2 rounded">   
-				<div class="form-check">
-					<input class="form-check-input" type="radio" name="idcomp" id="flexRadioDefault1"/>
-					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["bank"]?> - <?php echo $data6["norekening"]?></label><br>
-					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["namecomp"]?> </label>
-				</div>
-			</div>
-		  
         </div>
 	</div>
 </div>
@@ -242,9 +177,8 @@
 			<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
 			<th style="background:#1143d8;color:white;text-align:right;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qty</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Expired Date</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Type Disc</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Disc Item</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Type Discount</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Discount Item</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Total</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Action</th>
 			</tr>
@@ -257,18 +191,18 @@
 		</table>
 		  <div class="row rounded me-1" style="justify-content: end;">
 			  <div class="col-2" style="text-align: end;background:#E6ECFF; width:fit-content">
-				  <p>DPP</p>
 				  <p>Subtotal</p>
-				  <p>Discount Transaksi</p>
-				  <p>Pph</p>
+				  <p>Discount</p>
+				  <p>PPN</p>
+				  <p>Ongkos Kirim</p>
 				  <p>Grand Total</p>
 			  </div>
 			  <div class="col-2" style="text-align: end;background:#E6ECFF;">
-				  <input type="text" id="dpp" value="0" class="form-control">
 				  <input type="text" id="subtotal" value="0" class="form-control">
 				  <input type="text" id="discount" value="0" class="form-control">
-				  <input type="text" id="pph22" value="0" class="form-control">
-				  <input type="text" id="_total" value="0" class="form-control" onchange="count('+ xid +')">
+				  <input type="text" id="ppn" value="0" class="form-control">
+				  <input type="text" id="ongkir" value="0" class="form-control">
+				  <input type="text" id="_grangtot" value="0" class="form-control">
 			  </div>
 		  </div>
           <div class="mr-4 mt-3" style="text-align:right;">
@@ -395,7 +329,6 @@
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count('+ xid +')"></td>';
-		tabel += '<td class="p-0" style="border:none; width:12%;"><input type="date" id="transaksi_' + xid + '_expiredate" objtype="_expiredate" class="form-control  _expiredate" name="transaksi_expiredate[]" />';
 		tabel += '<td class="p-0" style="border:none; width:12%;"><select class="form-control _typedisc" name="transaksi_typedisc[]"><option value="">Pilih</option><option value="Nominal">Nominal</option><option value="Persen">Persen</option></select>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_disc"  class="form-control _disc" name="transaksi_disc[]' + xid + '_disc"  value="0" onchange="count('+ xid +')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_total" objtype="_total" class="form-control _total" name="transaksi_total[]' + xid + '_total"  autocomplete="off" value="0" onchange="count('+ xid +')"></td>';

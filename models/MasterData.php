@@ -4421,11 +4421,11 @@ class MasterData extends CI_Model
 	function readdetailposum($idtrans)
 	{
 		$data = array($idtrans);
-		$query = "SELECT b.*,a.sku,a.nameitem,a.unitsatuan,qty,b.expiredate FROM  (SELECT idpo,iditembom,MAX(idpodet) AS idpodet,SUM(qty) AS qty,expiredate FROM podet 
-							WHERE idpo = ?
-							GROUP BY idpo,iditembom ) AS b
-							INNER JOIN tb_itembom AS a ON b.iditembom=a.iditembom 
-							ORDER BY idpodet";
+		$query = "SELECT b.*,a.sku,a.nameitem,a.unitsatuan,qty,b.expiredate,b.iditembom FROM  (SELECT idpo,iditembom,MAX(idpodet) AS idpodet,SUM(qty) AS qty,expiredate FROM podet 
+				  WHERE idpo = ?
+				  GROUP BY idpo,iditembom ) AS b
+				  INNER JOIN tb_itembom AS a ON b.iditembom=a.iditembom 
+				  ORDER BY idpodet";
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
@@ -4477,6 +4477,34 @@ class MasterData extends CI_Model
 				$f["typein"]	    = $key->typein;
 				$f["qtyin"]	        = $key->qtyin;
 				$f["status"]	    = $key->status;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getlistinvindet()
+	{
+		$query = "SELECT nameitem,deskripsi,itemgroup,sku,qtypo,qty,balance,invin.idin,invin.idpo,codein,datein,typein,hargaitem FROM invin,invindet,tb_itembom WHERE invin.idin = invindet.idin AND invindet.iditembom = tb_itembom.iditembom";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"]	        = $key->idin;
+				$f["idpo"]	        = $key->idpo;
+				$f["codein"]	    = $key->codein;
+				$f["datein"]	    = $key->datein;
+				$f["typein"]	    = $key->typein;
+				$f["nameitem"]	    = $key->nameitem;
+				$f["hargaitem"]	    = $key->hargaitem;
+				$f["deskripsi"]  	= $key->deskripsi;
+				$f["itemgroup"]	    = $key->itemgroup;
+				$f["sku"]	        = $key->sku;
+				$f["qtypo"]	        = $key->qtypo;
+				$f["qty"]	        = $key->qty;
+				$f["balance"]	    = $key->balance;
 				array_push($respon, $f);
 			}
 		} else {

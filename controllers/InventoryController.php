@@ -190,4 +190,28 @@ class InventoryController extends CI_Controller
         $f = $this->session->userdata("data");
 	}
 
+	function InOutReport()
+	{
+		$this->load->model("MasterData");
+		$f["title"]   = "Inventory InOut Report";
+		$f["data"]    = $this->MasterData->getlistinvindet();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/InOutReport",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
+	function StockCardReport()
+	{
+		$this->load->model("MasterData");
+		$f["title"]   = "Inventory StockCard Report";
+		$f["data"]    = $this->MasterData->getlistinvindet();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/StockCardReport",$f);
+		$this->load->view("SuperAdmin/Footer");
+        $f = $this->session->userdata("data");
+	}
+
 }

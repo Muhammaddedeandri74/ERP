@@ -305,7 +305,7 @@
 			<th style="background:#1143d8;color:white;text-align:right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harga</th>
 			<th style="background:#1143d8;color:white;text-align:right;">&nbsp;&nbsp;&nbsp;Qty Po</th>
 			<th style="background:#1143d8;color:white;text-align:right;">&nbsp;&nbsp;&nbsp;Qty In</th>
-			<th style="background:#1143d8;color:white;text-align:right;">&nbsp;&nbsp;&nbsp;Balance</th>
+			<th style="background:#1143d8;color:white;text-align:right;">&nbsp;&nbsp;&nbsp;Selisih</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Expire Date</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Action</th>
 			</tr>
@@ -339,7 +339,7 @@
 		foreach ($order as $key) {
 
 	?>
-			<option value="<?php echo $key["codepo"]; ?>" data-idpo="<?php echo $key["idpo"]; ?>" data-datepo="<?php echo $key["datepo"]; ?>" data-qty="<?php echo $key["qty"]; ?>" >( <?php echo $key["datepo"] ?> ) <?php echo $key["codepo"] ?> </option>
+			<option value="<?php echo $key["codepo"]; ?>" data-idpo="<?php echo $key["idpo"]; ?>"  data-datepo="<?php echo $key["datepo"]; ?>" data-qty="<?php echo $key["qty"]; ?>" >( <?php echo $key["datepo"] ?> ) <?php echo $key["codepo"] ?> </option>
 	<?php }
 	} ?>
 </datalist>
@@ -485,9 +485,6 @@
 		$.post("<?php echo base_url('InventoryController/getpo?'); ?>", {
 			id: xid
 		}, function(result) {
-			//alert(result);
-			// var data = $.parseJSON(result);
-			// alert(data.detailtrans[0]['iditem']);
 			var data = $.parseJSON(result);
 			if (data.headertrans != "Not Found") {
 				$('#detailx').html('');
@@ -503,20 +500,19 @@
 							add_row_transaksi(xiddet);
 							xiddet = xiddet + 1;
 							$('#transaksi_' + xiddet + '_idpodet').val(data.detailtrans[(xiddet + xlost - 1)]['idpodet']);
-							$('#transaksi_' + xiddet + '_iditembom').val(data.detailtrans[(xiddet + xlost - 1)]['_iditembom']);
+							$('#transaksi_' + xiddet + '_iditembom').val(data.detailtrans[(xiddet + xlost - 1)]['iditembom']);
 							$('#transaksi_' + xiddet + '_sku').val(data.detailtrans[(xiddet + xlost - 1)]['sku']);
 							$('#transaksi_' + xiddet + '_nameitem').val(data.detailtrans[(xiddet + xlost - 1)]['nameitem']);
 							$('#transaksi_' + xiddet + '_unitsatuan').val(data.detailtrans[(xiddet + xlost - 1)]['unitsatuan']);
 							$('#transaksi_' + xiddet + '_harga').val(data.detailtrans[(xiddet + xlost - 1)]['price'].replace(".0000", ""));
 							$('#transaksi_' + xiddet + '_qtypo').val(data.detailtrans[(xiddet + xlost - 1)]['qty']);
 							$('#transaksi_' + xiddet + '_expiredate').val(data.detailtrans[(xiddet + xlost - 1)]['expiredate']);
-
 						} else {
 							xlost = xlost + 1;
 						}
 					}
 				}
-				add_row_transaksi(xiddet);
+				// add_row_transaksi(xiddet);
 				calc();
 			}
 		});

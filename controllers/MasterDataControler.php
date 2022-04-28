@@ -239,6 +239,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_balance     = $this->input->post("transaksi_balance");
 		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
 
+
 		$cek                   = $this->MasterData->AddInventoryIn($codein, $tipeingoing,$codepo, $namesupp, $namewarehouse,$datein,$currency,$transaksi_iditembom,$transaksi_sku,$transaksi_nameitem,
 		$transaksi_unitsatuan,$transaksi_harga,$transaksi_qtypo,$transaksi_qtyin,$transaksi_balance,$transaksi_expiredate,$userid);
 		echo $cek;
