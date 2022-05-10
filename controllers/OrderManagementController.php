@@ -23,13 +23,18 @@ class OrderManagementController extends CI_Controller
     {
         $this->load->model("MasterData");
 		$f            = $this->session->userdata("data");
-		$f["title"]   = "Register Purchase Order";
+		$f["title"]   = "Register Sales Order";
 		$f["data"]    = $this->MasterData->getitemmaterial();
+		$f["data1"]   = $this->MasterData->getsalesorder();
+		$f["data2"]   = $this->MasterData->getcustomer();
+		$f["data3"]   = $this->MasterData->getpaymentmethod();
+		$f["data4"]   = $this->MasterData->getcompany();
 		
 		$this->load->view("Superadmin/Header");
 		$this->load->view("SalesOrder/AddSalesorder",$f);
 		$this->load->view("SuperAdmin/Footer");
         $f = $this->session->userdata("data");
+		$this->load->view("xfooter");
 	}
 
 

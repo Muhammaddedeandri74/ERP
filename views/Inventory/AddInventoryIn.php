@@ -206,33 +206,33 @@
           <div class="col-3 mb-3">
            <h5>Informasi Dasar</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:50%;">
+             <div class="me-3" style="width:75%;">
                   <label for="">No. Transaksi</label>
 				  <input type="text" name="codein" class="form-control" value="<?php echo $idnew ?>" readonly>
                   <input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
              </div>
-			 <button type="button" class="btn btn-primary" style="height:36px;font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#modalinvin">Cari Data</button>
+			 <!-- <button type="button" class="btn btn-primary" style="height:36px;font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#modalinvin">Cari Data</button> -->
            </div>
 
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-2" style="width:50%;">
+             <div class="me-2" style="width:75%;">
                   <label for="">Tipe Ingoing</label>
                   <select name="tipeingoing" id="tipeingoing" class="form-select" onchange="location = this.options[this.selectedIndex].value;">
                     <option value="Supplier">Supplier</option>
-                    <option value="Return">Return</option>
-                    <option value="Move Warehouse">Move Warehouse</option>
+                    <!-- <option value="Return">Return</option>
+                    <option value="Move Warehouse">Move Warehouse</option> -->
                   </select>
              </div>
            </div>
 		   <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-2" style="width:50%;">
+             <div class="me-2" style="width:75%;">
                   <label for="">No. Purchase Order</label>
 				  <input type="hidden" class="form-control" id="idpo" name="idpo">
                   <input type="text" id="codepo" name="codepo" class="form-control" list="xpo" autocomplete="off">
              </div>
-             &nbsp;&nbsp;<button type="button" class="btn btn-primary" style="height:36px;font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button>
+             <!-- &nbsp;&nbsp;<button type="button" class="btn btn-primary" style="height:36px;font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
            </div>
-           <div class="me-3" style="width:50%;">
+           <div class="me-3" style="width:75%;">
                   <label for="">Customer</label>
                   <select name="namesupp" class="form-select" required>
                     <option value="">Pilih</option>
@@ -244,11 +244,11 @@
                   </select>
              </div>
           </div>
-
-          <div class="col-3">
+          <div class="col-1"></div>
+          <div class="col-4" >
            <h5>Informasi Gudang & Mata Uang </h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:50%;">
+             <div class="me-3" style="width:75%;">
                   <label for="">Gudang Penerima</label>
                   <select name="namewarehouse" id="" class="form-select" required>
                     <option value="">Pilih</option>
@@ -259,7 +259,7 @@
 					<?php endif?>
                   </select>
              </div>
-             <div class="">
+             <div class="" style="width:75%;">
                   <label for="">Tanggal Masuk</label>
                   <input type="text" name="datein" id="datein" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
              </div>
@@ -277,8 +277,8 @@
                   </select>
              </div>
           </div>
-
-          <div class="col-3">
+          <div class="col-1"></div>
+          <div class="col-2">
            <h5>Cetak & Download</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3">
@@ -337,7 +337,6 @@
 	<?php
 	if ($order != 'Not Found') {
 		foreach ($order as $key) {
-
 	?>
 			<option value="<?php echo $key["codepo"]; ?>" data-idpo="<?php echo $key["idpo"]; ?>"  data-datepo="<?php echo $key["datepo"]; ?>" data-qty="<?php echo $key["qty"]; ?>" >( <?php echo $key["datepo"] ?> ) <?php echo $key["codepo"] ?> </option>
 	<?php }
@@ -421,9 +420,9 @@
 		tabel +='<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control _nameitem" name="transaksi_nameitem[]" value=""/></td>';
 		tabel +='<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_unitsatuan" autocomplete="off" objtype="_unitsatuan" class="form-control  _unitsatuan" name="transaksi_unitsatuan[]' + xid + '_unitsatuan"></td>';
 		tabel +='<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
-		tabel +='<td class="p-0" style="border:none;"><input type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" name="transaksi_qtypo[]" value="0" onchange="count('+ xid +')"></td>';
-		tabel +='<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" name="transaksi_qtyin[]" value="0" onchange="count('+ xid +')"></td>';
-		tabel +='<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi_' + xid + '_balance" class="form-control _balance" name="transaksi_balance[]"  value="0" onchange="count('+ xid +')"></td>';
+		tabel +='<td class="p-0" style="border:none;"><input type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count('+ xid +')"></td>';
+		tabel +='<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" value="0" name="transaksi_qtyin[]" onchange="count('+ xid +')"></td>';
+		tabel +='<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi_' + xid + '_balance" class="form-control _balance" value="0" name="transaksi_balance[]"  onchange="count('+ xid +')"></td>';
 		tabel +='<td class="p-0" style="border:none;"><input  autocomplete="off" type="date" id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
 		tabel +='<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel +='</tr>';
@@ -565,12 +564,12 @@
 			sts = 0;
 			return false;
 		}
-		xval = $("#datein").val();
-		if ($("#datein").val() == '') {
-			alert('Input Tanggal Masuk');
-			sts = 0;
-			return false;
-		}
+		// xval = $("#datein").val();
+		// if ($("#datein").val() == '') {
+		// 	alert('Input Tanggal Masuk');
+		// 	sts = 0;
+		// 	return false;
+		// }
 
 		$('input[objtype=expiredate]').each(function(i, obj) {
 

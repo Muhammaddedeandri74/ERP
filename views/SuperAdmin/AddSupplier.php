@@ -155,7 +155,77 @@ if ($data != "Not Found") {
 					<div class="col-3"></div>
 					<div class="col-2"></div>
 					<div class="col-3">
-					<input type="text" name="namesupp" class="form-control" placeholder="Masukan Nama Supplier" required autocomplete="off">
+					<input type="text" name="namesupp" class="form-control" required autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">PIC/Nama Contact</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<input type="text" name="namacontact" class="form-control" autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">No. Telepon</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+				<input type="text" name="notelp" class="form-control" autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Nomor Rekening</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<input type="text" name="norekening" class="form-control" required autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Nama Bank</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<input type="text" name="nambank" class="form-control" required autocomplete="off">
+					</div>
+                </div>
+
+				<div class="row">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-2">Beneficiary</div>
+                </div>
+				
+				<div class="row mb-2">
+					<div class="col-3"></div>
+					<div class="col-2"></div>
+					<div class="col-3">
+					<input type="text" name="beneficiary" class="form-control" required autocomplete="off">
 					</div>
                 </div>
 

@@ -204,12 +204,12 @@
 			<div class="card-body">
 				<div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-					  <a href="<?php echo base_url('SuperAdminControler/addcustomer')?>">
+					  <a href="<?php echo base_url('SuperAdminControler/addsupplier')?>">
 						<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 						 <img
 						style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/register_customer.png')?>" alt=""></div>
                      </a>
-						<div class="h6 mb-0 font-weight-bold text-gray-800">Register Customer</div>
+						<div class="h6 mb-0 font-weight-bold text-gray-800">Register Supplier</div>
 					</div>
 					
 				</div>
@@ -227,7 +227,7 @@
 						 <img
 						style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/list_user.png')?>" alt=""></div>
                         </a>
-						<div class="h6 mb-0 font-weight-bold text-gray-800">List Customer</div>
+						<div class="h6 mb-0 font-weight-bold text-gray-800">List Supplier</div>
 					</div>
 					
 				</div>
@@ -421,23 +421,7 @@
 	</div>
 
 	<!-- Pending Requests Card Example -->
-	<div class="col-2">
-		<div class="card border-left-warning shadow h-100 py-2">
-			<div class="card-body">
-				<div class="row no-gutters align-items-center">
-					<div class="col mr-2">
-					  <a href="<?php echo base_url('SuperAdminControler/addsupplier')?>">
-						<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-						 <img
-						style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/register_customer.png')?>" alt=""></div>
-                     </a>
-						<div class="h6 mb-0 font-weight-bold text-gray-800">Register Supplier</div>
-					</div>
-					
-				</div>
-			</div>
-		</div>
-	</div>
+	
 </div>
 
 <br>

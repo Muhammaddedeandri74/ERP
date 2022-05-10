@@ -57,7 +57,6 @@ class SuperAdminControler extends CI_Controller
 		$this->MasterData->userlog($f["iduser"], "item manage dashboard");
 	}
 
-
 	function addlocitem()
 	{
 		$this->load->Model("MasterData");
@@ -68,6 +67,7 @@ class SuperAdminControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "addlocitem");
 	}
+
 	public function item()
 	{
 		$f["title"]          = "List Item";
@@ -167,7 +167,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["title"] = "customer";
-		$f["data"] = $this->MasterData->getcustomer();
+		$f["data"] = $this->MasterData->getsupplier();
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Customer",$f);
 		$this->load->view("SuperAdmin/Footer");

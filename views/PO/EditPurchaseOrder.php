@@ -30,26 +30,82 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')?>">
 		<title>S-ERP</title>
 	</head>
-	<?php
-    $idnew;
-    if ($data1 != "Not Found") {
-        foreach ($data1 as $key) {
-            $idnew = $key["codeso"];
-            $idnew++;
-        }
-    } else {
-        $idnew = "SLS-20220412-001";
-    }
-?>
 <body class="body" >
-<form action="<?php echo base_url('MasterDataControler/addsalesorder') ?>" method="POST" enctype="multipart/form-data" id="form">
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#1143d8;color:white;">
+        <h5 class="modal-title" id="exampleModalLabel">PILIH DATA PURCHASE ORDER</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
+      </div>
+      <div class="modal-body">
+		<div class="row mx-3">
+			<div class="col-3 mb-3">
+				<label for="">Pencarian</label>
+				<input type="text" class="form-control" placeholder="Cari berdasarkan customer">
+			</div>
+			<div class="col-2"></div>
+			<div class="col-2">
+				<label for="">Mulai Dari</label>
+				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+			</div>
+			<div class="col-2">
+				<label for="">Sampai Dengan</label>
+				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+			</div>
+			<div class="col-2 mt-4"> 
+				<button type="button" class="btn btn-primary">Terapkan</button>
+			</div>
+		</div>
+		<div class="row mx-3" style="overflow-x: auto;">
+			<table class="table table-bordered table-striped" id="table-user">
+				<thead>
+					<tr>
+						<td>#</td>
+						<td>No. PO</td>
+						<td>Tanggal Order</td>
+						<td>Due Date</td>
+						<td>Qty Item</td>
+						<td>Total Amount</td>
+						<td>Status</td>
+						<td>Action</td>
+					</tr>
+                </thead>
+				<tbody>
+					<?php if($data4 !="Not Found"):?>
+						 <?php $no=1;?>
+						  <?php foreach($data4 as $key):?>
+					<tr>
+							<td><?php echo $no++;?></td>
+							<td><?php echo $key["codepo"]?></td>
+							<td><?php echo $key["datepo"]?></td>
+							<td><?php echo $key["datepo"]?></td>
+							<td><?php echo $key["qty"]?></td>
+							<td><?php echo $key["grandtotal"]?></td>
+							<td><?php echo $key["statuspo"]?></td>
+							<td><a href="<?php echo base_url('MasterDataControler/getdatapobyid?id=' . base64_encode($key['idpo'])) ?>">Pilih</a></td>
+					</tr>
+					<?php endforeach?>
+					<?php endif?>
+				</tbody>
+			</table>
+		</div>
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<form action="<?php echo base_url('MasterDataControler/addpo') ?>" method="POST" enctype="multipart/form-data" id="form">
 <div class="header px-4 pt-2" style="height: 196px;">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb m-0">
-    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Order Management </a></li>
-    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Sales Order</li>
+    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Purchase Management </a></li>
+    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Purchase Order</li>
   </ol>
-  <h3 class="text-white">Register Order Confirmation</h3>
+  <h3 class="text-white">Register Purchase Order</h3>
 </nav>
 </div>
 <div class="content bg-white  mx-4">
@@ -61,8 +117,8 @@
 			<?php echo $this->session->flashdata('message'); ?>
 			<?php $this->session->set_flashdata('message', ''); ?>
 		</div>
-		<input type="hidden" name="idso" id="idso">
-		<input type="hidden" name="codeso" id="codeso">
+		<input type="hidden" name="idpo" id="idpo">
+		<input type="hidden" name="codepo" id="codepo">
 		<div class="row">
 			<div class="col-3">
 				<div class="col d-flex align-middle mb-3" style="align-items:center"><i class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
@@ -76,114 +132,88 @@
            <h5>Informasi Dasar</h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:75%;">
-                  <label for="">No. Sales Order</label>
-                  <input type="text" name="codeso" class="form-control" value="<?php echo $idnew ?>" readonly>
+                  <label for="">No. Purchase Order</label>
+                  <input type="text" name="codepo" class="form-control" value="<?php echo $data7["codepo"] ?>" readonly>
                   <input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-                  <input type="hidden" name="idso" class="form-control">
+                  <input type="hidden" name="idpo" class="form-control">
              </div>
+			 <!-- <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
            </div>
 
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-2" style="width:75%;">
-                  <label for="">No Quotation</label>
-                  <input type="text" name="idquo" class="form-control" value="" autocomplete="off" readonly>
+                  <label for="">Supplier</label>
+                  <select name="supplier" id="supplier" class="form-select">
+                    <option value="">Pilih</option>
+					<?php if($data5 !="Not Found"):?>
+				    	<?php foreach($data5 as $key):?>
+						 <option value="<?php echo $key["idsupp"] ?>" <?php echo ($key["idsupp"] ==  $key["idsupp"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namesupp"] ?></option>
+					    <?php  endforeach?>
+					    <?php  endif?>
+                  </select>
              </div>
              <!-- &nbsp;&nbsp;<button class="btn btn-primary" style="height:36px;font-size:13px;">Cari Data</button> -->
            </div>
-           <div class="me-3 mb-3" style="width:75%;" >
-                <label for="">Tipe Order</label>
-                <select name="tipeorder" id="" class="form-select">
-                    <option value="">Pilih</option>
-                    <option value="E-Commerce">E-Commerce</option>
-                    <option value="B2B">B2B</option>
-                </select>
-            </div>
-            <div class="me-3 mb-3" style="width:75%;" >
-                <label for="">Customer</label>
-                <select name="idcust" id="idcust" class="form-select">
-                    <option value="">Pilih</option>
-                   <?php if($data2 !="Not Found"):?>
-                    <?php foreach($data2 as $key):?>
-						<option value="<?php echo $key["idcomm"]?>"><?php echo $key["namecomm"]?></option>
-					<?php endforeach?>
-					<?php endif?>
-                </select>
-            </div>
-            <div class="me-3" style="width:50%;" >
-               <a style="font-size:13px;" href="<?php echo base_url('SuperAdminControler/addcustomer')?>" class="btn btn-primary">+ Customer Baru</a>
-            </div>
+           <div class="me-3" style="width:75%;">
+                  <label for="">Judul Purchase</label>
+                  <textarea name="judulpurchase" id="" cols="7" rows="4" class="form-control" placeholder="Contoh : Penawaran PT. ABC" style="font-size:13px;"><?php echo $data7["deskripsi"]?></textarea>
+             </div>
           </div>
 
           <div class="col-3">
-           <h5>Informasi Detail Pesanan </h5>
+           <h5>Informasi Gudang & Mata Uang </h5>
            <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
-             <label for="">Tanggal Order</label>
-                 <input type="text" name="dateso" id="dateso" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+                  <label for="">Gudang Penerima</label>
+                  <select name="namewarehouse" id="namewarehouse" class="form-select" required>
+                    <option value="">Pilih</option>
+					<?php if($data1 !="Not Found"):?>
+						<?php foreach($data1 as $key) :?>
+						 <option value="<?php echo $key["idwarehouse"] ?>" <?php echo ($key["idwarehouse"] ==  $key["idwarehouse"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namewarehouse"] ?></option>
+
+						<?php endforeach?>
+					<?php endif?>
+                  </select>
              </div>
              <div class="" style="width:50%;">
-                  <label for="">Tanggal Pengiriman</label>
-                  <input type="text" name="delivdate" id="delivdate" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
+                  <label for="">Tanggal Masuk</label>
+                  <input type="text" name="tanggalmasuk" id="datepo" value="<?php echo $data7["datepo"] ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
              </div>
            </div>
+
            <div class="me-3 mb-3" style="width:fit-content;width:50%;">
-              <label for="">No Pesanan (E-Commerce)</label>
-                 <input type="text" name="nopesanan" class="form-control">
-           </div>
-           <div class="me-3 mb-3" style="width:fit-content;width:100%;">
-              <label for="">Alamat Pengiriman</label>
-                 <textarea name="delivaddr" id="delivaddr" cols="4" rows="4" class="form-control"></textarea>
-           </div>
-          </div>
-          <div class="col-1"></div>
-          <div class="col-3">
-           <h5>Metode Pembayaran </h5>
-           <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:50%;">
-                 <label for="">Metode Pembayaran</label>
-                 <select name="paymentmethod" id="paymentmethod" class="form-select" required>
-				  <option value="">Pilih</option>
-                   <?php if($data3 !="Not Found"):?>
-                    <?php foreach($data3 as $key):?>
-						<option value="<?php echo $key["idcomm"]?>"><?php echo $key["namecomm"]?></option>
-					<?php endforeach?>
+                  <label for="">Mata Uang</label>
+                  <select name="matauang" id="matauang" class="form-select" required>
+                    <option value="">Pilih</option>
+					<?php if($data2 !="Not Found"):?>
+						<?php foreach($data2 as $key) :?>
+							<option value="<?php echo $key["idcomm"] ?>" <?php echo ($key["idcomm"] ==  $key["idcomm"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namecomm"] ?></option>
+						<?php endforeach?>
 					<?php endif?>
                   </select>
              </div>
-             <div class="" style="width:50%;">
-                  <label for="">Rekening Bank</label>
-                  <select name="norekening" id="norekening" class="form-select" required>
-				  <option value="">Pilih</option>
-				    <?php if($data4 !="Not Found"):?>
-                    <?php foreach($data4 as $key):?>
-						<option value="<?php echo $key["norekening"]?>"><?php echo $key["norekening"]?> - <?php echo $key["bank"]?></option>
-					<?php endforeach?>
-					<?php endif?>
-                  </select>
-             </div>
-           </div>
-           <div class="me-3 mb-3" style="width:fit-content;;">
-              <h5>Pajak</h5>
-           </div>
-           <div class="d-flex mb-3" style="align-items: flex-end;">
+			 <label for="" style="font-size:20px;">Pajak</label>
+			 <div class="d-flex mb-3" style="align-items: flex-end;">
              <div class="me-3" style="width:50%;">
                   <label for="">Gunakan VAT</label>
              </div>
 			 <div class="form-check form-switch">
-                    <input type="checkbox" name="vat"  value="11" class="form-check-input"  id="flexSwitchCheckDefault" >
+                    <input type="checkbox" name="vat"  value="11" class="form-check-input"  id="flexSwitchCheckDefault" checked>
                 </div>
            </div>
-           <div class="me-3 mb-3" style="width:fit-content;;">
-              <h5>Cetak & Download</h5>
-           </div>
-           <div class="d-flex" style="align-items: flex-end;">
-             <div class="me-3 mb-3">
-               <button class="btn btn-light"><i class='bx bxs-download' >Download</i></button> 
-               <button class="btn btn-light"><i class='bx bx-printer'>Cetak</i></button> 
-             </div>
-           </div>     
-           </div>
+             
           </div>
+			<div class="col-3">
+			<h5>Akun Perbankan</h5>
+			<div class="d-flex mb-3" style="align-items: flex-end;">
+			<div class="border px-3 py-2 rounded">   
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="idcomp" id=""  value="<?php echo $data6["idcomp"]?>" checked>
+					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["bank"]?> - <?php echo $data6["norekening"]?></label><br>
+					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["namecomp"]?> </label>
+				</div>
+			</div>
+		  
         </div>
 	</div>
 </div>
@@ -202,6 +232,7 @@
 			<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
 			<th style="background:#1143d8;color:white;text-align:right;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qty</th>
+			<th style="background:#1143d8;color:white;text-align:right;">Expired Date</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Disc Nominal</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Disc Persen</th>
 			<th style="background:#1143d8;color:white;text-align:right;">Total</th>
@@ -216,18 +247,18 @@
 		</table>
 		  <div class="row rounded me-1" style="justify-content: end;">
 			  <div class="col-2" style="text-align: end;background:#E6ECFF; width:fit-content">
+				  <p>DPP</p>
 				  <p>Subtotal</p>
-				  <p>Discount</p>
-				  <p>PPN</p>
-				  <p>Ongkos Kirim</p>
+				  <p>Discount Transaksi</p>
+				  <p>Pph</p>
 				  <p>Grand Total</p>
 			  </div>
 			  <div class="col-2" style="text-align: end;background:#E6ECFF;">
-				  <input type="text" name="subtotal" id="subtotal" class="form-control">
-				  <input type="text" name="discount" id="discount" value="0" class="form-control">
-				  <input type="text" name="ppn" id="ppn" value="0" class="form-control">
-				  <input type="text" name="ongkir" id="ongkir" value="0" class="form-control">
-				  <input type="text" name="grandtotal" id="grandtotal" value="0" class="form-control">
+				  <input type="text" name="dpp" id="dpp" class="form-control" readonly>
+				  <input type="text" name="subtotal" id="subtotal"  class="form-control" readonly>
+				  <input type="text" name="discount" id="discount" value="0" class="form-control" readonly>
+				  <input type="text" name="pph22" id="pph22" value="0" class="form-control" readonly>
+				  <input type="text" name="grandtotal" id="grandtotal" class="form-control" readonly>
 			  </div>
 		  </div>
           <div class="mr-4 mt-3" style="text-align:right;">
@@ -301,18 +332,18 @@
 				echo $x;
 				?>';
 
-	// 	function calc() {
-	// 	var xcnt = 0;
-	// 	var xqty = 0;
-	// 	var xid = 0;
-	// 	$('input[objtype=sku]').each(function(i, obj) {
-	// 		xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-	// 		if ($('#transaksi_' + xid + '_iditembom').val() != '') {
-	// 			xcnt++;
-	// 			xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
-	// 		}
-	// 	});
-	// }
+		function calc() {
+		var xcnt = 0;
+		var xqty = 0;
+		var xid = 0;
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+				xcnt++;
+				xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
+			}
+		});
+	}
 
 		function reorder() {
 		$('input[objtype=nourut]').each(function(i, obj) {
@@ -354,6 +385,7 @@
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count('+ xid +')"></td>';
+		tabel += '<td class="p-0" style="border:none; width:12%;"><input type="date" id="transaksi_' + xid + '_expiredate" objtype="_expiredate" class="form-control  _expiredate" name="transaksi_expiredate[]" />';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discnominal"  class="form-control _discnominal" name="transaksi_discnominal[]' + xid + '_discnominal"  value="0" onchange="count('+ xid +')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discpersen"  class="form-control _discpersen" name="transaksi_discpersen[]' + xid + '_discpersen"  max="100" min="0" oninput="discountpersent('+ xid +',this.value)"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_total" objtype="_total" class="form-control _total" name="transaksi_total[]' + xid + '_total"  autocomplete="off" value="0" onchange="count('+ xid +')"></td>';
@@ -413,7 +445,7 @@
 	$('form button').on("click", function(e) {
 		if ($(this).attr('id') == "addorder") {
 			var xask = '';
-			if ($("#idso").val() == "") {
+			if ($("#idpo").val() == "") {
 				xask = "Simpan Transaksi?";
 			} else {
 				xask = "Ubah Transaksi?";
@@ -466,6 +498,24 @@
 			return false;
 		}
 
+		xval = $("#_expiredate").val();
+		if ($("#_expiredate").val() == "") {
+			alert('Input Expiredate');
+			sts = 0;
+			return false;
+		}
+
+		$('input[objtype=expiredate]').each(function(i, obj) {
+
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_expiredate", "");
+			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+				if ($("#datepo").val() >= $(this).val()) {
+					alert('Tanggal Expired Dibawah Atau Sama Dengan Tanggal Transaksi');
+					sts = 0;
+					return false;
+				}
+			}
+		});
 		if (sts == 1) {
 			return true;
 		} else {
@@ -513,7 +563,7 @@
 
 	function addorder() {
 		var cx = $('#form').serialize();
-			$.post("<?php echo base_url('MasterDataControler/addsalesorder') ?>", cx,
+			$.post("<?php echo base_url('MasterDataControler/addpo') ?>", cx,
 				function(data) {
 					if (data == 'Success') {
 						alert('Input Data Berhasil');

@@ -152,7 +152,7 @@
 							<option value="0">Pilih...</option>
 							<?php if ($data1 != "Not Found") {
 								foreach ($data1 as $key) : ?>
-									<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
+									<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
 							<?php endforeach;
 							} ?>
 						</select>

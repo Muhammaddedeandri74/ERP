@@ -129,11 +129,13 @@
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Code Customer</th>
+                    <th>Code Supplier</th>
                     <th>Nama Perusahaan</th>
-                    <th>Type Customer</th>
-                    <th>Kontak Customer</th>
-                    <th>No Telepon</th>
+                    <th>PIC/ Nama Contak</th>
+                    <th>No. Telepon</th>
+                    <th>Nomor Rekening</th>
+                    <th>Bank</th>
+                    <th>Beneficiary</th>
                     <th>Alamat Customer</th>
                     <th>Action</th>
                   </tr>
@@ -144,13 +146,15 @@
 						foreach ($data as $key) : ?>
 							<tr>
 								<td><?php echo $a++ ?></td>
-								<td><?php echo $key["codecomm"] ?></td>
-								<td><?php echo $key["namecomm"] ?></td>
-								<td><?php echo $key["attrib4"] ?></td>
-								<td><?php echo $key["attrib5"] ?></td>
-								<td><?php echo $key["attrib2"] ?></td>
-								<td><?php echo $key["attrib1"] ?></td>
-								<td><a href="<?php echo base_url('MasterDataControler/getdatacustomerbyid?id=' . base64_encode($key['codecomm'])) ?>" class="btn btn-primary">Edit</a></td>
+								<td><?php echo $key["codesupp"] ?></td>
+								<td><?php echo $key["namesupp"] ?></td>
+								<td><?php echo $key["namacontact"] ?></td>
+								<td><?php echo $key["notelp"] ?></td>
+								<td><?php echo $key["norekening"] ?></td>
+								<td><?php echo $key["namabank"] ?></td>
+								<td><?php echo $key["beneficiary"] ?></td>
+								<td><?php echo $key["addressup"] ?></td>
+								<td><a href="<?php echo base_url('MasterDataControler/getdatacustomerbyid?id=' . base64_encode($key['codesupp'])) ?>" class="btn btn-primary" style="font-size:13px;">Edit</a></td>
 							</tr>
 						<?php endforeach ?>
 					<?php } ?>
