@@ -48,7 +48,6 @@ if ($data3 != "Not Found") {
 ?>
 
 <body class="body">
-	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
@@ -154,7 +153,6 @@ if ($data3 != "Not Found") {
 											<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
 											<input type="hidden" name="idpo" class="form-control">
 										</div>
-										<!-- <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
 									</div>
 
 									<div class="d-flex mb-3" style="align-items: flex-end;">
@@ -223,7 +221,14 @@ if ($data3 != "Not Found") {
 									<div class="d-flex mb-3" style="align-items: flex-end;">
 										<div class="me-3" style="width:75%;">
 											<label for="">Pilih Akun </label>
-											<input type="text" name="norekening" id="norekening" class="form-control">
+											<select name="norekening" id="norekening" class="form-select" required>
+												<option value="">Pilih</option>
+												<?php if ($data5 != "Not Found") : ?>
+													<?php foreach ($data5 as $key) : ?>
+														<option value="<?php echo $key["norekening"] ?>"><?php echo $key["norekening"] ?> - <?php echo $key["namabank"] ?></option>
+													<?php endforeach ?>
+												<?php endif ?>
+											</select>
 										</div>
 									</div>
 
@@ -269,9 +274,6 @@ if ($data3 != "Not Found") {
 
 								</tbody>
 							</table>
-							<!-- <table class="table table-striped table-hover">
-			
-		</table> -->
 							<div class="row rounded me-1" style="justify-content: end;">
 								<div class="col-2  py-3" style="text-align: end;background:#E6ECFF; width:fit-content">
 									<!-- <p>DPP</p> -->
@@ -286,7 +288,7 @@ if ($data3 != "Not Found") {
 									<!-- <input type="text" name="dpp" id="dpp" value="0" class="form-control" readonly> -->
 									<input type="text" name="subtotal" id="subtotal" value="0" class="form-control" readonly>
 									<input type="number" name="disglob" id="disnoms" value="0" class="form-control" oninput="calc()">
-									<input type="number" name="discount" id="discount" value="0" class="form-control">
+									<input type="number" name="dispers" id="disper" value="0" class="form-control" oninput="calc()">
 									<input type="text" name="totaldisc" id="totaldisc" value="0" class="form-control" readonly>
 									<input type="text" name="vat" id="vat" value="0" class="form-control" readonly>
 									<input type="text" name="grandtotal" id="grandtotal" value="0" class="form-control" readonly>
@@ -574,10 +576,6 @@ if ($data3 != "Not Found") {
 			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
 				xttl += parseFloat($('#transaksi_' + xid + '_grandtotal').val().replaceAll(',', ''));
 				dpp += parseFloat($('#transaksi_' + xid + '_harga').val().replaceAll('.', '') * $('#transaksi_' + xid + '_qty').val());
-				// vat = xttl * 11 / 100;
-
-				// grantot = (xttl + vat);
-
 				totaldisc = xttl - $('#disnoms').val();
 
 				if ($("#check").val() == 1) {
@@ -587,8 +585,10 @@ if ($data3 != "Not Found") {
 				}
 
 				totaldisc = xttl - $('#disnoms').val();
-				grandtot = totaldisc + vat;
 
+				// dispers = xttl * $('#disper').val() / 100;
+				// console.log(disper);
+				grandtot = totaldisc + vat;
 
 			}
 
@@ -620,17 +620,4 @@ if ($data3 != "Not Found") {
 	function cancelorder() {
 		location.reload();
 	}
-
-	// function onClick() {
-	// var pdf = new jsPDF('p', 'pt', 'letter');
-	// pdf.canvas.height = 72 * 11;
-	// pdf.canvas.width = 72 * 8.5;
-
-	// pdf.fromHTML(document.body);
-
-	// pdf.save('Addpo.pdf');
-	// };
-
-	// var element = document.getElementById("addorder");
-	// element.addEventListener("click", onClick);
 </script>

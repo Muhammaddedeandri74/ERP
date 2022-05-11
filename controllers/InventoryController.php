@@ -190,7 +190,6 @@ class InventoryController extends CI_Controller
 		$f            = $this->session->userdata("data");
 		$f["title"]   = "Register Purchase Order";
 		$f["data"]    = $this->MasterData->getitemmaterial();
-		$f["data1"]   = $this->MasterData->getwarehouse();
 		$f["data2"]   = $this->MasterData->getcurrency();
 		$f["data3"]   = $this->MasterData->getpo();
 		$f["data4"]   = $this->MasterData->getlistpo();
