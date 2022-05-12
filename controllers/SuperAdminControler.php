@@ -20,12 +20,12 @@ class SuperAdminControler extends CI_Controller
 	}
 
 
-	 function user()
+	function user()
 	{
 		$f["title"]          = "User";
 		$f["data"]           = $this->MasterData->getdatausers();
-		$this->load->view("SuperAdmin/Header",$f);
-		$this->load->view("SuperAdmin/User",$f);
+		$this->load->view("SuperAdmin/Header", $f);
+		$this->load->view("SuperAdmin/User", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "user manage dashboard");
@@ -73,7 +73,7 @@ class SuperAdminControler extends CI_Controller
 		$f["title"]          = "List Item";
 		$f["data"]           = $this->MasterData->getitem();
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/Item",$f);
+		$this->load->view("SuperAdmin/Item", $f);
 		$this->load->view("SuperAdmin/Footer");
 
 		// $this->MasterData->userlog($f["iduser"], "item manage dashboard");
@@ -84,7 +84,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["data"]   = $this->MasterData->getitemmaterial();
-		$f["data1"]  = $this->MasterData->getunitmaterial();
+		$f["data1"]  = $this->MasterData->getitemtype();
 		$this->load->model("MasterData");
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Produk", $f);
@@ -95,18 +95,33 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["data"]   = $this->MasterData->getitemmaterial();
-		$f["data1"]  = $this->MasterData->getunitmaterial();
+		$f["data1"]   = $this->MasterData->getitemtype();
 		$this->load->model("MasterData");
-		$this->load->view("SuperAdmin/Header");
+		$this->load->view("Superadmin/Header");
+		$this->load->view("SuperAdmin/Footer");
 		$this->load->view("SuperAdmin/Produk", $f);
+	}
+
+	function ProdukJadi()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$f["data"]   = $this->MasterData->getitemmaterial();
+		$f["data1"]   = $this->MasterData->getitemtype();
+		$this->load->model("MasterData");
+		$this->load->view("Superadmin/Header");
+		$this->load->view("SuperAdmin/Footer");
+		$this->load->view("SuperAdmin/ProdukJadi", $f);
 	}
 
 	function BahanMaterial()
 	{
 		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
-		$f["data"]  = $this->MasterData->getitemtype();
+		$f          = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getunit();
 		$this->load->model("MasterData");
+		$this->load->view("Superadmin/Header");
+		$this->load->view("SuperAdmin/Footer");
 		$this->load->view("SuperAdmin/BahanMaterial", $f);
 	}
 
@@ -126,10 +141,10 @@ class SuperAdminControler extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/Header");
 		$f["data"] = $this->MasterData->getitemtype();
-		$this->load->model("MasterData");
-		$this->load->view("SuperAdmin/Header", $f);
 		$this->load->view("SuperAdmin/AddItemType", $f);
+		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "additemtype");
 	}
@@ -142,7 +157,7 @@ class SuperAdminControler extends CI_Controller
 		$f["title"] = "warehouse";
 		$f["data"] = $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/Warehouse",$f);
+		$this->load->view("SuperAdmin/Warehouse", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "warehouse manage dashboard");
@@ -169,7 +184,7 @@ class SuperAdminControler extends CI_Controller
 		$f["title"] = "customer";
 		$f["data"] = $this->MasterData->getsupplier();
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/Customer",$f);
+		$this->load->view("SuperAdmin/Customer", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "customer manage dashboard");
@@ -194,7 +209,7 @@ class SuperAdminControler extends CI_Controller
 		$f["title"] = "Bundling";
 		$f["data"] = $this->MasterData->getbundling();
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/Bundling",$f);
+		$this->load->view("SuperAdmin/Bundling", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "customer manage dashboard");
@@ -463,7 +478,7 @@ class SuperAdminControler extends CI_Controller
 		$remarkinvoice  = $this->input->post("remarkinvoice");
 		$remarkquotation = $this->input->post("remarkquotation");
 
-		$cek = $this->MasterData->addcompany($logo,$namecomp,$email, $nokantor, $nohandphone, $alamat, $bank, $norekening,$beneficiary,$remarkinvoice,$remarkquotation,$userid);
+		$cek = $this->MasterData->addcompany($logo, $namecomp, $email, $nokantor, $nohandphone, $alamat, $bank, $norekening, $beneficiary, $remarkinvoice, $remarkquotation, $userid);
 		echo $cek;
 	}
 

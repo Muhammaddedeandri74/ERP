@@ -19,18 +19,19 @@ class InventoryController extends CI_Controller
 		$this->load->model("MasterData");
 	}
 
-	function Supplier()
+	function newinvin()
 	{
 		$this->load->model("MasterData");
-		$f = $this->session->userdata("data");
+		$f  = $this->session->userdata("data");
 		$f["title"]   = "Register Inventory In";
-		$f["data"]    = $this->MasterData->getitemmaterial();
+		$f["data"]    = $this->MasterData->getitemmaterialinvin();
 		$f["data1"]   = $this->MasterData->getcurrency();
 		$f["data2"]   = $this->MasterData->getwarehouse();
 		$f["data3"]   = $this->MasterData->getlistinvin();
 		$f["data4"]   = $this->MasterData->getsupplier();
 		$f["data5"]   = $this->MasterData->getlistpoheader();
 		$f["data6"]   = $this->MasterData->getlistinvin();
+		$f["data7"]   = $this->MasterData->getlistpo();
 		$f["order"]   = $this->MasterData->getlistpoheader();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/Addinventoryin", $f);
@@ -189,7 +190,7 @@ class InventoryController extends CI_Controller
 		$this->load->model("MasterData");
 		$f            = $this->session->userdata("data");
 		$f["title"]   = "Register Purchase Order";
-		$f["data"]    = $this->MasterData->getitemmaterial();
+		$f["data"]    = $this->MasterData->getitemmaterialpo();
 		$f["data2"]   = $this->MasterData->getcurrency();
 		$f["data3"]   = $this->MasterData->getpo();
 		$f["data4"]   = $this->MasterData->getlistpo();
@@ -208,11 +209,16 @@ class InventoryController extends CI_Controller
 
 	function PoStatus()
 	{
+		$codepo         = $this->input->post('codepo');
 		$namesupp       = $this->input->post('namesupp');
 		$filter         = $this->input->post('filter');
 		$date1          = $this->input->post('date1');
 		$date2          = $this->input->post('date2');
 		$status         = $this->input->post('status');
+
+		if (!isset($codepo)) {
+			$codepo = '';
+		}
 
 		if (!isset($namesupp)) {
 			$namesupp = '';
@@ -237,7 +243,7 @@ class InventoryController extends CI_Controller
 		$this->load->model("MasterData");
 		$f            = $this->session->userdata("data");
 		$f["title"]   = "Status Purchase Order";
-		$f["data"]    = $this->MasterData->getlistpodetail($namesupp, $filter, $date1, $date2, $status);
+		$f["data"]    = $this->MasterData->getlistpodetail($codepo, $namesupp, $filter, $date1, $date2, $status);
 		$f["data1"]   = $this->MasterData->getwarehouse();
 		$f["data2"]   = $this->MasterData->getsupplier();
 		$this->load->view("Superadmin/Header");

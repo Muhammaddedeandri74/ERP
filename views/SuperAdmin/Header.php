@@ -174,7 +174,7 @@
               </ul>
             </li>
             <li>
-              <a class="dropdown-item " href="<?php echo base_url('OrderManagementController/addsalesorder') ?>">
+              <a class="dropdown-item " href="#">
                 <div class="row mt-2">
                   <div class="col-2">
                     <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png') ?>" alt="">
@@ -187,7 +187,7 @@
               </a>
               <ul class="dropdown-menu dropdown-submenu" style="border-radius: 10px;">
                 <li>
-                  <a class="dropdown-item m-2" href="#">Register Order Confirmation</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('OrderManagementController/addsalesorder') ?>">Register Order Confirmation</a>
                 </li>
                 <li>
                   <a class="dropdown-item m-2" href="#">Order Confirmation Report</a>
@@ -325,10 +325,13 @@
           </a>
           <ul class="dropdown-menu dropdown-submenu mt-2" style="border-radius: 10px;">
             <li>
-              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Supplier') ?>">Register Ingoing</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/newinvin') ?>">Register Ingoing</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingstatus') ?>">Ingoing List</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingstatus') ?>">Ingoing Status</a>
+            </li>
+            <li>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingstatus') ?>">Ingoing Report</a>
             </li>
           </ul>
         </li>

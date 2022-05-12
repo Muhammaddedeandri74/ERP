@@ -28,17 +28,17 @@
                 <div class="row mb-3">
                   <div class="col-8">
                     <label for="">No. Purchase Order</label>
-                    <input type="text" name="codepo" class="form-control" value="" autocomplete="off">
+                    <input type="text" name="codepo" value="<?= set_value('codepo') ?>" class="form-control" autocomplete="off" placeholder="Cari Berdasarkan PO . ." autofocus>
                   </div>
                   <div class="col-4 mt-2">
                     <p></p>
-                    <button class="btn btn-outline-primary" style="height:36px;font-size:13px;">Cari Data</button>
+                    <!-- <button class="btn btn-outline-primary" style="height:36px;font-size:13px;">Cari Data</button> -->
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-8">
                     <label for="">Supplier</label>
-                    <select name="namesupp" id="" class="form-select" required>
+                    <select name="namesupp" id="" class="form-select" value="<?= set_value('codepo') ?>">
                       <option value="">Pilih</option>
                       <?php if ($data2 != "Not Found") : ?>
                         <?php foreach ($data2 as $key) : ?>
@@ -70,7 +70,7 @@
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col-8">
+                  <div class="col-4">
                     <label for="">Status Purchase Order</label>
                     <select name="status" id="" class="form-select">
                       <option value="">Pilih</option>
@@ -94,11 +94,11 @@
                 <div class="row">
                   <div class="col-3 mt-2">
                     <p></p>
-                    <button class="btn btn-light"><i class='bx bxs-download'>Download</i></button>
+                    <a class="btn btn-light" id="btn_exportexcel"><i class='bx bxs-download'>Download</i></a>
                   </div>
                   <div class="col-3 mt-2">
                     <p></p>
-                    <button class="btn btn-light"><i class='bx bx-printer'>Cetak</i></button>
+                    <a class="btn btn-light" onclick="printdata()"><i class='bx bx-printer'>Cetak</i></a>
                   </div>
                   <div class="col-6"></div>
                 </div>
@@ -137,7 +137,7 @@
                         <td><?php echo $key["datepo"] ?></td>
                         <td><?php echo $key["delivedate"] ?></td>
                         <td><?php echo $key["namecomm"] ?></td>
-                        <td><?php echo $key["price"] ?></td>
+                        <td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
                         <td>
                           <?php if ($key["vat"]) : ?>
                             <p>Yes</p>
@@ -158,7 +158,7 @@
                           </center>
                         </td>
                         <td>
-                          <center><a style="height:36px;font-size:13px;" onclick="cekdetail(<?= $key['idpo'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></center>
+                          <center><a style="height:36px;font-size:10px;" onclick="cekdetail(<?= $key['idpo'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></center>
                         </td>
                       </tr>
                     <?php endforeach ?>
@@ -202,8 +202,70 @@
       </div>
     </div>
   </div>
+  <pre id="result" style="display: none"></pre>
+  <div class="excel" id="excel">
+  </div>
+  <div class="data" id="data">
+    <table class="table table-striped table-hover">
+      <thead style="background: purple">
+        <tr>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">#</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">No. Purchase</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Supplier</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Transaksi</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Delivery</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Mata Uang</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Harga</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">VAT</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Total</td>
+          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Status</td>
+        </tr>
+      </thead>
+      <tbody id="printt">
+        <?php if ($data != "Not Found") { ?>
+          <?php $a = 1;
+          foreach ($data as $key) : ?>
+            <tr>
+              <td style="border:solid;"><?php echo $a++ ?></td>
+              <td style="border:solid;"><?php echo $key["codepo"] ?></td>
+              <td style="border:solid;"><?php echo $key["namesupp"] ?></td>
+              <td style="border:solid;"><?php echo $key["datepo"] ?></td>
+              <td style="border:solid;"><?php echo $key["delivedate"] ?></td>
+              <td style="border:solid;"><?php echo $key["namecomm"] ?></td>
+              <td style="border:solid;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
+              <td style="border:solid;">
+                <?php if ($key["vat"]) : ?>
+                  <p>Yes</p>
+                <?php else : ?>
+                  <p>No</p>
+                <?php endif ?>
+              </td>
+              <td style="border:solid;"><?php echo $key["grandtotal"] ?></td>
+              <td style="border:solid;">
+                <center>
+                  <?php if ($key["statuspo"] == "Waiting") : ?>
+                    <p style="background-color:#E6ECFF;width:fit-content;text-color:#1143D8;" class="fs-6 px-3 rounded-pill"> <?php echo $key["statuspo"] ?></p>
+                  <?php elseif ($key["statuspo"] == "Process") : ?>
+                    <p style="background-color:#FCAA25;width:fit-content;text-color:white;" class="fs-6 px-3 text-white rounded-pill"> <?php echo $key["statuspo"] ?></p>
+                  <?php elseif ($key["statuspo"] == "Finish") : ?>
+                    <p style="background-color:#A6FFC6;width:fit-content;text-color:#008F43;" class="fs-6 px-3 rounded-pill"> <?php echo $key["statuspo"] ?></p>
+                  <?php endif ?>
+                </center>
+              </td>
+            </tr>
+          <?php endforeach ?>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
 </form>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+  $('#data').hide();
+
   function cekdetail(x) {
     var data = <?php echo json_encode($data) ?>;
     var baris = "";
@@ -216,8 +278,8 @@
           baris += '<td scope="row">' + ix++ + '</td>';
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
-          baris += '<td>' + - +'</td>';
-          baris += '<td>' + data[i]["data"][a]["hargaitem"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
+          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
           baris += '</tr>';
         }
         break;
@@ -225,4 +287,25 @@
     }
     $('#xdetails').html(baris);
   }
+
+  function printdata() {
+    var printContents = document.getElementById('data').innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+
+  $("#btn_exportexcel").click(function(e) {
+    let file = new Blob([$('.data').html()], {
+      type: "application/vnd.ms-excel"
+    });
+    console.log(file)
+    let url = URL.createObjectURL(file);
+    let a = $("<a />", {
+      href: url,
+      download: "Purchase Order.xls"
+    }).appendTo("body").get(0).click();
+    e.preventDefault();
+  });
 </script>

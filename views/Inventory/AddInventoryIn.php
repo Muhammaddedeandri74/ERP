@@ -11,7 +11,7 @@ if ($data3 != "Not Found") {
 }
 ?>
 
-<form action="<?php echo base_url('MasterDataControler/AddInventoryin') ?>" method="POST" enctype="multipart/form-data" id="form">
+<form action="<?php echo base_url('MasterDataControler/newinvin') ?>" method="POST" enctype="multipart/form-data" id="form">
 	<div class="header px-4 pt-2" style="height: 196px;">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb m-0">
@@ -59,12 +59,12 @@ if ($data3 != "Not Found") {
 								<div class="mb-3">
 									<label for="" class="form-label">No. Purchase Order</label>
 									<input type="hidden" class="form-control" id="idpo" name="idpo">
-									<input type="text" id="codepo" name="codepo" class="form-control" list="xpo" autocomplete="off" readonly>
+									<input type="text" id="codepo" name="codepo" class="form-control" readonly>
 								</div>
 							</div>
 							<div class="col-4 mb-3">
 								<p></p>
-								<a href="" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary mt-3">Cari Data</a>
+								<a href="#" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary mt-3">Cari Data</a>
 							</div>
 						</div>
 						<div class="row">
@@ -80,7 +80,7 @@ if ($data3 != "Not Found") {
 							<div class="col-8">
 								<div class="mb-3">
 									<label for="" class="form-label">Data Move WH</label>
-									<input type="hidden" class="form-control" id="idpo" name="idpo">
+									<!-- <input type="hidden" class="form-control" id="idpo" name="idpo"> -->
 									<input type="text" id="codepo" name="codepo" class="form-control" list="xpo" autocomplete="off" readonly>
 								</div>
 							</div>
@@ -121,7 +121,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="datein" id="datein" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="datein" id="date" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -195,7 +195,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="datein" id="datein" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -234,9 +234,8 @@ if ($data3 != "Not Found") {
 			<table class="table">
 				<thead>
 					<tr>
-						<th style="background:#1143d8;color:white;text-align:center;">Nama Item</th>
-						<th style="background:#1143d8;color:white;text-align:right;">SKU</th>
-						<th style="background:#1143d8;color:white;text-align:right;">Unit</th>
+						<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
 						<th style="background:#1143d8;color:white;text-align:right;">Deskripsi</th>
 						<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
 						<th style="background:#1143d8;color:white;text-align:right;">Qty Po</th>
@@ -357,9 +356,7 @@ if ($data3 != "Not Found") {
 						<table class="table table-bordered table-striped" id="table-user">
 							<thead>
 								<tr>
-									<td>
-										<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-									</td>
+									<td>No</td>
 									<td>No. Purchase Order</td>
 									<td>Supplier</td>
 									<td>Tgl Order</td>
@@ -371,17 +368,22 @@ if ($data3 != "Not Found") {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td><a href="" class="btn btn-primary">Pilih</a></td>
-								</tr>
+								<?php if ($data7 != "Not Found") : ?>
+									<?php $no = 1; ?>
+									<?php foreach ($data7 as $key) : ?>
+										<tr>
+											<td><?php echo $no++; ?></td>
+											<td><?php echo $key["codepo"] ?></td>
+											<td><?php echo $key["namesupp"] ?></td>
+											<td><?php echo $key["datepo"] ?></td>
+											<td><?php echo $key["delivedate"] ?></td>
+											<td><?php echo $key["qtypo"] ?></td>
+											<td><?php echo $key["grandtotal"] ?></td>
+											<td><?php echo $key["statuspo"] ?></td>
+											<td><a href="#" data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
+										</tr>
+									<?php endforeach ?>
+								<?php endif ?>
 							</tbody>
 						</table>
 					</div>
@@ -422,42 +424,31 @@ if ($data3 != "Not Found") {
 <datalist id="xitem">
 	<?php if ($data != 'Not Found') {
 		foreach ($data as $key) { ?>
-			<option value="<?php echo $key["nameitem"] ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditembom="<?php echo $key["iditembom"]; ?>" data-price="<?php echo $key["hargaitem"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-hargaitem="<?php echo $key["hargaitem"]; ?>" data-unitsatuan="<?php echo $key["unitsatuan"]; ?>"><?php echo $key["sku"]; ?></option>
-	<?php }
-	} ?>
-</datalist>
-<datalist id="xpo">
-	<?php
-	if ($order != 'Not Found') {
-		foreach ($order as $key) {
-	?>
-			<option value="<?php echo $key["codepo"]; ?>" data-idpo="<?php echo $key["idpo"]; ?>" data-datepo="<?php echo $key["datepo"]; ?>" data-qty="<?php echo $key["qty"]; ?>">( <?php echo $key["datepo"] ?> ) <?php echo $key["codepo"] ?> </option>
+			<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
 	<?php }
 	} ?>
 </datalist>
 <script type="text/javascript">
+	function poselect(x, y, z) {
+		$('#codepo').val(x);
+		$('#idpo').val(y);
+		$('#datepo').val(z);
+		loadreq();
+	}
+
 	add_row_transaksi(0)
 	var xitem = '';
 	xitem = '<?php
 				$x = '';
 				if ($data != 'Not Found') {
 					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["iditembom"] . '" price="' . $key["hargaitem"] . '" nameitem="' . $key["nameitem"] . '"  sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
+						$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["price"] . '" nameitem="' . $key["nameitem"] . '"  sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
 					}
 				}
 				echo $x;
 				?>';
 
 	var xunit = '';
-	xunit = '<?php
-				$x = '';
-				if ($data != 'Not Found') {
-					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '">' . $key["nameitem"] . ' - ' . $key["nameitem"] . '</option>';
-					}
-				}
-				echo $x;
-				?>';
 
 	function calc() {
 		var xcnt = 0;
@@ -465,7 +456,7 @@ if ($data3 != "Not Found") {
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				xcnt++;
 				xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
 			}
@@ -508,10 +499,10 @@ if ($data3 != "Not Found") {
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditembom"  class="form-control  iditembom" name="transaksi_iditembom[]" / ></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control _nameitem" name="transaksi_nameitem[]" value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_unitsatuan" autocomplete="off" objtype="_unitsatuan" class="form-control  _unitsatuan" name="transaksi_unitsatuan[]' + xid + '_unitsatuan"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_deskripsi" autocomplete="off" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]' + xid + '_deskripsi"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" value="0" name="transaksi_qtyin[]" onchange="count(' + xid + ')"></td>';
@@ -538,39 +529,39 @@ if ($data3 != "Not Found") {
 		});
 		if ((val == "") || (xobj.val() == undefined)) {
 			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_iditembom').val("");
+			$('#transaksi_' + xid + '_iditem').val("");
 			$('#transaksi_' + xid + '_nameitem').val("");
 			$('#transaksi_' + xid + '_harga').val(0);
-			$('#transaksi_' + xid + '_unitsatuan').val("");
+			$('#transaksi_' + xid + '_deskripsi').val("");
 			$('#transaksi_' + xid + '_qtypo').val("");
 			$('#transaksi_' + xid + '_expiredate').val("");
 		} else {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
-			$('#transaksi_' + xid + '_iditembom').val(xobj.data('iditembom'));
+			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
-			$('#transaksi_' + xid + '_harga').val(xobj.data('hargaitem'));
-			$('#transaksi_' + xid + '_unitsatuan').val(xobj.data('unitsatuan'));
+			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
+			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
 			$('#transaksi_' + xid + '_expiredate').val(xobj.data('expiredate'));
 		}
 		calc();
 	});
 
-	$(document).on('input', '#codepo', function() {
-		var val = $(this).val();
-		var xobj = $('#xpo option').filter(function() {
-			return this.value == val;
-		});
-		if ((val == "") || (xobj.val() == undefined)) {
-			$('#idpo').val("");
-			$('#datepo').val("");
-		} else {
+	// $(document).on('input', '#codepo', function() {
+	// 	var val = $(this).val();
+	// 	var xobj = $('#xpo option').filter(function() {
+	// 		return this.value == val;
+	// 	});
+	// 	if ((val == "") || (xobj.val() == undefined)) {
+	// 		$('#idpo').val("");
+	// 		$('#datepo').val("");
+	// 	} else {
 
-			$('#idpo').val(xobj.data('idpo'));
-			$('#codepo').val(xobj.data('codepo'));
-			$('#datepo').val(xobj.data('datepo'));
-			loadreq();
-		}
-	});
+	// 		$('#idpo').val(xobj.data('idpo'));
+	// 		$('#codepo').val(xobj.data('codepo'));
+	// 		$('#datepo').val(xobj.data('datepo'));
+	// 		loadreq();
+	// 	}
+	// });
 
 	function loadreq() {
 		var xid = $('#idpo').val();
@@ -592,10 +583,10 @@ if ($data3 != "Not Found") {
 							add_row_transaksi(xiddet);
 							xiddet = xiddet + 1;
 							$('#transaksi_' + xiddet + '_idpodet').val(data.detailtrans[(xiddet + xlost - 1)]['idpodet']);
-							$('#transaksi_' + xiddet + '_iditembom').val(data.detailtrans[(xiddet + xlost - 1)]['iditembom']);
+							$('#transaksi_' + xiddet + '_iditem').val(data.detailtrans[(xiddet + xlost - 1)]['iditem']);
 							$('#transaksi_' + xiddet + '_sku').val(data.detailtrans[(xiddet + xlost - 1)]['sku']);
 							$('#transaksi_' + xiddet + '_nameitem').val(data.detailtrans[(xiddet + xlost - 1)]['nameitem']);
-							$('#transaksi_' + xiddet + '_unitsatuan').val(data.detailtrans[(xiddet + xlost - 1)]['unitsatuan']);
+							$('#transaksi_' + xiddet + '_deskripsi').val(data.detailtrans[(xiddet + xlost - 1)]['deskripsi']);
 							$('#transaksi_' + xiddet + '_harga').val(data.detailtrans[(xiddet + xlost - 1)]['price'].replace(".0000", ""));
 							$('#transaksi_' + xiddet + '_qtypo').val(data.detailtrans[(xiddet + xlost - 1)]['qty']);
 							$('#transaksi_' + xiddet + '_expiredate').val(data.detailtrans[(xiddet + xlost - 1)]['expiredate']);
@@ -612,7 +603,7 @@ if ($data3 != "Not Found") {
 
 	function addorder() {
 		var cx = $('#form').serialize();
-		$.post("<?php echo base_url('MasterDataControler/AddInventoryin') ?>", cx,
+		$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
 			function(data) {
 				if (data == 'Success') {
 					alert('Input Data Berhasil');
@@ -667,7 +658,7 @@ if ($data3 != "Not Found") {
 		$('input[objtype=expiredate]').each(function(i, obj) {
 
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_expiredate", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				if ($("#datein").val() >= $(this).val()) {
 					alert('Tanggal Expired Dibawah Atau Sama Dengan Tanggal Transaksi');
 					sts = 0;
@@ -694,4 +685,12 @@ if ($data3 != "Not Found") {
 		var totals = qtypos - qtyins;
 		$('#transaksi_' + xid + '_balance').val(totals);
 	}
+
+	$(document).ready(function() {
+		var today = new Date();
+		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
+		if ($("#date").val() == '') {
+			$("#date").val(date);
+		}
+	});
 </script>

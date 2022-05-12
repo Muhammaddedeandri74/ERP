@@ -102,7 +102,7 @@ $status = array('Waiting', 'Process', 'Finish', 'Cancel');
 				<input type="text" name="search" value="<?= set_value('search') ?>" class="form-control col-10" placeholder="&#xF002; Cari Berdasarkan Filter" id="valsearch" style="font-family:Arial, FontAwesome">
 			</div>
 			<div class="card">
-				<div class="card-body bays">
+				<div class="card-body bays">a
 					<div class="d-flex justify-content-between">
 						<div class="col-3">
 							<p>Dari</p>

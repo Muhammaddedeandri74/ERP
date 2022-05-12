@@ -308,7 +308,7 @@ if ($data3 != "Not Found") {
 		if ($data != 'Not Found') {
 			foreach ($data as $key) {
 		?>
-				<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditembom="<?php echo $key["iditembom"]; ?>" data-price="<?php echo $key["hargaitem"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-hargaitem="<?php echo $key["hargaitem"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>" data-vat="<?php echo $key["vat"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
+				<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
 		<?php }
 		} ?>
 	</datalist>
@@ -328,9 +328,9 @@ if ($data3 != "Not Found") {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 
 <script type="text/javascript">
-	$(function() {
-		$('.selectpicker').selectpicker();
-	});
+	// $(function() {
+	// 	$('.selectpicker').selectpicker();
+	// });
 
 	$(function() {
 		$("#check").click(function() {
@@ -359,7 +359,7 @@ if ($data3 != "Not Found") {
 				$x = '';
 				if ($data != 'Not Found') {
 					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["iditembom"] . '" price="' . $key["hargaitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
+						$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["price"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
 					}
 				}
 				echo $x;
@@ -382,7 +382,7 @@ if ($data3 != "Not Found") {
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				xcnt++;
 				xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
 			}
@@ -424,7 +424,7 @@ if ($data3 != "Not Found") {
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditembom"  class="form-control  iditembom" name="transaksi_iditembom[]" / >';
+		tabel += '<tr class="result transaksi-row" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / >';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
@@ -440,7 +440,6 @@ if ($data3 != "Not Found") {
 		$('#line-transaksi').val(xid);
 		$('#detailx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
-		// var i = document.getElementById("test").value = test1++;
 		if (parseInt(xxid) != 0) {
 			var olddata = $('#transaksi-tr-' + xxid + '').html();
 			var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
@@ -470,19 +469,17 @@ if ($data3 != "Not Found") {
 		});
 		if ((val == "") || (xobj.val() == undefined)) {
 			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_iditembom').val("");
+			$('#transaksi_' + xid + '_iditem').val("");
 			$('#transaksi_' + xid + '_nameitem').val("");
 			$('#transaksi_' + xid + '_deskripsi').val("");
-			$('#transaksi_' + xid + '_harga').val(0);
-			// $('#transaksi_' + xid + '_vat').val(0);
+			$('#transaksi_' + xid + '_harga').val();
 			$('#transaksi_' + xid + 'qty').val(0);
 		} else {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
-			$('#transaksi_' + xid + '_iditembom').val(xobj.data('iditembom'));
+			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
-			$('#transaksi_' + xid + '_harga').val(xobj.data('hargaitem'));
-			// $('#transaksi_' + xid + '_vat').val(xobj.data('vat'));
+			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
 			$('#transaksi_' + xid + 'qty').val(xobj.data('qty'));
 		}
 		calc();
@@ -573,7 +570,7 @@ if ($data3 != "Not Found") {
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				xttl += parseFloat($('#transaksi_' + xid + '_grandtotal').val().replaceAll(',', ''));
 				dpp += parseFloat($('#transaksi_' + xid + '_harga').val().replaceAll('.', '') * $('#transaksi_' + xid + '_qty').val());
 				totaldisc = xttl - $('#disnoms').val();
@@ -585,9 +582,6 @@ if ($data3 != "Not Found") {
 				}
 
 				totaldisc = xttl - $('#disnoms').val();
-
-				// dispers = xttl * $('#disper').val() / 100;
-				// console.log(disper);
 				grandtot = totaldisc + vat;
 
 			}
