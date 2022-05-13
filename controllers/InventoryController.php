@@ -95,11 +95,6 @@ class InventoryController extends CI_Controller
 		$date2           = $this->input->post('date2');
 		$nameitem        = $this->input->post('nameitem');
 
-		print_r($namewarehouse);
-		print_r($tipein);
-
-
-
 		if (!isset($namewarehouse)) {
 			$namewarehouse = '';
 		}

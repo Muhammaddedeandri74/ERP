@@ -107,6 +107,7 @@
               <td style="background:#1143d8;color:white;min-width: auto;">No</td>
               <td style="background:#1143d8;color:white;min-width: auto;">No. Transaksi</td>
               <td style="background:#1143d8;color:white;min-width: auto;">No. Purchase Order</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">Supplier</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Nama Item</td>
               <td style="background:#1143d8;color:white;min-width: auto;">SKU</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Gudang Penerima</td>
@@ -127,6 +128,7 @@
                   <td><?php echo $no++; ?></td>
                   <td><?php echo $key["codein"] ?></td>
                   <td><?php echo $key["codepo"] ?></td>
+                  <td><?php echo $key["namesupp"] ?></td>
                   <td><?php echo $key["nameitem"] ?></td>
                   <td><?php echo $key["sku"] ?></td>
                   <td><?php echo $key["namewarehouse"] ?></td>

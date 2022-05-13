@@ -582,6 +582,8 @@ if ($data3 != "Not Found") {
 				$("#idpo").val(data.headertrans['idpo']);
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
+
+				// console.log(data);
 				var xiddet = 0;
 				var xlost = 0;
 				if (data.detailtrans != "Not Found") {
