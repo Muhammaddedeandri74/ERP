@@ -304,14 +304,14 @@
 <script type="text/javascript">
 	var xitem = '';
 	xitem = '<?php
-	$x = ''; //'<option value="" disabled selected>Select Item</option>';
-	if ($order != 'Not Found') {
-		foreach ($item as $key) {
-			$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["priceitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
-		}
-	}
-	echo $x;
-	?>';
+				$x = ''; //'<option value="" disabled selected>Select Item</option>';
+				if ($order != 'Not Found') {
+					foreach ($item as $key) {
+						$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["priceitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
+					}
+				}
+				echo $x;
+				?>';
 
 	$(document).on('keypress', '.sku', function(e) {
 		if (e.keyCode == 13) {
@@ -836,7 +836,7 @@
 	$(document).on('focus', 'input', function() {
 		$(this).select();
 	});
-	
+
 	$('form button').on("click", function(e) {
 		if ($(this).attr('id') == 'cancelorder') {
 			if (confirm("Batalkan Transaksi?")) {

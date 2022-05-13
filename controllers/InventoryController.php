@@ -32,6 +32,7 @@ class InventoryController extends CI_Controller
 		$f["data5"]   = $this->MasterData->getlistpoheader();
 		$f["data6"]   = $this->MasterData->getlistinvin();
 		$f["data7"]   = $this->MasterData->getlistpo();
+		$f["data8"]   = $this->MasterData->getsupplier();
 		$f["order"]   = $this->MasterData->getlistpoheader();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/Addinventoryin", $f);
@@ -87,23 +88,20 @@ class InventoryController extends CI_Controller
 
 	function ingoingstatus()
 	{
-		$nameitem       = $this->input->post('nameitem');
-		$date1          = $this->input->post('date1');
-		$date2          = $this->input->post('date2');
-		$tipein         = $this->input->post('tipein');
-		$namesupp       = $this->input->post('namesupp');
-		$typeitem      = $this->input->post('itemgroup');
+		$namewarehouse   = $this->input->post('namewh');
+		$tipein          = $this->input->post('tipein');
+		$namesupp        = $this->input->post('namesupp');
+		$date1           = $this->input->post('date1');
+		$date2           = $this->input->post('date2');
+		$nameitem        = $this->input->post('nameitem');
 
-		if (!isset($nameitem)) {
-			$nameitem = '';
-		}
+		print_r($namewarehouse);
+		print_r($tipein);
 
-		if (!isset($date1)) {
-			$date1 = '';
-		}
 
-		if (!isset($date2)) {
-			$date2 = '';
+
+		if (!isset($namewarehouse)) {
+			$namewarehouse = '';
 		}
 
 		if (!isset($tipein)) {
@@ -114,13 +112,22 @@ class InventoryController extends CI_Controller
 			$namesupp = '';
 		}
 
-		if (!isset($typeitem)) {
-			$typeitem = '';
+		if (!isset($date1)) {
+			$date1 = '';
 		}
 
+		if (!isset($date2)) {
+			$date2 = '';
+		}
+
+		if (!isset($nameitem)) {
+			$nameitem = '';
+		}
+
+
 		$this->load->model("MasterData");
-		$f["title"]   = "Register Inventory In";
-		$f["data"]    = $this->MasterData->getlistinvindet($nameitem, $date1, $date2, $tipein, $namesupp, $typeitem);
+		$f["title"]    = "Register Inventory In";
+		$f["data"]     = $this->MasterData->getlistinvindet($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem);
 		$f["data1"]    = $this->MasterData->getwarehouse();
 		$f["data2"]    = $this->MasterData->getcustomer();
 		$this->load->view("Superadmin/Header");
@@ -291,6 +298,15 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Invoice/RequestInvoice", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function outstatus()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/outstatus", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }

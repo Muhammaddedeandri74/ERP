@@ -160,7 +160,7 @@ if ($data3 != "Not Found") {
 											<label for="">No. Request PO</label>
 											<input type="text" name="aa" class="form-control" value="" readonly>
 										</div>
-										<button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button>
+										<!-- <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
 									</div>
 
 									<div class="d-flex mb-3" style="align-items: flex-end;">

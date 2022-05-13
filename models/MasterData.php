@@ -135,6 +135,7 @@ class MasterData extends CI_Model
 			foreach ($eksekusi as $key) {
 				$f["idpo"]    =  $key->idpo;
 				$f["codepo"]  =  $key->codepo;
+				$f["datepo"]  =  $key->datepo;
 				array_push($respon, $f);
 			}
 		} else {
@@ -334,9 +335,9 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getitemmaterial()
+	function getitemmaterialso()
 	{
-		$query    = "SELECT * FROM tb_item WHERE bom ='y' AND usebom='n'";
+		$query    = "SELECT * FROM tb_item";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -1805,33 +1806,6 @@ class MasterData extends CI_Model
 		$query = $this->db->get('tb_user');
 		return $query->num_rows();
 	}
-
-
-
-	// function getwarehouse()
-	// {
-	// 	$query = "SELECT * FROM common_detail WHERE idgroup = '4'";
-	// 	$eksekusi = $this->db->query($query)->result_object();
-	// 	if (count($eksekusi) > 0) {
-	// 		$respon = array();
-	// 		foreach ($eksekusi as $key) {
-	// 			$f["idcomm"] =  $key->idcomm;
-	// 			$f["codecomm"] =  $key->codecomm;
-	// 			$f["namecomm"] =  $key->namecomm;
-	// 			$f["isactive"] =  $key->isactive;
-	// 			$f["attrib1"] =  $key->attrib1;
-	// 			$f["attrib2"] =  $key->attrib2;
-	// 			$f["attrib3"] =  $key->attrib3;
-
-
-	// 			array_push($respon, $f);
-	// 		}
-	// 	} else {
-	// 		$respon = "Not Found";
-	// 	}
-
-	// 	return $respon;
-	// }
 
 	function getwarehouse()
 	{
@@ -3471,8 +3445,7 @@ class MasterData extends CI_Model
 	function getlistpo()
 	{
 		$query = "SELECT * FROM po AS a 
-		INNER JOIN podet AS b ON a.idpo = b.idpodet
-		INNER JOIN tb_supplier AS c ON a.idsupp = c.idsupp WHERE qtypo !=qtyin AND qtyin < qtypo";
+		INNER JOIN podet AS b ON a.idpo = b.idpodet WHERE qtypo !=qtyin AND qtyin < qtypo";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -3485,7 +3458,7 @@ class MasterData extends CI_Model
 				$f["grandtotal"]	    = $key->grandtotal;
 				$f["delivedate"]	    = $key->delivedate;
 				$f["qtypo"]	    = $key->qtypo;
-				$f["namesupp"]	    = $key->namesupp;
+				$f["qtyin"]	    = $key->qtyin;
 				$f["statuspo"]	    = $key->statuspo;
 				$f["expiredate"]	= $key->expiredate;
 				$data = array($f["idpo"]);
@@ -3714,7 +3687,7 @@ class MasterData extends CI_Model
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["idpo"]	= $key->idpo;
+				$f["idpo"]   	= $key->idpo;
 				$f["codepo"]	= $key->codepo;
 				$f["idcurr"]	= $key->idcurr;
 				$f["datepo"]	= $key->datepo;
@@ -3795,37 +3768,42 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getlistinvindet($nameitem, $date1, $date2, $tipein, $namesupp, $typeitem)
+	function getlistinvindet($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem)
 	{
-		// $query = "SELECT * FROM invin,invindet,tb_item,tb_supplier WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idsupp = tb_supplier.idsupp";
 		$data = "";
 		$query = "";
 
-		if ($nameitem != "" && $date1 == "" && $date2 == "") {
-			$data  = array("%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo
-			AND tb_item.nameitem like ?";
-		} elseif ($nameitem == "" && $date1 != "" && $date2 != "") {
-			$data  = array($date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo
-			AND REPLACE(invin.datein, ' ', '') >= ? AND REPLACE(invin.datein, ' ', '') <= ?";
-		} elseif ($nameitem == "" && $date1 == "" && $date2 == "" && $tipein != "") {
+		if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($namewarehouse);
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse AND namewarehouse = ?";
+		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($tipein);
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo
-			AND invin.typein = ?";
-		} elseif ($nameitem == "" && $date1 == "" && $date2 == "" && $tipein == "" && $namesupp != "") {
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse AND typein = ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo
-			AND tb_supplier.namesupp = ?";
-		} elseif ($nameitem == "" && $date1 == "" && $date2 == "" && $tipein == "" && $namesupp == "" && $typeitem != "") {
-			$data  = array($typeitem);
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo
-			AND tb_item.itemgroup = ?";
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse AND namesupp = ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
+			$data  = array($date1, $date2);
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse AND REPLACE(datein, ' ', '') >= ? AND REPLACE(datein, ' ', '') <= ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
+			$data  = array("%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse AND nameitem like ?";
 		} else {
 			$data  = array();
-			$query = "SELECT * FROM invin,invindet,tb_item,po WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo";
+			$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse";
 		}
 		$eksekusi = $this->db->query($query, $data)->result_object();
+		echo ($this->db->last_query());
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
@@ -3840,11 +3818,12 @@ class MasterData extends CI_Model
 				$f["deskripsi"]  	= $key->deskripsi;
 				$f["itemgroup"]	    = $key->itemgroup;
 				$f["sku"]	        = $key->sku;
-				$f["qtypo"]	        = $key->qtypo;
-				$f["qtyin"]	        = $key->qtyin;
+				$f["qtypodet"]	        = $key->qtypodet;
+				$f["qtyindet"]	        = $key->qtyindet;
 				$f["balance"]	    = $key->balance;
 				$f["expdate"]       = $key->expdate;
 				$f["idunit"]       = $key->idunit;
+				$f["namewarehouse"]       = $key->namewarehouse;
 				array_push($respon, $f);
 			}
 		} else {
@@ -5589,9 +5568,11 @@ class MasterData extends CI_Model
 		$data1  = array($codein);
 		$query1 = "SELECT * FROM invin WHERE codein = ?";
 		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+
 		if (count($eksekusi1) > 0) {
 			$respon = "Code Invin telah terdaftar";
 		} else {
+			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
 			$query    = "INSERT INTO invin (codein,typein,idpo,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
@@ -5609,7 +5590,7 @@ class MasterData extends CI_Model
 								$idin, $idpo, $transaksi_iditem[$i], $transaksi_harga[$i], $transaksi_qtypo[$i],
 								$transaksi_qtyin[$i], $transaksi_balance[$i], $transaksi_expiredate[$i]
 							);
-							$queryxx    = "INSERT INTO invindet (idin,idpo,iditem,harga,qtypo,qtyin,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
+							$queryxx    = "INSERT INTO invindet (idin,idpo,iditem,harga,qtypodet,qtyindet,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
 							$eksekusixx = $this->db->query($queryxx, $dataxx);
 							if ($eksekusixx == true) {
 								$respon    = "Success";
@@ -5618,6 +5599,7 @@ class MasterData extends CI_Model
 								$listqtyin = $transaksi_qtyin[$i];
 							} else {
 								$respon = "Failed on Detail";
+								break;
 							}
 							$dataxs   = array($transaksi_qtyin[$i], $idpo, $transaksi_iditem[$i]);
 							$queryxs  = "UPDATE podet  set qtyindet = qtyindet + ? WHERE idpo = ? AND iditem = ?";
@@ -5626,6 +5608,7 @@ class MasterData extends CI_Model
 								$respon  = "Success";
 							} else {
 								$respon  = "Failed on Qtyin";
+								break;
 							}
 						}
 
@@ -5635,6 +5618,7 @@ class MasterData extends CI_Model
 							$respon = "Success";
 						} else {
 							$respon = "Failed on Qtyin";
+							break;
 						}
 
 						$queryqtyin  = "UPDATE po  set qtyin = qtyin + " . $qtyin . " WHERE idpo = " . $idpo . "";
@@ -5643,6 +5627,7 @@ class MasterData extends CI_Model
 							$respon  = "Success";
 						} else {
 							$respon  = "Failed on Qtyin";
+							break;
 						}
 					}
 				} else {
@@ -5650,6 +5635,63 @@ class MasterData extends CI_Model
 				}
 			} else {
 				$respon     = "Failed on Detail";
+			}
+			if ($respon == "Success") {
+				for ($x = 0; $x < count($transaksi_iditem); $x++) {
+					$data2  = array($transaksi_iditem[$x], $namewarehouse);
+					$query2 = "SELECT * FROM tb_itemqty WHERE iditem = ? AND idwh = ?";
+					$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+					if (count($eksekusi2) > 0) {
+						$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse,);
+						$query3    = "UPDATE tb_itemqty SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? ";
+						$eksekusi3 = $this->db->query($query3, $data3);
+						if ($eksekusi3 == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+					} else {
+						$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_qtyin[$x], $transaksi_qtyin[$x]);
+						$query4    = "INSERT INTO tb_itemqty(iditem,idwh,beginqty,inqty,outqty,endqty,qtyso)VALUES(?,?,0,?,0,?,0)";
+						$eksekusi4 = $this->db->query($query4, $data4);
+						if ($eksekusi4 == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+					}
+					$data2     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+					$query2    = "SELECT * FROM tb_itemqtyexp WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+					$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+					if (count($eksekusi2) > 0) {
+						$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+						$query3    = "UPDATE tb_itemqtyexp SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+						$eksekusi3 = $this->db->query($query3, $data3);
+						if ($eksekusi3 == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+					} else {
+						$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x], $transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_harga[$x]);
+						$query4    = "INSERT INTO tb_itemqtyexp(iditem,idwh,expdate,beginqty,inqty,outqty,endqty,hpp)VALUES(?,?,?,0,?,0,?,?)";
+						$eksekusi4 = $this->db->query($query4, $data4);
+						if ($eksekusi4 == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+					}
+				}
+			}
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
 			}
 			return $respon;
 		}

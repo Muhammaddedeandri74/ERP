@@ -175,13 +175,13 @@
             </li>
             <li>
               <a class="dropdown-item " href="#">
-                <div class="row mt-2">
+                <div class="row mt-2 w-100">
                   <div class="col-2">
                     <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png') ?>" alt="">
                   </div>
                   <div class="col-6 ms-3">
                     <h6>Sales Order</h6>
-                    <p>Buat Data Penjualan</p>
+                    <p>Buat Data Penjualan &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                   </div>
                 </div>
               </a>
@@ -350,6 +350,9 @@
           <ul class="dropdown-menu dropdown-submenu mt-2" style="border-radius: 10px;">
             <li>
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/inventoryout') ?>">Register Outgoing</a>
+            </li>
+            <li>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/outstatus') ?>">Outgoing Status</a>
             </li>
             <li>
               <a class="dropdown-item m-2" href="#">Outgoing List</a>

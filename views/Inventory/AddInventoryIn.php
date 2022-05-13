@@ -45,13 +45,28 @@ if ($data3 != "Not Found") {
 					<div class="row">
 						<div class="col-8 mb-3">
 							<label for="exampleFormControlInput1" class="form-label">Tipe Ingoing</label>
-							<select id="myDIV" onchange="ubah(this.value)" class="form-select">
+							<select name="typein" id="myDIV" onchange="ubah(this.value)" class="form-select">
 								<option value="supplier">Supplier</option>
 								<option value="warehousex">Move Warehouse</option>
 								<option value="return">Return</option>
+								<option value="inititalstock">Initial Stock</option>
 							</select>
 						</div>
 						<div class="col-4"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-8">
+							<label for="" class="form-label">Customer</label>
+							<select name="namesupp" id="" class="form-select" required>
+								<option value="">Pilih</option>
+								<?php if ($data8 != "Not Found") : ?>
+									<?php foreach ($data8 as $key) : ?>
+										<option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+						</div>
+						<div class="col-4 mb-3"></div>
 					</div>
 					<div id="supplierx">
 						<div class="row">
@@ -67,20 +82,13 @@ if ($data3 != "Not Found") {
 								<a href="#" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary mt-3">Cari Data</a>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-8">
-								<label for="" class="form-label">Customer</label>
-								<input type="text" class="form-control" readonly>
-							</div>
-							<div class="col-4"></div>
-						</div>
+
 					</div>
 					<div id="warehousexx" style="display: none;">
 						<div class="row">
 							<div class="col-8">
 								<div class="mb-3">
 									<label for="" class="form-label">Data Move WH</label>
-									<!-- <input type="hidden" class="form-control" id="idpo" name="idpo"> -->
 									<input type="text" id="codepo" name="codepo" class="form-control" list="xpo" autocomplete="off" readonly>
 								</div>
 							</div>
@@ -358,10 +366,10 @@ if ($data3 != "Not Found") {
 								<tr>
 									<td>No</td>
 									<td>No. Purchase Order</td>
-									<td>Supplier</td>
 									<td>Tgl Order</td>
 									<td>Tgl Delivery</td>
-									<td>Qty Item</td>
+									<td>Qty PO</td>
+									<td>Qty IN</td>
 									<td>Total Amount</td>
 									<td>Status <i class='bx bx-down-arrow-alt'></i></td>
 									<td>Action</td>
@@ -374,10 +382,10 @@ if ($data3 != "Not Found") {
 										<tr>
 											<td><?php echo $no++; ?></td>
 											<td><?php echo $key["codepo"] ?></td>
-											<td><?php echo $key["namesupp"] ?></td>
 											<td><?php echo $key["datepo"] ?></td>
 											<td><?php echo $key["delivedate"] ?></td>
 											<td><?php echo $key["qtypo"] ?></td>
+											<td><?php echo $key["qtyin"] ?></td>
 											<td><?php echo $key["grandtotal"] ?></td>
 											<td><?php echo $key["statuspo"] ?></td>
 											<td><a href="#" data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
@@ -424,7 +432,7 @@ if ($data3 != "Not Found") {
 <datalist id="xitem">
 	<?php if ($data != 'Not Found') {
 		foreach ($data as $key) { ?>
-			<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
+			<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
 	<?php }
 	} ?>
 </datalist>

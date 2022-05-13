@@ -13,7 +13,7 @@
       <?php echo $this->session->flashdata('message'); ?>
       <?php $this->session->set_flashdata('message', ''); ?>
     </div>
-    <form action="<?php echo base_url('InventoryController/ingoingstatus') ?>" method="POST" enctype="multipart/form-data" id="form">
+    <form action="<?php echo base_url('InventoryController/ingoingstatus') ?>" method="POST">
       <div class="row mb-4">
         <div class="col-8">
           <label for="" class="form-label fs-3 mb-3">Filter Status</label>
@@ -22,20 +22,22 @@
               <div class="row mb-3">
                 <div class="col-5">
                   <label for="" class="form-label">Gudang Penerima</label>
-                  <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                  <select name="namewh" class="form-select" aria-label="Default select example">
+                    <option value="">Pilih</option>
+                    <?php if ($data1 != "Not Found") : ?>
+                      <?php foreach ($data1 as $key) : ?>
+                        <option value="<?php echo $key["namewarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
+                      <?php endforeach ?>
+                    <?php endif ?>
                   </select>
                 </div>
                 <div class="col-5">
                   <label for="" class="form-label">Tipe Ingoing</label>
                   <select name="tipein" class="form-select">
                     <option value="">Pilih</option>
-                    <option value="Supplier">Supplier</option>
-                    <option value="Return">Return</option>
-                    <option value="Move Warehouse">Move Warehouse</option>
+                    <option value="supplier">Supplier</option>
+                    <option value="return">Return</option>
+                    <option value="move Warehouse">Move Warehouse</option>
                   </select>
                 </div>
                 <div class="col-2"></div>
@@ -70,7 +72,7 @@
               <div class="row mb-3">
                 <div class="col-10">
                   <label for="" class="form-label">Item</label>
-                  <input type="text" class="form-control" name="" placeholder="Pilih Item yang ingin dicari" id="" readonly>
+                  <input type="text" name="nameitem" class="form-control" placeholder="Pilih Item yang ingin dicari" id="">
                 </div>
                 <div class="col-2"></div>
               </div>
@@ -80,7 +82,7 @@
                     <div class="col-6"></div>
                     <div class="col-6">
                       <a href="<?php echo base_url('InventoryController/ingoingstatus') ?>" class="btn" style="margin-left: 10px;">Reset</a>
-                      <button type="submit" name="submit" class="btn btn-primary" style="margin-left: 11px;">Pencarian</button>
+                      <button type="submit" class="btn btn-primary" style="margin-left: 11px;">Pencarian</button>
                     </div>
                   </div>
                 </div>
@@ -99,42 +101,45 @@
       </div>
       <div class="row">
         <label for="" class="form-label fs-4 mb-3">Item/Produk</label>
-        <!-- <input type="hidden" id="line-transaksi" name="line-transaksi" value="0" /> -->
         <table class="table table-bordered table-striped list-akses" id="table-user">
           <thead class="border-0">
             <tr>
+              <td style="background:#1143d8;color:white;min-width: auto;">No</td>
               <td style="background:#1143d8;color:white;min-width: auto;">No. Transaksi</td>
               <td style="background:#1143d8;color:white;min-width: auto;">No. Purchase Order</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Supplier</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Nama Item</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">SKU</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">Gudang Penerima</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Tangal InventoryIn</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Tipe Ingoing</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">SKU</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Tipe Item</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Deskripsi</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">QtyPo</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">QtyIn</td>
               <td style="background:#1143d8;color:white;min-width: auto;">Harga</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Qty.In</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Expire Date</td>
+              <td style="background:#1143d8;color:white;min-width: auto;">Deskripsi</td>
             </tr>
           </thead>
           <tbody>
-            <?php if ($data != "Not Found")
-              foreach ($data as $key) : ?>
-              <tr>
-                <td><?php echo $key["codein"] ?></td>
-                <td><?php echo $key["codepo"] ?></td>
-                <td></td>
-                <td><?php echo $key["nameitem"] ?></td>
-                <td><?php echo $key["datein"] ?></td>
-                <td><?php echo $key["typein"] ?></td>
-                <td><?php echo $key["sku"] ?></td>
-                <td><?php echo $key["itemgroup"] ?></td>
-                <td><?php echo $key["deskripsi"] ?></td>
-                <td><?php echo $key["price"] ?></td>
-                <td><?php echo $key["qtyin"] ?></td>
-                <td><?php echo $key["expdate"] ?></td>
-              </tr>
-            <?php endforeach ?>
+            <?php if ($data != "Not Found") : ?>
+              <?php $no = 1; ?>
+              <?php foreach ($data as $key) : ?>
+                <tr>
+                  <td><?php echo $no++; ?></td>
+                  <td><?php echo $key["codein"] ?></td>
+                  <td><?php echo $key["codepo"] ?></td>
+                  <td><?php echo $key["nameitem"] ?></td>
+                  <td><?php echo $key["sku"] ?></td>
+                  <td><?php echo $key["namewarehouse"] ?></td>
+                  <td><?php echo $key["datein"] ?></td>
+                  <td><?php echo $key["typein"] ?></td>
+                  <td><?php echo $key["itemgroup"] ?></td>
+                  <td><?php echo $key["qtypodet"] ?></td>
+                  <td><?php echo $key["qtyindet"] ?></td>
+                  <td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
+                  <td><?php echo $key["deskripsi"] ?></td>
+                </tr>
+              <?php endforeach ?>
+            <?php endif ?>
           </tbody>
         </table>
       </div>

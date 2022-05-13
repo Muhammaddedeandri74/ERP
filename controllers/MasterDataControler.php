@@ -236,6 +236,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_balance     = $this->input->post("transaksi_balance");
 		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
 
+
 		$cek                   = $this->MasterData->newinvin(
 			$codein,
 			$tipeingoing,
@@ -256,8 +257,6 @@ class MasterDataControler extends CI_Controller
 			$userid
 		);
 		echo $cek;
-
-		// print_r($transaksi_unitsatuan);
 	}
 
 	function addbundling()
