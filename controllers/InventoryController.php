@@ -29,7 +29,6 @@ class InventoryController extends CI_Controller
 		$f["data2"]   = $this->MasterData->getwarehouse();
 		$f["data3"]   = $this->MasterData->getlistinvin();
 		$f["data4"]   = $this->MasterData->getsupplier();
-		$f["data5"]   = $this->MasterData->getlistpoheader();
 		$f["data6"]   = $this->MasterData->getlistinvin();
 		$f["data7"]   = $this->MasterData->getlistpo();
 		$f["data8"]   = $this->MasterData->getsupplier();

@@ -29,8 +29,7 @@ if ($data1 != "Not Found") {
 							<?php echo $this->session->flashdata('message'); ?>
 							<?php $this->session->set_flashdata('message', ''); ?>
 						</div>
-						<input type="hidden" name="idso" id="idso">
-						<input type="hidden" name="codeso" id="codeso">
+						<!-- <?php print_r($data2) ?> -->
 						<div class="row">
 							<div class="col-4">
 								<label for="" class="form-label fs-3 mb-3">Informasi Dasar</label>
@@ -66,7 +65,7 @@ if ($data1 != "Not Found") {
 								<div class="row mb-3">
 									<div class="col-8">
 										<label for="" class="form-label">Customer</label>
-										<select name="supplier" id="supplier" class="form-select selectpicker" data-live-search="true" required onchange="supp(this.value)">
+										<select name="idcust" id="idcust" class="form-select selectpicker" data-live-search="true" required onchange="supp(this.value)">
 											<option value="">Pilih</option>
 											<?php if ($data2 != "Not Found") : ?>
 												<?php foreach ($data2 as $key) : ?>
@@ -93,25 +92,32 @@ if ($data1 != "Not Found") {
 									</div>
 									<div class="col-5">
 										<label for="" class="form-label">Tanggal Pengiriman</label>
-										<input type="date" name="delivdate" id="delivedate" style="cursor: pointer;" class="form-control">
+										<input type="date" name="delivdate" id="delivdate" style="cursor: pointer;" class="form-control">
 									</div>
 									<div class="col-2"></div>
 								</div>
 								<div class="row mb-3">
 									<div class="col-10">
 										<label for="" class="form-label">No Pesanan (E-Commerce)</label>
-										<input type="text" name="nopesanan" class="form-control">
+										<input type="text" name="nopesanan" class="form-control" autocomplete="off" required>
 									</div>
 									<div class="col-2"></div>
 								</div>
 								<div class="row mb-3">
 									<div class="col-5">
 										<label for="" class="form-label">No. Kontak</label>
-										<input type="text" name="nokontak" class="form-control" placeholder="+62 xxxxxxxx">
+										<select name="nocontact" id="notelp" class="form-select">
+											<option value="">Pilih</option>
+											<?php if ($data2 != "Not Found") : ?>
+												<?php foreach ($data2 as $key) : ?>
+													<option value="<?php echo $key["notelp"] ?>"><?php echo $key["notelp"] ?> </option>
+												<?php endforeach ?>
+											<?php endif ?>
+										</select>
 									</div>
 									<div class="col-5">
 										<label for="" class="form-label">Ongkos Kirim</label>
-										<input type="text" name="ongkir" id="ongkira" class="form-control" placeholder="Rp. -" name="" id="">
+										<input type="text" name="ongkir" id="ongkir" class="form-control" autocomplete="off" required placeholder="Rp. -">
 									</div>
 									<div class="col-2"></div>
 								</div>
@@ -219,7 +225,7 @@ if ($data1 != "Not Found") {
 									<p>Discount Nominal</p>
 								</div>
 								<div class="col-6">
-									<input type="text" name="disglob" id="disnoms" class="form-control" oninput="calc()">
+									<input type="text" name="disnom" id="disnoms" class="form-control" oninput="calc()">
 								</div>
 							</div>
 							<div class="row">
@@ -227,7 +233,7 @@ if ($data1 != "Not Found") {
 									<p>Discount Persen</p>
 								</div>
 								<div class="col-6">
-									<input type="text" name="dispers" id="dispers" class="form-control" oninput="calc()">
+									<input type="text" name="disper" id="disper" class="form-control" oninput="calc()">
 								</div>
 							</div>
 							<div class="row">
@@ -431,7 +437,7 @@ if ($data1 != "Not Found") {
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary">SIMPAN</button>
+					<button type="button" class="btn btn-primary">Simpan</button>
 				</div>
 			</div>
 		</div>
@@ -469,7 +475,8 @@ if ($data1 != "Not Found") {
 		var data = <?php echo json_encode($data2) ?>;
 		for (let i = 0; i < data.length; i++) {
 			if (data[i]["idsupp"] == x) {
-				$('#norekening').val(data[i]["norekening"], data[i]["namabank"])
+				$('#notelp').val(data[i]["notelp"], data[i]["notelp"]);
+				$('#norekening').val(data[i]["norekening"], data[i]["namabank"]);
 			}
 
 		}
@@ -550,7 +557,7 @@ if ($data1 != "Not Found") {
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga" readonly></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_price[]' + xid + '_harga" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_total" objtype="_total" class="form-control  _total" name="transaksi_total[]' + xid + '_total" autocomplete="off" value="0" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discnominal"  class="form-control _discnominal" name="transaksi_discnominal[]' + xid + '_discnominal"  value="0" onchange="count(' + xid + ')"></td>';
@@ -558,7 +565,6 @@ if ($data1 != "Not Found") {
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_grandtotal" objtype="_grandtotal" class="form-control _grandtotal" name="transaksi_grandtotal[]' + xid + '_grandtotal"  autocomplete="off" value="0" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		//return tabel;
 		$('#line-transaksi').val(xid);
 		$('#detailx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
@@ -696,6 +702,7 @@ if ($data1 != "Not Found") {
 				xttl += parseFloat($('#transaksi_' + xid + '_grandtotal').val().replaceAll(',', ''));
 				dpp += parseFloat($('#transaksi_' + xid + '_harga').val().replaceAll('.', '') * $('#transaksi_' + xid + '_qty').val());
 				totaldisc = xttl - $('#disnoms').val();
+				// ongkir = $('#disnoms').val();
 
 				if ($("#check").val() == 1) {
 					vat = totaldisc * 11 / 100;
@@ -704,7 +711,7 @@ if ($data1 != "Not Found") {
 				}
 
 				totaldisc = xttl - $('#disnoms').val();
-				grandtot = totaldisc + $('#ongkir').val() + vat;
+				grandtot = totaldisc + vat;
 
 			}
 
@@ -716,13 +723,13 @@ if ($data1 != "Not Found") {
 		$('#subtotal').val(formatnum(xttl));
 		$('#totaldisc').val(formatnum(totaldisc));
 		$('#vat').val(formatnum(vat));
-		$('#grandtotal').val(formatnum(grandtot));
+		$('#grandtotal').val(formatnum(grandtot - $('#ongkir').val()));
 
 	}
 
 	function addorder() {
 		var cx = $('#form').serialize();
-		$.post("<?php echo base_url('MasterDataControler/addpo') ?>", cx,
+		$.post("<?php echo base_url('MasterDataControler/addsalesorder') ?>", cx,
 			function(data) {
 				if (data == 'Success') {
 					alert('Input Data Berhasil');

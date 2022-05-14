@@ -388,7 +388,7 @@ if ($data3 != "Not Found") {
 											<td><?php echo $key["qtyin"] ?></td>
 											<td><?php echo $key["grandtotal"] ?></td>
 											<td><?php echo $key["statuspo"] ?></td>
-											<td><a href="#" data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
+											<td><a data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
 										</tr>
 									<?php endforeach ?>
 								<?php endif ?>
@@ -401,8 +401,13 @@ if ($data3 != "Not Found") {
 	</div>
 </form>
 
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+	var datax = <?php echo json_encode($data7); ?>;
+	console.log(datax)
+
 	function ubah(x) {
 		if (x == "supplier") {
 			$('#supplier').show();
@@ -441,6 +446,7 @@ if ($data3 != "Not Found") {
 		$('#codepo').val(x);
 		$('#idpo').val(y);
 		$('#datepo').val(z);
+		// console.log(y);
 		loadreq();
 	}
 
@@ -554,25 +560,10 @@ if ($data3 != "Not Found") {
 		calc();
 	});
 
-	// $(document).on('input', '#codepo', function() {
-	// 	var val = $(this).val();
-	// 	var xobj = $('#xpo option').filter(function() {
-	// 		return this.value == val;
-	// 	});
-	// 	if ((val == "") || (xobj.val() == undefined)) {
-	// 		$('#idpo').val("");
-	// 		$('#datepo').val("");
-	// 	} else {
-
-	// 		$('#idpo').val(xobj.data('idpo'));
-	// 		$('#codepo').val(xobj.data('codepo'));
-	// 		$('#datepo').val(xobj.data('datepo'));
-	// 		loadreq();
-	// 	}
-	// });
 
 	function loadreq() {
 		var xid = $('#idpo').val();
+
 		$.post("<?php echo base_url('InventoryController/getpo?'); ?>", {
 			id: xid
 		}, function(result) {
@@ -583,7 +574,9 @@ if ($data3 != "Not Found") {
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
 
-				// console.log(data);
+				console.log(xid);
+
+
 				var xiddet = 0;
 				var xlost = 0;
 				if (data.detailtrans != "Not Found") {

@@ -830,33 +830,36 @@ class MasterDataControler extends CI_Controller
 
 	function addsalesorder()
 	{
-		$codeso        = $this->input->post("codeso");
-		$idquo         = $this->input->post("idquo");
-		$tipeorder     = $this->input->post("tipeorder");
-		$idcust        = $this->input->post("idcust");
-		$dateso        = $this->input->post("dateso");
-		$delivdate     = $this->input->post("delivdate");
-		$nopesanan     = $this->input->post("nopesanan");
-		$delivaddr     = $this->input->post("delivaddr");
-		$paymentmethod = $this->input->post("paymentmethod");
-		$norekening    = $this->input->post("norekening");
-		$vat           = $this->input->post("vat");
-		$subtotal      = $this->input->post("subtotal");
-		$discount      = $this->input->post("discount");
-		$ppn           = $this->input->post("ppn");
-		$ongkir        = $this->input->post("ongkir");
-		$grandtotal    = $this->input->post("grandtotal");
+		$codeso                  = $this->input->post("codeso");
+		$idquo                   = $this->input->post("idquo");
+		$tipeorder               = $this->input->post("tipeorder");
+		$idcust                  = $this->input->post("idcust");
+		$dateso                  = $this->input->post("dateso");
+		$delivdate               = $this->input->post("delivdate");
+		$nopesanan               = $this->input->post("nopesanan");
+		$nocontact               = $this->input->post("nocontact");
+		$delivaddr               = $this->input->post("delivaddr");
+		$paymentmethod           = $this->input->post("paymentmethod");
+		$norekening              = $this->input->post("norekening");
+		$subtotal                = $this->input->post("subtotal");
+		$disnom                  = $this->input->post("disnom");
+		$disper                  = $this->input->post("disper");
+		$totaldisc               = $this->input->post("totaldisc");
+		$vat                     = $this->input->post("vat");
+		$ongkir                  = $this->input->post("ongkir");
+		$grandtotaldetail        = $this->input->post("grandtotal");
 
-		$transaksiiditem     = $this->input->post("transaksiiditem");
+		$transaksi_iditem        = $this->input->post("transaksi_iditem");
 		$transaksi_sku           = $this->input->post("transaksi_sku");
 		$transaksi_nameitem      = $this->input->post("transaksi_nameitem");
-		$transaksi_harga         = $this->input->post("transaksi_harga");
+		$transaksi_deskripsi     = $this->input->post("transaksi_deskripsi");
+		$transaksi_price         = $this->input->post("transaksi_price");
 		$transaksi_qty           = $this->input->post("transaksi_qty");
-		$transaksi_expiredate    = $this->input->post("transaksi_expiredate");
+		$transaksi_total         = $this->input->post("transaksi_total");
 		$transaksi_discnominal   = $this->input->post("transaksi_discnominal");
 		$transaksi_discpersen    = $this->input->post("transaksi_discpersen");
-		$transaksi_total         = $this->input->post("transaksi_total");
-		$iduser                  = $this->input->post("userid");
+		$transaksi_grandtotal    = $this->input->post("transaksi_grandtotal");
+		// $iduser                  = $this->input->post("userid");
 
 		$cek                     = $this->MasterData->addso(
 			$codeso,
@@ -866,24 +869,29 @@ class MasterDataControler extends CI_Controller
 			$dateso,
 			$delivdate,
 			$nopesanan,
+			$nocontact,
 			$delivaddr,
 			$paymentmethod,
 			$norekening,
-			$vat,
 			$subtotal,
-			$discount,
-			$ppn,
+			$disnom,
+			$disper,
+			$totaldisc,
+			$vat,
 			$ongkir,
-			$grandtotal,
-			$transaksiiditem,
+			$grandtotaldetail,
+
+			$transaksi_iditem,
 			$transaksi_sku,
 			$transaksi_nameitem,
-			$transaksi_harga,
+			$transaksi_deskripsi,
+			$transaksi_price,
 			$transaksi_qty,
+			$transaksi_total,
 			$transaksi_discnominal,
 			$transaksi_discpersen,
-			$transaksi_total,
-			$iduser
+			$transaksi_grandtotal
+			// $iduser
 		);
 
 		echo $cek;
