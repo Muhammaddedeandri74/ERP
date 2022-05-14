@@ -222,7 +222,7 @@ class MasterDataControler extends CI_Controller
 		$codein                = $this->input->post("codein");
 		$tipeingoing           = $this->input->post("typein");
 		$idpo                  = $this->input->post("idpo");
-		$namesupp              = $this->input->post("namesupp");
+		$namesupp              = $this->input->post("namecust");
 		$namewarehouse         = $this->input->post("namewarehouse");
 		$datein                = $this->input->post("datein");
 		$currency              = $this->input->post("currency");
@@ -826,6 +826,23 @@ class MasterDataControler extends CI_Controller
 		$cek                 = $this->MasterData->additemproduk($itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/Produk');
+	}
+
+	function newcustomer()
+	{
+		$codecust     = $this->input->post("codecust");
+		$typecust	  = $this->input->post("typecust");
+		$namecomp     = $this->input->post("namaperusahaan");
+		$nocontact    = $this->input->post("nocontact");
+		$email        = $this->input->post("email");
+		$notelp       = $this->input->post("notelp");
+		$alamat       = $this->input->post("alamat");
+		$userid       = $this->input->post("iduser");
+		$namabank     = $this->input->post("namabank");
+		$norekening   = $this->input->post("norekening");
+		$beneficiary  = $this->input->post("beneficiary");
+		$cek          = $this->MasterData->newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary);
+		echo $cek;
 	}
 
 	function addsalesorder()

@@ -56,6 +56,7 @@ if ($data1 != "Not Found") {
 									<div class="col-8">
 										<label for="" class="form-label">Tipe Order</label>
 										<select name="tipeorder" id="" class="form-select">
+											<option value="">Pilih</option>
 											<option value="E-Commerce">E-Commerce</option>
 											<option value="B2B">B2B</option>
 										</select>
@@ -69,14 +70,14 @@ if ($data1 != "Not Found") {
 											<option value="">Pilih</option>
 											<?php if ($data2 != "Not Found") : ?>
 												<?php foreach ($data2 as $key) : ?>
-													<option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
+													<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 												<?php endforeach ?>
 											<?php endif ?>
 										</select>
 									</div>
 									<div class="col-4"></div>
 								</div>
-								<div class="row">
+								<div class="row mb-3">
 									<div class="col-6">
 										<a style="font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary">+ Customer Baru</a>
 									</div>
@@ -97,27 +98,20 @@ if ($data1 != "Not Found") {
 									<div class="col-2"></div>
 								</div>
 								<div class="row mb-3">
-									<div class="col-10">
-										<label for="" class="form-label">No Pesanan (E-Commerce)</label>
-										<input type="text" name="nopesanan" class="form-control" autocomplete="off" required>
+									<div class="col-5">
+										<label for="" class="form-label">No Pesanan</label>
+										<input type="text" name="nopesanan" id="nopesanan" style="cursor: pointer;" class="form-control" autocomplete="off" required>
 									</div>
-									<div class="col-2"></div>
-								</div>
-								<div class="row mb-3">
 									<div class="col-5">
 										<label for="" class="form-label">No. Kontak</label>
-										<select name="nocontact" id="notelp" class="form-select">
+										<select name="nocontact" id="nocontact" class="form-select">
 											<option value="">Pilih</option>
 											<?php if ($data2 != "Not Found") : ?>
 												<?php foreach ($data2 as $key) : ?>
-													<option value="<?php echo $key["notelp"] ?>"><?php echo $key["notelp"] ?> </option>
+													<option value="<?php echo $key["nocontact"] ?>"><?php echo $key["nocontact"] ?> </option>
 												<?php endforeach ?>
 											<?php endif ?>
 										</select>
-									</div>
-									<div class="col-5">
-										<label for="" class="form-label">Ongkos Kirim</label>
-										<input type="text" name="ongkir" id="ongkir" class="form-control" autocomplete="off" required placeholder="Rp. -">
 									</div>
 									<div class="col-2"></div>
 								</div>
@@ -135,6 +129,7 @@ if ($data1 != "Not Found") {
 									<div class="col-5">
 										<label for="" class="form-label">Metode Pembayaran</label>
 										<select name="paymentmethod" id="paymentmethod" class="form-select" required>
+											<option value="">Pilih</option>
 											<?php if ($data3 != "Not Found") : ?>
 												<?php foreach ($data3 as $key) : ?>
 													<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
@@ -277,101 +272,6 @@ if ($data1 != "Not Found") {
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-xl">
-			<div class="modal-content">
-				<div class="modal-header" style="background:#1143d8;color:white;">
-					<h5 class="modal-title" id="exampleModalLabel">TAMBAH CUSTOMER BARU</h5>
-					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
-				</div>
-				<div class="modal-body">
-					<div class="row mb-3">
-						<div class="col-6">
-							<label for="" class="form-label">User ID</label>
-							<input type="text" class="form-control" placeholder="123121" name="" id="" readonly>
-						</div>
-						<div class="col-6">
-							<label for="" class="form-label">Email</label>
-							<input type="text" class="form-control" placeholder="Masukkan Email Pengguna" name="" id="">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-6">
-							<label for="" class="form-label">Type Customer</label>
-							<select class="form-select" aria-label="Default select example">
-								<option selected>Open this select menu</option>
-								<option value="1">One</option>
-								<option value="2">Two</option>
-								<option value="3">Three</option>
-							</select>
-						</div>
-						<div class="col-6">
-							<label for="" class="form-label">No. Telpon</label>
-							<input type="text" class="form-control" placeholder="Masukkan Nomor Telepon Pengguna" name="" id="">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-6">
-							<div class="row mb-3">
-								<div class="col">
-									<label for="" class="form-label">Nama Perusahaan</label>
-									<input type="text" class="form-control" placeholder="Masukkan Nama Perusahaan" name="" id="">
-								</div>
-							</div>
-							<div class="row">
-								<div class="col">
-									<label for="" class="form-label">Contact Person</label>
-									<input type="text" class="form-control" placeholder="Masukkan Contact Person" name="" id="">
-								</div>
-							</div>
-						</div>
-						<div class="col-6">
-							<label for="" class="form-label">Alamat</label>
-							<textarea name="" class="form-control" id="" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" cols="30" rows="4"></textarea>
-							<div class="text-end">
-								<span style="font-size: 10px" class="text-muted">Maksimal 200 Karakter</span>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<label for="" class="form-label fs-3 mb-3">Informasi Bank</label>
-							<table class="table">
-								<thead>
-									<tr>
-										<td>Pilih Bank</td>
-										<td>Nomor Rekening</td>
-										<td>Attr/Beneficiary</td>
-										<td>Action</td>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>~</td>
-										<td>~</td>
-										<td>~</td>
-										<td>
-											<div class="row">
-												<div class="col-6">
-													<a href="" class="btn btn-danger"><i class="bx bx-trash"></i></a>
-												</div>
-												<div class="col-6">
-													<a href="" class="btn btn-primary"><i class="bx bx-plus"></i></a>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary">SIMPAN</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="modal fade" id="modaldata" tabindex="-1" aria-labelledby="modaldataLabel" aria-hidden="true">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
@@ -443,6 +343,103 @@ if ($data1 != "Not Found") {
 		</div>
 	</div>
 </form>
+<?php
+$idcust;
+if ($data2 != "Not Found") {
+	foreach ($data2 as $key) {
+		$idcust = $key["codecust"];
+		$idcust++;
+	}
+} else {
+	$idcust = "CC01";
+}
+?>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms">
+				<div class="modal-header" style="background:#1143d8;color:white;">
+					<h5 class="modal-title" id="exampleModalLabel">TAMBAH CUSTOMER BARU</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+				</div>
+				<input type="hidden" name="idcust" id="idcust">
+				<div class="modal-body">
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="" class="form-label">Code Customer</label>
+							<input type="text" name="codecust" class="form-control" value="<?php echo $idcust ?>" readonly>
+							<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+						</div>
+						<div class="col-6">
+							<label for="" class="form-label">Email</label>
+							<input type="email" name="email" id="email" class="form-control" placeholder="Masukkan Email Pengguna" required autocomplete="off">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="" class="form-label">Type Customer</label>
+							<select name="typecust" class="form-select" aria-label="Default select example">
+								<option Value="">Pilih</option>
+								<option value="Buyer">Buyer</option>
+								<option value="Supplier">Supplier</option>
+							</select>
+						</div>
+						<div class="col-6">
+							<label for="" class="form-label">No. Telpon</label>
+							<input type="text" name="notelp" id="notelp" class="form-control" autocomplete="off" placeholder="Masukkan Nomor Telepon Pengguna">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
+							<div class="row mb-3">
+								<div class="col">
+									<label for="" class="form-label">Nama Perusahaan</label>
+									<input type="text" name="namaperusahaan" id="" autocomplete="off" class="form-control" placeholder="Masukkan Nama Perusahaan">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<label for="" class="form-label">Contact Person</label>
+									<input type="text" name="nocontact" class="form-control" autocomplete="off" placeholder="Masukkan Contact Person">
+								</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<label for="" class="form-label">Alamat</label>
+							<textarea name="alamat" class="form-control" id="" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" cols="30" rows="4"></textarea>
+							<div class="text-end">
+								<span style="font-size: 10px" class="text-muted">Maksimal 200 Karakter</span>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-3">
+						</div>
+						<div class="col-12">
+							<table class="table m-0">
+								<thead class="border-0">
+									<tr>
+										<th style="background:#1143d8;color:white;text-align:right;">Nama Bank</th>
+										<th style="background:#1143d8;color:white;text-align:right;">Nomor Rekening</th>
+										<th style="background:#1143d8;color:white;text-align:right;">Attn/Beneficiary</th>
+										<th style="background:#1143d8;color:white;text-align:right;">Action</th>
+									</tr>
+								</thead>
+							</table>
+							<table class="table table-striped table-hover">
+								<tbody id="detailxnxx">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="addcust" onclick="addcustx()">SIMPAN</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 <datalist id="xitem">
 	<?php
 	if ($data != 'Not Found') {
@@ -474,9 +471,10 @@ if ($data1 != "Not Found") {
 	function supp(x) {
 		var data = <?php echo json_encode($data2) ?>;
 		for (let i = 0; i < data.length; i++) {
-			if (data[i]["idsupp"] == x) {
-				$('#notelp').val(data[i]["notelp"], data[i]["notelp"]);
-				$('#norekening').val(data[i]["norekening"], data[i]["namabank"]);
+			if (data[i]["idcust"] == x) {
+				$('#nocontact').val(data[i]["nocontact"]);
+				$('#norekening').val(data[i]["norekening"]);
+				$('#delivaddr').val(data[i]["addresscust"]);
 			}
 
 		}
@@ -742,5 +740,75 @@ if ($data1 != "Not Found") {
 
 	function cancelorder() {
 		location.reload();
+	}
+
+
+
+	// ========================REGISTER CUSTOMER======================
+	add_row_customer();
+
+	function add_row_customer(xxid) {
+		var lastid = 0;
+		if (parseInt(xxid) != 0) {
+			lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());
+		}
+		var xid = (parseInt(xxid) + 1);
+		lastid++;
+		var tabel = '';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" class="form-control bank" name="namabank[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control " name="norekening[]" value=""></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" class="form-control" name="beneficiary[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_customer(' + xid + ')"><b>+</b></button></td>';
+		tabel += '</tr>';
+		//return tabel;
+		$('#line-transaksi').val(xid);
+		$('#detailxnxx').append(tabel);
+		$('#transaksi_' + xid + '_nourut').val(lastid);
+		if (parseInt(xxid) != 0) {
+			var olddata = $('#transaksi-tr-' + xxid + '').html();
+			var xdt = olddata.replace('onclick="add_row_customer(' + xxid + ')"><b>+</b>', 'onclick="del_row_customer(' + xxid + ')"><b>x</b>');
+			$('#transaksi-tr-' + xxid + '').html(xdt);
+		}
+	}
+
+	$('forms button').on("click", function(e) {
+		if ($(this).attr('id') == "addcust") {
+			var xask = '';
+			if ($("#idcust").val() == "") {
+				xask = "Simpan Transaksi?";
+			} else {
+				xask = "Ubah Transaksi?";
+			}
+			if (confirm(xask)) {
+				if (validasi()) {
+					addcustx();
+				}
+			}
+		}
+		e.preventDefault();
+	});
+
+	function del_row_customer(xid) {
+		$('#transaksi-' + xid + '').remove();
+		reorder();
+		calc();
+	}
+
+	function cancelorder() {
+		location.reload();
+	}
+
+	function addcustx() {
+		var cx = $('#forms').serialize();
+		$.post("<?php echo base_url('MasterDataControler/newcustomer') ?>", cx,
+			function(data) {
+				if (data == 'Success') {
+					alert('Input Data Berhasil');
+					cancelorder();
+				} else {
+					alert('Input Data Gagal. ' + data);
+				}
+			});
 	}
 </script>

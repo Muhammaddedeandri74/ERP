@@ -147,20 +147,33 @@ class MasterData extends CI_Model
 
 	function getcustomer()
 	{
-		$query = "SELECT * FROM common_detail WHERE idgroup = '2'";
+		$query = "SELECT * FROM tb_customer";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["idcomm"] =  $key->idcomm;
-				$f["codecomm"] =  $key->codecomm;
-				$f["namecomm"] =  $key->namecomm;
-				$f["isactive"] =  $key->isactive;
-				$f["attrib1"] =  $key->attrib1;
-				$f["attrib2"] =  $key->attrib2;
-				$f["attrib4"] =  $key->attrib4;
-				$f["attrib5"] =  $key->attrib5;
+				$f["idcust"]        =  $key->idcust;
+				$f["codecust"]      =  $key->codecust;
+				$f["typecust"]      =  $key->typecust;
+				$f["namecust"]      =  $key->namecust;
+				$f["phonecust"]     =  $key->phonecust;
+				$f["email"]         =  $key->email;
+				$f["nocontact"]     =  $key->nocontact;
+				$f["addresscust"]   =  $key->addresscust;
+				$f["madelog"]       =  $key->madelog;
+				$f["madeuser"]      =  $key->madeuser;
 
+				$datax = array($f["idcust"]);
+				$queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idcustdet"]     =  $keyx->idcustdet;
+						$f["norekening"]    =  $keyx->norekening;
+						$f["namabank"]      =  $keyx->namabank;
+						$f["beneficiary"]   =  $keyx->beneficiary;
+					}
+				}
 
 				array_push($respon, $f);
 			}
@@ -5427,6 +5440,54 @@ class MasterData extends CI_Model
 				}
 			} else {
 				$respon = "Failed on Detail";
+			}
+			return $respon;
+		}
+	}
+
+	function newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$fail      = 0;
+		$data1     = array($codecust);
+		$query1    = "SELECT * FROM tb_customer WHERE codecust = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+		if (count($eksekusi1) > 0) {
+			$respon = "Code Cust telah terdaftar";
+		} else {
+			$this->db->trans_begin();
+			$data     = array($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_customer(codecust,typecust,namecust,nocontact,email,phonecust,addresscust,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$datax = array($codecust);
+				$queryx = "SELECT * FROM tb_customer WHERE codecust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $key) {
+						$idcust = $key->idcust;
+						for ($i = 0; $i < count($norekening); $i++) {
+							$data2     = array($idcust, $namabank[$i], $norekening[$i], $beneficiary[$i]);
+							$query2    = "INSERT INTO tb_customerdet (idcust,namabank,norekening,beneficiary)VALUES(?,?,?,?)";
+							$eksekusi2 = $this->db->query($query2, $data2);
+							if ($eksekusi2 == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Detail";
+								break;
+							}
+						}
+					}
+				} else {
+					$respon = "Failed on Detail";
+				}
+			} else {
+				$respon = "Failed on Detail";
+			}
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
 			}
 			return $respon;
 		}

@@ -57,11 +57,11 @@ if ($data3 != "Not Found") {
 					<div class="row mb-3">
 						<div class="col-8">
 							<label for="" class="form-label">Customer</label>
-							<select name="namesupp" id="" class="form-select" required>
+							<select name="namecust" id="" class="form-select" required>
 								<option value="">Pilih</option>
-								<?php if ($data8 != "Not Found") : ?>
-									<?php foreach ($data8 as $key) : ?>
-										<option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
+								<?php if ($data4 != "Not Found") : ?>
+									<?php foreach ($data4 as $key) : ?>
+										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 									<?php endforeach ?>
 								<?php endif ?>
 							</select>

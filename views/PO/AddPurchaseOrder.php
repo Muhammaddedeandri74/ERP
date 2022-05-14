@@ -171,7 +171,7 @@ if ($data3 != "Not Found") {
 												<?php
 												if ($data5 != 'Not Found' || !empty($data5)) {
 													foreach ($data5 as $key) : ?>
-														<option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
+														<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 												<?php endforeach;
 												} ?>
 											</select>
@@ -346,7 +346,7 @@ if ($data3 != "Not Found") {
 	function supp(x) {
 		var data = <?php echo json_encode($data5) ?>;
 		for (let i = 0; i < data.length; i++) {
-			if (data[i]["idsupp"] == x) {
+			if (data[i]["idcust"] == x) {
 				$('#norekening').val(data[i]["norekening"], data[i]["namabank"])
 			}
 

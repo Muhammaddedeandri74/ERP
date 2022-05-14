@@ -133,7 +133,7 @@ if ($data != "Not Found") {
 								<div class="col-4">
 									<div class="d-flex mb-3" style="align-items: flex-end;">
 										<div class="me-3" style="width:50%;">
-											<label for="">Code Po</label>
+											<label for="">Code Supplier</label>
 											<input type="text" name="codesupp" class="form-control" value="<?php echo $idnew ?>" readonly>
 											<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
 										</div>

@@ -190,7 +190,7 @@
                   <a class="dropdown-item m-2" href="<?php echo base_url('OrderManagementController/addsalesorder') ?>">Register Order Confirmation</a>
                 </li>
                 <li>
-                  <a class="dropdown-item m-2" href="#">Order Confirmation Report</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('OrderManagementController/orderreport') ?>">Order Confirmation Report</a>
                 </li>
               </ul>
             </li>

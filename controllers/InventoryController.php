@@ -28,10 +28,9 @@ class InventoryController extends CI_Controller
 		$f["data1"]   = $this->MasterData->getcurrency();
 		$f["data2"]   = $this->MasterData->getwarehouse();
 		$f["data3"]   = $this->MasterData->getlistinvin();
-		$f["data4"]   = $this->MasterData->getsupplier();
+		$f["data4"]   = $this->MasterData->getcustomer();
 		$f["data6"]   = $this->MasterData->getlistinvin();
 		$f["data7"]   = $this->MasterData->getlistpo();
-		$f["data8"]   = $this->MasterData->getsupplier();
 		$f["order"]   = $this->MasterData->getlistpoheader();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/Addinventoryin", $f);
@@ -195,7 +194,7 @@ class InventoryController extends CI_Controller
 		$f["data2"]   = $this->MasterData->getcurrency();
 		$f["data3"]   = $this->MasterData->getpo();
 		$f["data4"]   = $this->MasterData->getlistpo();
-		$f["data5"]   = $this->MasterData->getsupplier();
+		$f["data5"]   = $this->MasterData->getcustomer();
 		$f["data6"]   = $this->MasterData->getcompany();
 		$f["stat"]    = "";
 		$f["headertrans"] = "Not Found";
