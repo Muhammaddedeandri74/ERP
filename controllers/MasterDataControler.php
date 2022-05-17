@@ -229,52 +229,94 @@ class MasterDataControler extends CI_Controller
 		$transaksi_iditem       = $this->input->post("transaksi_iditem");
 		$transaksi_sku         = $this->input->post("transaksi_sku");
 		$transaksi_nameitem    = $this->input->post("transaksi_nameitem");
-		$transaksi_deskripsi  = $this->input->post("transaksi_deskripsi");
+		$transaksi_deskripsi   = $this->input->post("transaksi_deskripsi");
 		$transaksi_harga       = $this->input->post("transaksi_harga");
 		$transaksi_qtypo       = $this->input->post("transaksi_qtypo");
 		$transaksi_qtyin       = $this->input->post("transaksi_qtyin");
 		$transaksi_balance     = $this->input->post("transaksi_balance");
 		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
 
-		$transaksi_iditem1       = $this->input->post("transaksi_iditem1");
+		$idmove                 = $this->input->post("idmove");
+		$codemove               = $this->input->post("codemove");
+		$namewarehouse1         = $this->input->post("namewarehouse1");
+		$datein1                = $this->input->post("datein1");
+		$currency1              = $this->input->post("currency1");
+		$transaksi_iditem1      = $this->input->post("transaksi_iditem1");
 		$transaksi_sku1         = $this->input->post("transaksi_sku1");
 		$transaksi_nameitem1    = $this->input->post("transaksi_nameitem1");
-		$transaksi_deskripsi1  = $this->input->post("transaksi_deskripsi1");
+		$transaksi_deskripsi1   = $this->input->post("transaksi_deskripsi1");
 		$transaksi_harga1       = $this->input->post("transaksi_harga1");
 		$transaksi_qtyin1       = $this->input->post("transaksi_qtyin1");
 		$transaksi_balance1     = $this->input->post("transaksi_balance1");
 		$transaksi_expiredate1  = $this->input->post("transaksi_expiredate1");
 
+		$namewarehouse2         = $this->input->post("namewarehouse2");
+		$datein2                = $this->input->post("datein2");
+		$currency2              = $this->input->post("currency2");
+		$transaksi_iditem2      = $this->input->post("transaksi_iditem2");
+		$transaksi_sku2         = $this->input->post("transaksi_sku2");
+		$transaksi_nameitem2    = $this->input->post("transaksi_nameitem2");
+		$transaksi_deskripsi2   = $this->input->post("transaksi_deskripsi2");
+		$transaksi_qtyin2       = $this->input->post("transaksi_qtyin2");
+		$transaksi_expiredate2  = $this->input->post("transaksi_expiredate2");
 
-		$cek                   = $this->MasterData->newinvin(
-			$codein,
-			$tipeingoing,
-			$idpo,
-			$namesupp,
-			$namewarehouse,
-			$datein,
-			$currency,
-			$transaksi_iditem,
-			$transaksi_sku,
-			$transaksi_nameitem,
-			$transaksi_deskripsi,
-			$transaksi_harga,
-			$transaksi_qtypo,
-			$transaksi_qtyin,
-			$transaksi_balance,
-			$transaksi_expiredate,
+		if ($tipeingoing == "supplier") {
 
-			$transaksi_iditem1,
-			$transaksi_sku1,
-			$transaksi_nameitem1,
-			$transaksi_deskripsi1,
-			$transaksi_harga1,
-			$transaksi_qtyin1,
-			$transaksi_balance1,
-			$transaksi_expiredate1,
-			$userid
-		);
-		echo $cek;
+			$cek                   = $this->MasterData->newinvin(
+				$codein,
+				$tipeingoing,
+				$idpo,
+				$namesupp,
+				$namewarehouse,
+				$datein,
+				$currency,
+				$transaksi_iditem,
+				$transaksi_sku,
+				$transaksi_nameitem,
+				$transaksi_deskripsi,
+				$transaksi_harga,
+				$transaksi_qtypo,
+				$transaksi_qtyin,
+				$transaksi_balance,
+				$transaksi_expiredate,
+				$userid
+			);
+		} elseif ($tipeingoing == "warehouse") {
+			$cek                   = $this->MasterData->newinvinmovewh(
+				$codein,
+				$tipeingoing,
+				$idmove,
+				$namesupp,
+				$namewarehouse1,
+				$datein1,
+				$currency1,
+				$transaksi_iditem1,
+				$transaksi_sku1,
+				$transaksi_nameitem1,
+				$transaksi_deskripsi1,
+				$transaksi_harga1,
+				$transaksi_qtyin1,
+				$transaksi_expiredate1,
+				$userid
+			);
+		} elseif ($tipeingoing == "return") {
+			$cek                   = $this->MasterData->newinvinreturn(
+				$codein,
+				$tipeingoing,
+				$namesupp,
+				$namewarehouse2,
+				$datein2,
+				$currency2,
+				$transaksi_iditem2,
+				$transaksi_sku2,
+				$transaksi_nameitem2,
+				$transaksi_deskripsi2,
+				$transaksi_qtyin2,
+				$transaksi_expiredate2,
+				$userid
+			);
+			echo $cek;
+		}
 	}
 
 	function addbundling()

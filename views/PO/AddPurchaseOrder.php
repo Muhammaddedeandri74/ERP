@@ -166,10 +166,10 @@ if ($data3 != "Not Found") {
 									<div class="d-flex mb-3" style="align-items: flex-end;">
 										<div class="me-2" style="width:75%;">
 											<label for="">Supplier</label>
-											<select class="form-control selectpicker" name="supplier" id="supplier" data-live-search="true" required onchange="supp(this.value)">
+											<select class="form-control selectpicker" name="supplier" id="supplier" data-live-search="true" required onchange="customer(this.value)">
 												<option>Pilih Supplier</option>
 												<?php
-												if ($data5 != 'Not Found' || !empty($data5)) {
+												if ($data5 != 'Not Found') {
 													foreach ($data5 as $key) : ?>
 														<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 												<?php endforeach;
@@ -225,7 +225,7 @@ if ($data3 != "Not Found") {
 												<option value="">Pilih</option>
 												<?php if ($data5 != "Not Found") : ?>
 													<?php foreach ($data5 as $key) : ?>
-														<option value="<?php echo $key["norekening"] ?>"><?php echo $key["norekening"] ?> - <?php echo $key["namabank"] ?></option>
+														<option value="<?php echo $key["namecust"] ?>"><?php echo $key["namecust"] ?> - <?php echo $key["namecust"] ?></option>
 													<?php endforeach ?>
 												<?php endif ?>
 											</select>
@@ -343,7 +343,7 @@ if ($data3 != "Not Found") {
 		});
 	});
 
-	function supp(x) {
+	function customer(x) {
 		var data = <?php echo json_encode($data5) ?>;
 		for (let i = 0; i < data.length; i++) {
 			if (data[i]["idcust"] == x) {

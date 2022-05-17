@@ -147,7 +147,7 @@ class MasterData extends CI_Model
 
 	function getcustomer()
 	{
-		$query = "SELECT * FROM tb_customer";
+		$query = "SELECT * FROM tb_customer ";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -162,16 +162,18 @@ class MasterData extends CI_Model
 				$f["addresscust"]   =  $key->addresscust;
 				$f["madelog"]       =  $key->madelog;
 				$f["madeuser"]      =  $key->madeuser;
-
+				$f["data"] = array();
 				$datax = array($f["idcust"]);
 				$queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
-						$f["idcustdet"]     =  $keyx->idcustdet;
-						$f["norekening"]    =  $keyx->norekening;
-						$f["namabank"]      =  $keyx->namabank;
-						$f["beneficiary"]   =  $keyx->beneficiary;
+						$g["idcustdet"]     =  $keyx->idcustdet;
+						$g["norekening"]    =  $keyx->norekening;
+						$g["namabank"]      =  $keyx->namabank;
+						$g["beneficiary"]   =  $keyx->beneficiary;
+
+						array_push($f["data"], $g);
 					}
 				}
 
@@ -4942,15 +4944,6 @@ class MasterData extends CI_Model
 		$transaksi_qtyin,
 		$transaksi_balance,
 		$transaksi_expiredate,
-
-		$transaksi_iditem1,
-		$transaksi_sku1,
-		$transaksi_nameitem1,
-		$transaksi_deskripsi1,
-		$transaksi_harga1,
-		$transaksi_qtyin1,
-		$transaksi_balance1,
-		$transaksi_expiredate1,
 		$userid
 	) {
 		date_default_timezone_set('Asia/Jakarta');
@@ -5078,6 +5071,144 @@ class MasterData extends CI_Model
 					}
 				}
 			}
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
+			}
+			return $respon;
+		}
+	}
+
+	function newinvinmovewh(
+		$codein,
+		$tipeingoing,
+		$idmove,
+		$namesupp,
+		$namewarehouse1,
+		$datein1,
+		$currency1,
+		$transaksi_iditem1,
+		$transaksi_sku1,
+		$transaksi_nameitem1,
+		$transaksi_deskripsi1,
+		$transaksi_harga1,
+		$transaksi_qtyin1,
+		$transaksi_expiredate1,
+		$userid
+	) {
+		date_default_timezone_set('Asia/Jakarta');
+		$fail   = 0;
+		$data1  = array($codein);
+		$query1 = "SELECT * FROM invin WHERE codein = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+
+		if (count($eksekusi1) > 0) {
+			$respon = "Code Invin telah terdaftar";
+		} else {
+			$this->db->trans_begin();
+			$data     = array($codein, $tipeingoing,  $namesupp, $namewarehouse1, $datein1, $currency1, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO invin (codein,typein,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$datax     = array($codein);
+				$queryx    = "SELECT * FROM invin WHERE codein = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $key) {
+						$idin  = $key->idin;
+						$qtyin = 0;
+						$qtypo = 0;
+						for ($i = 0; $i < count($transaksi_iditem1); $i++) {
+							$dataxx     = array(
+								$idin, $transaksi_iditem1[$i], $transaksi_harga1[$i], $transaksi_qtyin1[$i],
+								$transaksi_expiredate1[$i]
+							);
+							$queryxx    = "INSERT INTO invindet (idin,iditem,harga,qtyindet,expdate)VALUES(?,?,?,?,?)";
+							$eksekusixx = $this->db->query($queryxx, $dataxx);
+							if ($eksekusixx == true) {
+								$respon    = "Success";
+							} else {
+								$respon = "Failed on Detail";
+								break;
+							}
+						}
+					}
+				} else {
+					$respon = "Failed on Detail";
+				}
+			} else {
+				$respon     = "Failed on Detail";
+			}
+
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
+			}
+			return $respon;
+		}
+	}
+
+	function newinvinreturn(
+		$codein,
+		$tipeingoing,
+		$namesupp,
+		$namewarehouse2,
+		$datein2,
+		$currency2,
+		$transaksi_iditem2,
+		$transaksi_sku2,
+		$transaksi_nameitem2,
+		$transaksi_deskripsi2,
+		$transaksi_qtyin2,
+		$transaksi_expiredate2,
+		$userid
+	) {
+		date_default_timezone_set('Asia/Jakarta');
+		$fail   = 0;
+		$data1  = array($codein);
+		$query1 = "SELECT * FROM invin WHERE codein = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+
+		if (count($eksekusi1) > 0) {
+			$respon = "Code Invin telah terdaftar";
+		} else {
+			$this->db->trans_begin();
+			$data     = array($codein, $tipeingoing,  $namesupp, $namewarehouse2, $datein2, $currency2, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO invin (codein,typein,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$datax     = array($codein);
+				$queryx    = "SELECT * FROM invin WHERE codein = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $key) {
+						$idin  = $key->idin;
+						$qtyin = 0;
+						$qtypo = 0;
+						for ($i = 0; $i < count($transaksi_iditem2); $i++) {
+							$dataxx     = array(
+								$idin, $transaksi_iditem2[$i], $transaksi_qtyin2[$i],
+								$transaksi_expiredate2[$i]
+							);
+							$queryxx    = "INSERT INTO invindet (idin,iditem,qtyindet,expdate)VALUES(?,?,?,?)";
+							$eksekusixx = $this->db->query($queryxx, $dataxx);
+							if ($eksekusixx == true) {
+								$respon    = "Success";
+							} else {
+								$respon = "Failed on Detail";
+								break;
+							}
+						}
+					}
+				} else {
+					$respon = "Failed on Detail";
+				}
+			} else {
+				$respon     = "Failed on Detail";
+			}
+
 			if ($respon == "Success") {
 				$this->db->trans_commit();
 			} else {
