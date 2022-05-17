@@ -236,6 +236,15 @@ class MasterDataControler extends CI_Controller
 		$transaksi_balance     = $this->input->post("transaksi_balance");
 		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
 
+		$transaksi_iditem1       = $this->input->post("transaksi_iditem1");
+		$transaksi_sku1         = $this->input->post("transaksi_sku1");
+		$transaksi_nameitem1    = $this->input->post("transaksi_nameitem1");
+		$transaksi_deskripsi1  = $this->input->post("transaksi_deskripsi1");
+		$transaksi_harga1       = $this->input->post("transaksi_harga1");
+		$transaksi_qtyin1       = $this->input->post("transaksi_qtyin1");
+		$transaksi_balance1     = $this->input->post("transaksi_balance1");
+		$transaksi_expiredate1  = $this->input->post("transaksi_expiredate1");
+
 
 		$cek                   = $this->MasterData->newinvin(
 			$codein,
@@ -254,6 +263,15 @@ class MasterDataControler extends CI_Controller
 			$transaksi_qtyin,
 			$transaksi_balance,
 			$transaksi_expiredate,
+
+			$transaksi_iditem1,
+			$transaksi_sku1,
+			$transaksi_nameitem1,
+			$transaksi_deskripsi1,
+			$transaksi_harga1,
+			$transaksi_qtyin1,
+			$transaksi_balance1,
+			$transaksi_expiredate1,
 			$userid
 		);
 		echo $cek;
@@ -845,6 +863,24 @@ class MasterDataControler extends CI_Controller
 		echo $cek;
 	}
 
+	function editcust()
+	{
+		$codecust     = $this->input->post("codecust");
+		$typecust	  = $this->input->post("typecust");
+		$namecomp     = $this->input->post("namaperusahaan");
+		$nocontact    = $this->input->post("nocontact");
+		$email        = $this->input->post("email");
+		$notelp       = $this->input->post("notelp");
+		$alamat       = $this->input->post("alamat");
+		$userid       = $this->input->post("iduser");
+		$namabank     = $this->input->post("namabank");
+		$norekening   = $this->input->post("norekening");
+		$beneficiary  = $this->input->post("beneficiary");
+		$cek          = $this->MasterData->editcust($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary);
+		echo $cek;
+	}
+
+
 	function addsalesorder()
 	{
 		$codeso                  = $this->input->post("codeso");
@@ -877,6 +913,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_discpersen    = $this->input->post("transaksi_discpersen");
 		$transaksi_grandtotal    = $this->input->post("transaksi_grandtotal");
 		// $iduser                  = $this->input->post("userid");
+
 
 		$cek                     = $this->MasterData->addso(
 			$codeso,

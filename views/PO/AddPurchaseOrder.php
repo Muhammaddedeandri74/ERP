@@ -43,7 +43,7 @@ if ($data3 != "Not Found") {
 		$idnew++;
 	}
 } else {
-	$idnew = "20220101-PO-001";
+	$idnew = "PO-TRS-001";
 }
 ?>
 

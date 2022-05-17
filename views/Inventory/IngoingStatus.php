@@ -81,7 +81,7 @@
                   <div class="row">
                     <div class="col-6"></div>
                     <div class="col-6">
-                      <a href="<?php echo base_url('InventoryController/ingoingstatus') ?>" class="btn" style="margin-left: 10px;">Reset</a>
+                      <a href="<?php echo base_url('InventoryController/ingoingstatus') ?>" class="btn  btn-danger" style="margin-left: 10px;">Reset</a>
                       <button type="submit" class="btn btn-primary" style="margin-left: 11px;">Pencarian</button>
                     </div>
                   </div>

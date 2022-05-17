@@ -29,7 +29,6 @@ if ($data1 != "Not Found") {
 							<?php echo $this->session->flashdata('message'); ?>
 							<?php $this->session->set_flashdata('message', ''); ?>
 						</div>
-						<!-- <?php print_r($data2) ?> -->
 						<div class="row">
 							<div class="col-4">
 								<label for="" class="form-label fs-3 mb-3">Informasi Dasar</label>
@@ -79,7 +78,7 @@ if ($data1 != "Not Found") {
 								</div>
 								<div class="row mb-3">
 									<div class="col-6">
-										<a style="font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary">+ Customer Baru</a>
+										<a style="font-size:13px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary" onclick="add_row_customer(0)">+ Customer Baru</a>
 									</div>
 									<div class="col-6"></div>
 								</div>
@@ -357,86 +356,86 @@ if ($data2 != "Not Found") {
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-xl">
 		<div class="modal-content">
-			<form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms">
-				<div class="modal-header" style="background:#1143d8;color:white;">
-					<h5 class="modal-title" id="exampleModalLabel">TAMBAH CUSTOMER BARU</h5>
-					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+			<!-- <form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms"> -->
+			<div class="modal-header" style="background:#1143d8;color:white;">
+				<h5 class="modal-title" id="exampleModalLabel">TAMBAH CUSTOMER BARU</h5>
+				<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+			</div>
+			<input type="hidden" name="idcust" id="idcust">
+			<div class="modal-body">
+				<div class="row mb-3">
+					<div class="col-6">
+						<label for="" class="form-label">Code Customer</label>
+						<input type="text" name="codecust" class="form-control" value="<?php echo $idcust ?>" readonly>
+						<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+					</div>
+					<div class="col-6">
+						<label for="" class="form-label">Email</label>
+						<input type="email" name="email" id="email" class="form-control" placeholder="Masukkan Email Pengguna" required autocomplete="off">
+					</div>
 				</div>
-				<input type="hidden" name="idcust" id="idcust">
-				<div class="modal-body">
-					<div class="row mb-3">
-						<div class="col-6">
-							<label for="" class="form-label">Code Customer</label>
-							<input type="text" name="codecust" class="form-control" value="<?php echo $idcust ?>" readonly>
-							<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-						</div>
-						<div class="col-6">
-							<label for="" class="form-label">Email</label>
-							<input type="email" name="email" id="email" class="form-control" placeholder="Masukkan Email Pengguna" required autocomplete="off">
-						</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label for="" class="form-label">Type Customer</label>
+						<select name="typecust" class="form-select" aria-label="Default select example">
+							<option Value="">Pilih</option>
+							<option value="Buyer">Buyer</option>
+							<option value="Supplier">Supplier</option>
+						</select>
 					</div>
-					<div class="row mb-3">
-						<div class="col-6">
-							<label for="" class="form-label">Type Customer</label>
-							<select name="typecust" class="form-select" aria-label="Default select example">
-								<option Value="">Pilih</option>
-								<option value="Buyer">Buyer</option>
-								<option value="Supplier">Supplier</option>
-							</select>
-						</div>
-						<div class="col-6">
-							<label for="" class="form-label">No. Telpon</label>
-							<input type="text" name="notelp" id="notelp" class="form-control" autocomplete="off" placeholder="Masukkan Nomor Telepon Pengguna">
-						</div>
+					<div class="col-6">
+						<label for="" class="form-label">No. Telpon</label>
+						<input type="text" name="notelp" id="notelp" class="form-control" autocomplete="off" placeholder="Masukkan Nomor Telepon Pengguna">
 					</div>
-					<div class="row mb-3">
-						<div class="col-6">
-							<div class="row mb-3">
-								<div class="col">
-									<label for="" class="form-label">Nama Perusahaan</label>
-									<input type="text" name="namaperusahaan" id="" autocomplete="off" class="form-control" placeholder="Masukkan Nama Perusahaan">
-								</div>
-							</div>
-							<div class="row">
-								<div class="col">
-									<label for="" class="form-label">Contact Person</label>
-									<input type="text" name="nocontact" class="form-control" autocomplete="off" placeholder="Masukkan Contact Person">
-								</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<div class="row mb-3">
+							<div class="col">
+								<label for="" class="form-label">Nama Perusahaan</label>
+								<input type="text" name="namaperusahaan" id="" autocomplete="off" class="form-control" placeholder="Masukkan Nama Perusahaan">
 							</div>
 						</div>
-						<div class="col-6">
-							<label for="" class="form-label">Alamat</label>
-							<textarea name="alamat" class="form-control" id="" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" cols="30" rows="4"></textarea>
-							<div class="text-end">
-								<span style="font-size: 10px" class="text-muted">Maksimal 200 Karakter</span>
+						<div class="row">
+							<div class="col">
+								<label for="" class="form-label">Contact Person</label>
+								<input type="text" name="nocontact" class="form-control" autocomplete="off" placeholder="Masukkan Contact Person">
 							</div>
 						</div>
 					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-						</div>
-						<div class="col-12">
-							<table class="table m-0">
-								<thead class="border-0">
-									<tr>
-										<th style="background:#1143d8;color:white;text-align:right;">Nama Bank</th>
-										<th style="background:#1143d8;color:white;text-align:right;">Nomor Rekening</th>
-										<th style="background:#1143d8;color:white;text-align:right;">Attn/Beneficiary</th>
-										<th style="background:#1143d8;color:white;text-align:right;">Action</th>
-									</tr>
-								</thead>
-							</table>
-							<table class="table table-striped table-hover">
-								<tbody id="detailxnxx">
-								</tbody>
-							</table>
+					<div class="col-6">
+						<label for="" class="form-label">Alamat</label>
+						<textarea name="alamat" class="form-control" id="" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" cols="30" rows="4"></textarea>
+						<div class="text-end">
+							<span style="font-size: 10px" class="text-muted">Maksimal 200 Karakter</span>
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="addcust" onclick="addcustx()">SIMPAN</button>
+				<div class="row mb-3">
+					<div class="col-3">
+					</div>
+					<div class="col-12">
+						<table class="table m-0">
+							<thead class="border-0">
+								<tr>
+									<th style="background:#1143d8;color:white;text-align:right;">Nama Bank</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Nomor Rekening</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Attn/Beneficiary</th>
+									<th style="background:#1143d8;color:white;text-align:right;">Action</th>
+								</tr>
+							</thead>
+						</table>
+						<table class="table table-striped table-hover">
+							<tbody id="detailxnxx">
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="addcust" onclick="addcustx()">SIMPAN</button>
+			</div>
+			<!-- </form> -->
 		</div>
 	</div>
 </div>
@@ -745,7 +744,7 @@ if ($data2 != "Not Found") {
 
 
 	// ========================REGISTER CUSTOMER======================
-	add_row_customer();
+
 
 	function add_row_customer(xxid) {
 		var lastid = 0;
@@ -759,16 +758,16 @@ if ($data2 != "Not Found") {
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" class="form-control bank" name="namabank[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control " name="norekening[]" value=""></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" class="form-control" name="beneficiary[]" /></td>';
-		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_customer(' + xid + ')"><b>+</b></button></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi-trx-' + xid + '"><button id="transaksi_' + xid + '_actionx" name="action" class="form-control " type="button" onclick="add_row_customer(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		//return tabel;
 		$('#line-transaksi').val(xid);
 		$('#detailxnxx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
 		if (parseInt(xxid) != 0) {
-			var olddata = $('#transaksi-tr-' + xxid + '').html();
+			var olddata = $('#transaksi-trx-' + xxid + '').html();
 			var xdt = olddata.replace('onclick="add_row_customer(' + xxid + ')"><b>+</b>', 'onclick="del_row_customer(' + xxid + ')"><b>x</b>');
-			$('#transaksi-tr-' + xxid + '').html(xdt);
+			$('#transaksi-trx-' + xxid + '').html(xdt);
 		}
 	}
 

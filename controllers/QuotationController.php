@@ -24,6 +24,7 @@ class QuotationController extends CI_Controller
     {
         $this->load->Model("MasterData");
         $f = $this->session->userdata("data");
+        $f["data"] = $this->MasterData->getsupplier();
         $this->load->view("SuperAdmin/header");
         $this->load->view("Quotation/addquot", $f);
         $this->load->view("SuperAdmin/Footer");

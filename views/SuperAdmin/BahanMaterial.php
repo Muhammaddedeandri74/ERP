@@ -54,6 +54,7 @@
 											<select name="itemgroup" class="form-control" onchange="location = this.options[this.selectedIndex].value;" required>
 												<option value="">Pilih..</option>
 												<option value="Produk"><a href="<?php echo base_url('SuperAdminControler/Produk') ?>">Produk</a></option>
+												<option value="ProdukJadi"><a href="<?php echo base_url('SuperAdminControler/ProdukJadi') ?>">Produk Jadi</a></option>
 												<option value="BahanMaterial" selected><a href="<?php echo base_url('SuperAdminControler/BahanMaterial') ?>">Bahan Baku/ Material </a></option>
 											</select>
 										</div>

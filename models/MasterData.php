@@ -348,6 +348,31 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getitemmaterial()
+	{
+		$query    = "SELECT * FROM tb_item";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["iditem"]        =  $key->iditem;
+				$f["nameitem"]      =  $key->nameitem;
+				$f["sku"]           =  $key->sku;
+				$f["price"]         =  $key->price;
+				$f["bom"]           =  $key->bom;
+				$f["usebom"]        =  $key->usebom;
+				$f["itemgroup"]     =  $key->itemgroup;
+				$f["deskripsi"]     =  $key->deskripsi;
+				$f["gambar"]        =  $key->gambar;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getitemmaterialso()
 	{
 		$query    = "SELECT * FROM tb_item";
@@ -2117,7 +2142,6 @@ class MasterData extends CI_Model
 				$f["vat"] = $key->VAT;
 				$f["totalquo"] = $key->totalquo;
 				$f["norek"] = $key->norek;
-
 				$f["delivdate"] = $key->delivdate;
 				$f["discs"] = $key->disc;
 				$f["delivaddr"] = $key->delivaddr;
@@ -2188,19 +2212,155 @@ class MasterData extends CI_Model
 
 
 
-	function getsalesorder()
+	function getsalesorderfilter($status, $date1, $date2, $namecust)
 	{
-		$query = "SELECT * FROM tb_salesorder";
-		$eksekusi = $this->db->query($query)->result_object();
+		$data  = "";
+		$query = "";
+
+		if ($status != "" && $date1 == "" && $date2 == "" && $namecust == "") {
+			$data = array($status);
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ?";
+		} else if ($status == "" && $date1 != "" && $date2 != "" && $namecust == "") {
+			$data = array($date1, $date2);
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND REPLACE(dateso, ' ', '') >= ? 
+			AND REPLACE(dateso, ' ', '') <= ?";
+		} else if ($status == "" && $date1 == "" && $date2 == "" && $namecust != "") {
+			$data = array("%" . $namecust . "%");
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND namecust like ?";
+		} else if ($status != "" && $date1 != "" && $date2 != "" && $namecust == "") {
+			$data = array($status, $date1, $date2);
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND REPLACE(dateso, ' ', '') >= ? 
+			AND REPLACE(dateso, ' ', '') <= ?";
+		} else if ($status != "" && $date1 == "" && $date2 == "" && $namecust != "") {
+			$data = array($status, "%" . $namecust . "%");
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND namecust like ?";
+		} else if ($status == "" && $date1 != "" && $date2 != "" && $namecust != "") {
+			$data = array($status, $date1, $date2, "%" . $namecust . "%");
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND REPLACE(dateso, ' ', '') >= ? 
+			AND REPLACE(dateso, ' ', '') <= ? AND namecust like ? ";
+		} else if ($status != "" && $date1 != "" && $date2 != "" && $namecust != "") {
+			$data = array($status, $date1, $date2, "%" . $namecust . "%");
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND REPLACE(dateso, ' ', '') >= ? 
+			AND REPLACE(dateso, ' ', '') <= ? AND namecust like ? ";
+		} else {
+			$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust ";
+		}
+
+		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
 				$f["idso"] = $key->idso;
 				$f["codeso"] = $key->codeso;
 				$f["dateso"] = $key->dateso;
+				$f["namecust"] = $key->namecust;
 				$f["delivaddr"] = $key->delivaddr;
 				$f["delivdate"] = $key->delivdate;
 				$f["nopesanan"] = $key->nopesanan;
+				$f["statusorder"] = $key->statusorder;
+				$f["disnomdet"] = $key->disnomdet;
+				$f["statusorder"] = $key->statusorder;
+
+				$datax = array($f["idso"]);
+				$queryx = "SELECT * FROM tb_salesorderdetail WHERE idso = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idso"]          =  $keyx->idso;
+						$f["idsodet"]       =  $keyx->idsodet;
+						$f["iditem"]        =  $keyx->iditem;
+						$f["price"]         =  $keyx->price;
+						$f["grandtotaldet"] = $keyx->grandtotaldet;
+					}
+				}
+
+				$datax  = array($f["iditem"]);
+				$queryx = "SELECT * FROM tb_item WHERE iditem = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["iditem"]           =  $keyx->iditem;
+						$f["nameitem"]         =  $keyx->nameitem;
+					}
+				}
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getallsalesorder()
+	{
+		$query = "SELECT * FROM tb_salesorderdetail";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["grandtotaldet"] = $key->grandtotaldet;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getsalesorder()
+	{
+
+		$query = "SELECT * FROM tb_salesorder";
+		$eksekusi = $this->db->query($query)->result_object();
+
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idso"] = $key->idso;
+				$f["idcust"] = $key->idcust;
+				$f["codeso"] = $key->codeso;
+				$f["dateso"] = $key->dateso;
+				$f["delivaddr"] = $key->delivaddr;
+				$f["delivdate"] = $key->delivdate;
+				$f["nopesanan"] = $key->nopesanan;
+				$f["statusorder"] = $key->statusorder;
+				$f["disnomdet"] = $key->disnomdet;
+				$f["statusorder"] = $key->statusorder;
+
+				$datax = array($f["idcust"]);
+				$queryx = "SELECT * FROM tb_customer WHERE idcust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idcust"]           =  $keyx->idcust;
+						$f["namecust"]         =  $keyx->namecust;
+					}
+				}
+
+				$datax = array($f["idso"]);
+				$queryx = "SELECT * FROM tb_salesorderdetail WHERE idso = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idso"]          =  $keyx->idso;
+						$f["idsodet"]       =  $keyx->idsodet;
+						$f["iditem"]        =  $keyx->iditem;
+						$f["price"]         =  $keyx->price;
+						$f["grandtotaldet"] = $keyx->grandtotaldet;
+					}
+				}
+
+				$datax  = array($f["iditem"]);
+				$queryx = "SELECT * FROM tb_item WHERE iditem = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["iditem"]           =  $keyx->iditem;
+						$f["nameitem"]         =  $keyx->nameitem;
+					}
+				}
 				array_push($respon, $f);
 			}
 		} else {
@@ -2440,907 +2600,6 @@ class MasterData extends CI_Model
 					}
 				}
 
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderfinish()
-	{
-		$query = "SELECT * FROM tb_salesorder,common_detail,tb_salesorderdetail,tb_item WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorderdetail.idso = tb_salesorder.idso AND tb_salesorderdetail.iditem = tb_item.iditem AND tb_salesorder.statusorder = 'Finish'";
-		$eksekusi = $this->db->query($query)->result_object();
-		// $str = $this->db->last_query();
-		// echo ($str);
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				// $f["sku"] = $key->sku;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-				$f["jasapengirim"] = $key->jasapengirim;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-				$queryxxs = "SELECT * FROM tb_salesorder,common_detail,tb_salesorderdetail,tb_item WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorderdetail.idso = tb_salesorder.idso AND tb_salesorderdetail.iditem = tb_item.iditem AND tb_salesorder.statusorder = 'Pending' ";
-				$eksekusixs = $this->db->query($queryxxs)->result_object();
-				if (count($eksekusixs) > 0) {
-					foreach ($eksekusixs as $keyx) {
-						$f["sku"] = $keyx->sku;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail,invinret WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem 
-				AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND tb_salesorderdetail.idso = invinret.idso AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-						$g["qtyinret"] = $keyx->qtyinret;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$data3 = array($key->idso);
-					$query3 = "SELECT * FROM tb_salesorderdetail, tb_item WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem  ";
-					$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-					if (count($eksekusi3) > 0) {
-						$f["data"] = array();
-						foreach ($eksekusi3 as $keyx) {
-							$g["idsodet"] = $keyx->idsodet;
-							$g["iditem"] = $keyx->iditem;
-							$g["nameitem"] = $keyx->nameitem;
-							$g["qty"] = $keyx->qty;
-							$g["qtyactual"] = 0;
-							$g["price"] = $keyx->price;
-							$g["disc"] = $keyx->disc;
-							$g["vat"] = $keyx->vat;
-							$g["totalprice"] = $keyx->totalprice;
-							$g["pricebuyitem"] = $keyx->pricebuyitem;
-							$g["qtyready"] = 0;
-							$g["sku"] = $keyx->sku;
-
-							array_push($f["data"], $g);
-						}
-					} else {
-						$f["data"] = "Not Found";
-					}
-				}
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderpendingpaginate($start, $limit, $filter, $search, $date1, $date2, $status)
-	{
-		$data = "";
-		$query = "";
-		if ($search != "" && $date1 == "" && $date2 == "" && $status == "") {
-			$data = array("%" . $search . "%", $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-			,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-			ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-			WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder = 'Pending' AND LOWER($filter) LIKE LOWER(?))  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search == "" && $date1 != "" && $date2 != "" && $status == "") {
-			$data = array($date1, $date2, $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder = 'Pending' AND REPLACE(tb_salesorder.dateso, ' ', '') >= ? AND REPLACE(tb_salesorder.dateso, ' ', '') <= ?)  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search == "" && $date1 == "" && $date2 == "" && $status != "") {
-			$data = array($start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder = 'Pending' AND statusorder = '$status')  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search != "" && $date1 != "" && $date2 != "" && $status == "") {
-			$data = array("%" . $search . "%", $date1, $date2, $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder = 'Pending' AND LOWER($filter) LIKE LOWER(?) AND REPLACE(tb_salesorder.dateso, ' ', '') >= ? AND REPLACE(tb_salesorder.dateso, ' ', '') <= ?)  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search != "" && $date1 == "" && $date2 == "" && $status != "") {
-			$data = array("%" . $search . "%", $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder = 'Pending' AND LOWER($filter) LIKE LOWER(?) AND statusorder = '$status')  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search == "" && $date1 != "" && $date2 != "" && $status != "") {
-			$data = array($date1, $date2, $status, $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND  tb_salesorder.statusorder = 'Pending' AND REPLACE(tb_salesorder.dateso, ' ', '') >= ? AND REPLACE(tb_salesorder.dateso, ' ', '') <= ? AND statusorder =?)  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} elseif ($search != "" && $date1 != "" && $date2 != "" && $status != "") {
-			$data = array("%" . $search . "%", $date1, $date2, $status, $start, $limit);
-			$query = " SELECT t.*  FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-		,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm, 
-		ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail 
-		WHERE tb_salesorder.idcust = common_detail.idcomm AND  tb_salesorder.statusorder = 'Pending' AND LOWER($filter) LIKE LOWER(?) AND REPLACE(tb_salesorder.dateso, ' ', '') >= ? AND REPLACE(tb_salesorder.dateso, ' ', '') <= ? AND statusorder =?)  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		} else {
-			$data = array($start, $limit);
-			$query = "SELECT t.* FROM (SELECT tb_salesorder.idso,tb_salesorder.codeso,tb_salesorder.dateso,tb_salesorder.typeso,tb_salesorder.delivaddr,tb_salesorder.totalso,tb_salesorder.totalprice
-			   ,tb_salesorder.delivdate , tb_salesorder.nopesanan , tb_salesorder.statusorder,tb_salesorder.jasapengirim, common_detail.namecomm,
-			   ROW_NUMBER() OVER (Order by tb_salesorder.codeso) AS RowNumber FROM tb_salesorder,common_detail  
-			   WHERE tb_salesorder.idcust = common_detail.idcomm AND  tb_salesorder.statusorder = 'Pending')  AS t WHERE t.RowNumber >= ? AND t.RowNumber <= ?";
-		}
-
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		// $str = $this->db->last_query();
-		// echo ($str);
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-				$f["jasapengirim"] = $key->jasapengirim;
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail,invinret WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem 
-				AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND tb_salesorderdetail.idso = invinret.idso AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-						$g["qtyinret"] = $keyx->qtyinret;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$data3 = array($key->idso);
-					$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem 
-					AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm  AND common_detail.attrib3 ='counter' ";
-					$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-					if (count($eksekusi3) > 0) {
-						$f["data"] = array();
-						foreach ($eksekusi3 as $keyx) {
-							$g["idsodet"] = $keyx->idsodet;
-							$g["iditem"] = $keyx->iditem;
-							$g["nameitem"] = $keyx->nameitem;
-							$g["qty"] = $keyx->qty;
-							$g["qtyactual"] = 0;
-							$g["price"] = $keyx->price;
-							$g["disc"] = $keyx->disc;
-							$g["vat"] = $keyx->vat;
-							$g["totalprice"] = $keyx->totalprice;
-							$g["pricebuyitem"] = $keyx->pricebuyitem;
-							$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-							$g["sku"] = $keyx->sku;
-
-							array_push($f["data"], $g);
-						}
-					} else {
-
-						$f["data"] = "Not Found";
-					}
-				}
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function countAllSalesorderPending($filter, $search, $date1, $date2)
-	{
-
-		$this->db->select('*');
-		$this->db->from('tb_salesorder');
-		$this->db->join('common_detail', 'tb_salesorder.idcust = common_detail.idcomm', 'left');
-		$this->db->where('statusorder', 'Pending');
-		$this->db->order_by('codeso', 'asc');
-		if ($search != "" && $date1 == "" && $date2 == "") {
-			$this->db->like($filter, $search);
-		} elseif ($search == "" && $date1 != "" && $date2 != "") {
-			$this->db->where('tb_salesorder.dateso', $date1, $date2);
-		} elseif ($search != "" && $date1 != "" && $date2 != "") {
-			$this->db->where('tb_salesorder.dateso', $date1, $date2);
-		}
-		$query = $this->db->get()->num_rows();
-		return $query;
-	}
-
-	function getsalesorderinvoicepaginate($start, $limit)
-	{
-		$this->db->select('*');
-		$this->db->from('tb_salesorder');
-		$this->db->join('common_detail', 'tb_salesorder.idcust = common_detail.idcomm');
-		$this->db->limit($start, $limit);
-
-		$eksekusi = $this->db->get()->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail,invinret WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem 
-				AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND tb_salesorderdetail.idso = invinret.idso AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-						$g["qtyinret"] = $keyx->qtyinret;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$data3 = array($key->idso);
-					$query3 = "SELECT * FROM tb_salesorderdetail, tb_item WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem  ";
-					$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-					if (count($eksekusi3) > 0) {
-						$f["data"] = array();
-						foreach ($eksekusi3 as $keyx) {
-							$g["idsodet"] = $keyx->idsodet;
-							$g["iditem"] = $keyx->iditem;
-							$g["nameitem"] = $keyx->nameitem;
-							$g["qty"] = $keyx->qty;
-							$g["qtyactual"] = 0;
-							$g["price"] = $keyx->price;
-							$g["disc"] = $keyx->disc;
-							$g["vat"] = $keyx->vat;
-							$g["totalprice"] = $keyx->totalprice;
-							$g["pricebuyitem"] = $keyx->pricebuyitem;
-							$g["qtyready"] = 0;
-							$g["sku"] = $keyx->sku;
-
-							array_push($f["data"], $g);
-						}
-					} else {
-						$f["data"] = "Not Found";
-					}
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-
-	function getsalesorderbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		// $str = $this->db->last_query();
-		// echo $str;
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-				$f["jasapengirim"] = $key->jasapengirim;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderwaitingbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder='Waiting' AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderpendingbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder='Pending' AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderProcessbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder='Process' AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesordercancelbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder='Cancel' AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getsalesorderfinishbydate($finish)
-	{
-		$data = array($finish);
-		$query = "SELECT * FROM tb_salesorder,common_detail WHERE tb_salesorder.idcust = common_detail.idcomm AND tb_salesorder.statusorder='Finish' AND REPLACE(tb_salesorder.dateso, ' ', '') = ? ORDER BY tb_salesorder.codeso ASC";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idso"] = $key->idso;
-				$f["codeso"] = $key->codeso;
-				$f["dateso"] = $key->dateso;
-				$f["namecomm"] = $key->namecomm;
-				$f["typeso"] = $key->typeso;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["totalso"] = $key->totalso;
-				$f["totalprice"] = $key->totalprice;
-				$f["subtotal"] = $key->subtotal;
-				$f["discs"] = $key->disc;
-				$f["delivdate"] = $key->delivdate;
-				$f["nopesanan"] = $key->nopesanan;
-
-				$dataxx = array($key->statusorder);
-				$queryxx = "SELECT * FROM common_detail WHERE namecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["statusorder"] = $keyx->namecomm;
-					}
-				}
-
-
-				$dataxx = array($key->typeso);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypeso"] = $keyx->namecomm;
-					}
-				}
-
-
-				$data3 = array($key->idso);
-				$query3 = "SELECT * FROM tb_salesorderdetail, tb_item,tb_itemqty,common_detail WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem AND  tb_item.iditem = tb_itemqty.iditem AND tb_itemqty.idwh = common_detail.idcomm AND common_detail.attrib3 ='counter' ";
-				$eksekusi3 = $this->db->query($query3, $data3)->result_object();
-				if (count($eksekusi3) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi3 as $keyx) {
-						$g["idsodet"] = $keyx->idsodet;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"] = $keyx->nameitem;
-						$g["qty"] = $keyx->qty;
-						$g["qtyactual"] = $keyx->endqty;
-						$g["price"] = $keyx->price;
-						$g["disc"] = $keyx->disc;
-						$g["vat"] = $keyx->vat;
-						$g["totalprice"] = $keyx->totalprice;
-						$g["pricebuyitem"] = $keyx->pricebuyitem;
-						$g["qtyready"] = $keyx->endqty - $keyx->qtyso;
-						$g["sku"] = $keyx->sku;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-
-
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
-		return $respon;
-	}
-
-	function getquotationbydates($finish)
-	{
-		// $data = date('Y-m-d');
-		$datax = array($finish);
-		$query = "SELECT * FROM tb_quotation,common_detail WHERE tb_quotation.statusquo = common_detail.namecomm AND common_detail.namecomm = 'Waiting' AND REPLACE(tb_quotation.datequo, ' ', '') = ?";
-		$eksekusi = $this->db->query($query, $datax)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idquo"] = $key->idquo;
-				$f["codequo"] = $key->codequo;
-				$f["datequo"] = $key->datequo;
-				$f["statusquo"] = $key->namecomm;
-				$f["typequo"] = $key->typequo;
-				$f["namequotation"] = $key->namequotation;
-				$f["pricetotal"] = $key->pricetotal;
-				$f["datequo"] = $key->datequo;
-				$f["totalquo"] = $key->totalquo;
-				$f["VAT"] = $key->VAT;
-				$f["norek"] = $key->norek;
-				$f["delivdate"] = $key->delivdate;
-				$f["delivaddr"] = $key->delivaddr;
-				$f["disc"] = $key->disc;
-				$f["address"] = $key->attrib1;
-				$datax = array($key->idcurrency);
-				$queryx = "SELECT * FROM common_detail WHERE idcomm = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $keyx) {
-						$f["currency"] = $keyx->namecomm;
-					}
-				}
-
-				$dataxx = array($key->idcust);
-				$queryxx = "SELECT * FROM common_detail WHERE idcomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["namecomm"] = $keyx->namecomm;
-					}
-				}
-
-				$dataxx = array($key->typequo);
-				$queryxx = "SELECT * FROM common_detail WHERE codecomm = ?";
-				$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
-				if (count($eksekusixx) > 0) {
-					foreach ($eksekusixx as $keyx) {
-						$f["nametypequo"] = $keyx->namecomm;
-					}
-				}
 				array_push($respon, $f);
 			}
 		} else {
@@ -3677,7 +2936,46 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getlistinvindet($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem)
+	function getlistinvindet()
+	{
+
+		$query = "SELECT * FROM invin,invindet,tb_item,po,tb_warehouse,tb_supplier 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idsupp = tb_supplier.idsupp";
+		$eksekusi = $this->db->query($query)->result_object();
+		// echo ($this->db->last_query());
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"]	        = $key->idin;
+				$f["idpo"]	        = $key->idpo;
+				$f["codein"]	    = $key->codein;
+				$f["codepo"]	    = $key->codepo;
+				$f["datein"]	    = $key->datein;
+				$f["typein"]	    = $key->typein;
+				$f["price"]	        = $key->price;
+				$f["nameitem"]	        = $key->nameitem;
+				$f["deskripsi"]  	= $key->deskripsi;
+				$f["itemgroup"]	    = $key->itemgroup;
+				$f["sku"]	        = $key->sku;
+				$f["qtypodet"]	        = $key->qtypodet;
+				$f["qtypo"]	        = $key->qtypo;
+				$f["qtyindet"]	        = $key->qtyindet;
+				$f["balance"]	    = $key->balance;
+				$f["expdate"]       = $key->expdate;
+				$f["idunit"]       = $key->idunit;
+				$f["namewarehouse"]       = $key->namewarehouse;
+				$f["namesupp"]       = $key->namesupp;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem)
 	{
 		$data = "";
 		$query = "";
@@ -3819,38 +3117,6 @@ class MasterData extends CI_Model
 		} else {
 			$respon = "Not Found";
 		}
-		return $respon;
-	}
-
-	function getjasapengirimbydate($finish)
-	{
-		$data = array($finish, $finish, $finish, $finish, $finish, $finish);
-		// $query = "SELECT jasapengirim,dateso, COUNT(jasapengirim) AS jumlah FROM tb_salesorder WHERE REPLACE(tb_salesorder.dateso, ' ', '') = ?  GROUP BY jasapengirim,dateso ORDER BY jumlah ASC";
-		// $query = "SELECT distinct(jasapengirim) FROM tb_salesorder WHERE REPLACE(tb_salesorder.dateso, ' ', '') = ?";
-		$query = "select a.jasapengirim,a1.qty as w,b.qty as p,c.qty as pr,d.qty as f,e.qty as c from 
-		(select distinct jasapengirim from tb_salesorder where REPLACE(tb_salesorder.dateso, ' ', '') = ?) as a 
-		left join(select jasapengirim,statusorder,count(statusorder) as qty from tb_salesorder where statusorder='Waiting' and REPLACE(tb_salesorder.dateso, ' ', '') = ?  group by jasapengirim,statusorder ) as a1 on a.jasapengirim = a1.jasapengirim
-		left join(select jasapengirim,statusorder,count(statusorder) as qty from tb_salesorder where statusorder='Pending' and REPLACE(tb_salesorder.dateso, ' ', '') = ? group by jasapengirim,statusorder) as b on a.jasapengirim = b.jasapengirim
-		left join(select jasapengirim,statusorder,count(statusorder) as qty  from tb_salesorder where statusorder='Process' and REPLACE(tb_salesorder.dateso, ' ', '') = ? group by jasapengirim,statusorder) as c on a.jasapengirim = c.jasapengirim
-		left join(select jasapengirim,statusorder,count(statusorder) as qty from tb_salesorder where statusorder='Finish' and REPLACE(tb_salesorder.dateso, ' ', '') = ? group by jasapengirim,statusorder) as d on a.jasapengirim = d.jasapengirim
-		left join(select jasapengirim,statusorder,count(statusorder) as qty from tb_salesorder where statusorder='Cancel'and REPLACE(tb_salesorder.dateso, ' ', '') = ? group by jasapengirim,statusorder) as e on a.jasapengirim = e.jasapengirim
-		";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["jasapengirim"] = $key->jasapengirim;
-				$f["waiting"] = $key->w;
-				$f["pending"] = $key->p;
-				$f["process"] = $key->pr;
-				$f["finish"] = $key->f;
-				$f["cancel"] = $key->c;
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-
 		return $respon;
 	}
 
@@ -4775,24 +4041,43 @@ class MasterData extends CI_Model
 	function getdatacustomerbyid($idcustomer)
 	{
 		$data = array(base64_decode($idcustomer));
-		$query = "SELECT * FROM common_detail WHERE codecomm = ?";
+		$query = "SELECT * FROM tb_customer where idcust = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
+			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["idcomm"] = $key->idcomm;
-				$f["codecomm"] = $key->codecomm;
-				$f["namecomm"] = $key->namecomm;
-				$f["isactive"] = $key->isactive;
-				$f["attrib1"] = $key->attrib1;
-				$f["attrib2"] = $key->attrib2;
-				$f["attrib3"] = $key->attrib3;
-				$f["attrib4"] = $key->attrib4;
-				$f["attrib5"] = $key->attrib5;
+				$f["idcust"]        =  $key->idcust;
+				$f["codecust"]      =  $key->codecust;
+				$f["typecust"]      =  $key->typecust;
+				$f["namecust"]      =  $key->namecust;
+				$f["phonecust"]     =  $key->phonecust;
+				$f["email"]         =  $key->email;
+				$f["nocontact"]     =  $key->nocontact;
+				$f["addresscust"]   =  $key->addresscust;
+				$f["madelog"]       =  $key->madelog;
+				$f["madeuser"]      =  $key->madeuser;
+				$f["data"] = array();
+				$datax = array($f["idcust"]);
+				$queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+
+					foreach ($eksekusix as $keyx) {
+						$g["idcustdet"]     =  $keyx->idcustdet;
+						$g["norekening"]    =  $keyx->norekening;
+						$g["namabank"]      =  $keyx->namabank;
+						$g["beneficiary"]   =  $keyx->beneficiary;
+
+						array_push($f["data"], $g);
+					}
+				}
+
+				array_push($respon, $f);
 			}
-			$respon = $f;
 		} else {
 			$respon = "Not Found";
 		}
+
 		return $respon;
 	}
 
@@ -5493,6 +4778,56 @@ class MasterData extends CI_Model
 		}
 	}
 
+	function editcust($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary)
+	{
+		date_default_timezone_set('Asia/Jakarta');
+		$this->db->trans_begin();
+		$data     = array($typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $codecust);
+		// $query    = "INSERT INTO tb_customer(codecust,typecust,namecust,nocontact,email,phonecust,addresscust,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+		$query = "UPDATE tb_customer SET typecust = ? , namecust = ?, nocontact = ? , email = ? ,phonecust = ?, addresscust = ? WHERE codecust = ?";
+		$eksekusi = $this->db->query($query, $data);
+		if ($eksekusi == true) {
+			$datax = array($codecust);
+			$queryx = "SELECT * FROM tb_customer WHERE codecust = ?";
+			$eksekusix = $this->db->query($queryx, $datax)->result_object();
+			if (count($eksekusix) > 0) {
+				foreach ($eksekusix as $key) {
+					$idcust = $key->idcust;
+					$data1 = $idcust;
+					$query1 = "DELETE FROM tb_customerdet WHERE idcust = ?";
+					$eksekusi1 = $this->db->query($query1, $data1);
+					if ($eksekusi1 == true) {
+						for ($i = 0; $i < count($norekening); $i++) {
+							if ($norekening[$i] != "") {
+								$data2     = array($idcust, $namabank[$i], $norekening[$i], $beneficiary[$i]);
+								$query2    = "INSERT INTO tb_customerdet (idcust,namabank,norekening,beneficiary)VALUES(?,?,?,?)";
+								$eksekusi2 = $this->db->query($query2, $data2);
+								if ($eksekusi2 == true) {
+									$respon = "Success";
+								} else {
+									$respon = "Failed on Detail";
+									break;
+								}
+							}
+						}
+					} else {
+						$respon = "Failed on Delete Detail Last";
+					}
+				}
+			} else {
+				$respon = "Failed on Detail";
+			}
+		} else {
+			$respon = "Failed on Detail";
+		}
+		if ($respon == "Success") {
+			$this->db->trans_commit();
+		} else {
+			$this->db->trans_rollback();
+		}
+		return $respon;
+	}
+
 	function addso(
 		$codeso,
 		$idquo,
@@ -5512,6 +4847,7 @@ class MasterData extends CI_Model
 		$vat,
 		$ongkir,
 		$grandtotaldetail,
+
 		$transaksi_iditem,
 		$transaksi_sku,
 		$transaksi_nameitem,
@@ -5521,7 +4857,7 @@ class MasterData extends CI_Model
 		$transaksi_total,
 		$transaksi_discnominal,
 		$transaksi_discpersen,
-		$transaksi_grandtotal
+		$transaksi_grandtotal1
 	) {
 		date_default_timezone_set('Asia/Jakarta');
 		$fail   = 0;
@@ -5551,7 +4887,6 @@ class MasterData extends CI_Model
 								$respon = "Success";
 							} else {
 								$respon = "Failed on Detail";
-								break;
 							}
 						}
 					}
@@ -5607,6 +4942,15 @@ class MasterData extends CI_Model
 		$transaksi_qtyin,
 		$transaksi_balance,
 		$transaksi_expiredate,
+
+		$transaksi_iditem1,
+		$transaksi_sku1,
+		$transaksi_nameitem1,
+		$transaksi_deskripsi1,
+		$transaksi_harga1,
+		$transaksi_qtyin1,
+		$transaksi_balance1,
+		$transaksi_expiredate1,
 		$userid
 	) {
 		date_default_timezone_set('Asia/Jakarta');

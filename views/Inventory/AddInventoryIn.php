@@ -57,7 +57,7 @@ if ($data3 != "Not Found") {
 					<div class="row mb-3">
 						<div class="col-8">
 							<label for="" class="form-label">Customer</label>
-							<select name="namecust" id="" class="form-select" required>
+							<select name="namecust1" id="" class="form-select" required>
 								<option value="">Pilih</option>
 								<?php if ($data4 != "Not Found") : ?>
 									<?php foreach ($data4 as $key) : ?>
@@ -89,7 +89,8 @@ if ($data3 != "Not Found") {
 							<div class="col-8">
 								<div class="mb-3">
 									<label for="" class="form-label">Data Move WH</label>
-									<input type="text" id="codepo" name="codepo" class="form-control" list="xpo" autocomplete="off" readonly>
+									<input type="hidden" class="form-control" id="idmove" name="idmove">
+									<input type="text" id="codemove" name="codemove" class="form-control" readonly>
 								</div>
 							</div>
 							<div class="col-4 mb-3">
@@ -151,7 +152,8 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Pengirim</label>
-								<select name="namewarehouse" id="" class="form-select" aria-label="Disabled select example" disabled>
+								<select name="namewarehouse1" id="" class="form-select" aria-label="Disabled select example">
+									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -160,8 +162,9 @@ if ($data3 != "Not Found") {
 								</select>
 							</div>
 							<div class="col-5">
-								<label for="" class="form-label">Gudang Pengirim</label>
-								<select name="namewarehouse" id="" class="form-select" aria-label="Disabled select example" disabled>
+								<label for="" class="form-label">Gudang Penerima</label>
+								<select name="namewarehouse1" id="" class="form-select" aria-label="Disabled select example">
+									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -174,11 +177,11 @@ if ($data3 != "Not Found") {
 						<div class="row">
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" class="form-control" name="" id="">
+								<input type="date" class="form-control" name="datein1" id="datein1">
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Mata Uang</label>
-								<select name="currency" id="" class="form-select" required>
+								<select name="currency1" id="" class="form-select" required>
 									<?php if ($data1 != "Not Found") : ?>
 										<?php foreach ($data1 as $key) : ?>
 											<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
@@ -236,7 +239,7 @@ if ($data3 != "Not Found") {
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" id="suptable">
 			<label for="" class="form-label fs-5 mt-3">Item/Produk</label>
 			<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
 			<table class="table">
@@ -256,6 +259,87 @@ if ($data3 != "Not Found") {
 			</table>
 			<table class="table table-striped table-hover">
 				<tbody id="detailx">
+				</tbody>
+			</table>
+			</table>
+			<div class="mr-4" style="text-align:right;">
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+			</div>
+		</div>
+
+
+		<div class="row" id="movewhtable" style="display: none;">
+			<label for="" class="form-label fs-5 mt-3">Item/Produk</label>
+			<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Unit</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Qty In</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Selisih</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Expire Date</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Action</th>
+					</tr>
+				</thead>
+			</table>
+			<table class="table table-striped table-hover">
+				<tbody id="detailmovewh">
+				</tbody>
+			</table>
+			</table>
+			<div class="mr-4" style="text-align:right;">
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+			</div>
+		</div>
+
+		<div class="row" id="returntable" style="display: none;">
+			<label for="" class="form-label fs-5 mt-3">Item/Produk</label>
+			<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
+						<th style="background:#1143d8;color:white;text-align:center;">Nama Item</th>
+						<th style="background:#1143d8;color:white;text-align:center;">Unit</th>
+						<th style="background:#1143d8;color:white;text-align:center;">Qty In</th>
+						<th style="background:#1143d8;color:white;text-align:center;">Expire Date</th>
+						<th style="background:#1143d8;color:white;text-align:center;">Action</th>
+					</tr>
+				</thead>
+			</table>
+			<table class="table table-striped table-hover">
+				<tbody id="detailreturn">
+				</tbody>
+			</table>
+			</table>
+			<div class="mr-4" style="text-align:right;">
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+			</div>
+		</div>
+
+		<div class="row" id="initialtable" style="display: none;">
+			<label for="" class="form-label fs-5 mt-3">Item/Produk</label>
+			<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Deskripsi</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Qty Po</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Qty In</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Selisih</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Expire Date</th>
+						<th style="background:#1143d8;color:white;text-align:right;">Action</th>
+					</tr>
+				</thead>
+			</table>
+			<table class="table table-striped table-hover">
+				<tbody id="detailreturn">
 				</tbody>
 			</table>
 			</table>
@@ -299,26 +383,22 @@ if ($data3 != "Not Found") {
 						<table class="table table-bordered table-striped" id="table-user">
 							<thead>
 								<tr>
-									<td>
-										<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-									</td>
-									<td>No. Outgoing (DO)</td>
-									<td>Gudang Pengirim</td>
-									<td>Qty Item</td>
-									<td>Total Amount</td>
-									<td>Status <i class='bx bx-down-arrow-alt'></i></td>
-									<td>Action</td>
+									<td style="text-align:center;">No. Outgoing (DO)</td>
+									<td style="text-align:center;">Gudang Pengirim</td>
+									<td style="text-align:center;">Qty Item</td>
+									<td style="text-align:center;">Total Amount</td>
+									<td style="text-align:center;">Status <i class='bx bx-down-arrow-alt'></i></td>
+									<td style="text-align:center;">Action</td>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td>ss</td>
-									<td><a href="" class="btn btn-primary">Pilih</a></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><a href="" class=" btn btn-primary">Pilih</a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -416,6 +496,10 @@ if ($data3 != "Not Found") {
 			$('#warehousexx').hide();
 			$('#return').hide();
 			$('#returnx').hide();
+			$('#suptable').show();
+			$('#movewhtable').hide();
+			$('#returntable').hide();
+			$('#initialtable').hide();
 		} else if (x == "warehousex") {
 			$('#supplier').hide();
 			$('#supplierx').hide();
@@ -423,6 +507,10 @@ if ($data3 != "Not Found") {
 			$('#warehousexx').show();
 			$('#return').hide();
 			$('#returnx').hide();
+			$('#suptable').hide();
+			$('#movewhtable').show();
+			$('#returntable').hide();
+			$('#initialtable').hide();
 		} else if (x == "return") {
 			$('#supplier').hide();
 			$('#supplierx').hide();
@@ -430,6 +518,10 @@ if ($data3 != "Not Found") {
 			$('#warehousexx').hide();
 			$('#return').show();
 			$('#returnx').show();
+			$('#suptable').hide();
+			$('#movewhtable').hide();
+			$('#returntable').show();
+			$('#initialtable').hide();
 		}
 	}
 </script>
@@ -442,15 +534,17 @@ if ($data3 != "Not Found") {
 	} ?>
 </datalist>
 <script type="text/javascript">
+	add_row_transaksi(0)
+	add_row_transaksi1(0)
+	add_row_transaksi2(0)
+
 	function poselect(x, y, z) {
 		$('#codepo').val(x);
 		$('#idpo').val(y);
 		$('#datepo').val(z);
-		// console.log(y);
 		loadreq();
 	}
 
-	add_row_transaksi(0)
 	var xitem = '';
 	xitem = '<?php
 				$x = '';
@@ -490,6 +584,18 @@ if ($data3 != "Not Found") {
 		calc();
 	}
 
+	function del_row_transaksi1(xid) {
+		$('#transaksi1-' + xid + '').remove();
+		reorder();
+		calc();
+	}
+
+	function del_row_transaksi2(xid) {
+		$('#transaksi2-' + xid + '').remove();
+		reorder();
+		calc();
+	}
+
 	function readURL(input) {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
@@ -513,18 +619,17 @@ if ($data3 != "Not Found") {
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi1-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control _nameitem" name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_deskripsi" autocomplete="off" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]' + xid + '_deskripsi"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count(' + xid + ')"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count(' + xid + ')" value="0"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" value="0" name="transaksi_qtyin[]" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi_' + xid + '_balance" class="form-control _balance" value="0" name="transaksi_balance[]"  onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input  autocomplete="off" type="date" id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
 		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		//return tabel;
 		$('#line-transaksi').val(xid);
 		$('#detailx').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
@@ -534,6 +639,63 @@ if ($data3 != "Not Found") {
 			$('#transaksi-tr-' + xxid + '').html(xdt);
 		}
 	}
+
+	function add_row_transaksi1(xxid) {
+		var lastid = 0;
+		if (parseInt(xxid) != 0) {
+			lastid = parseInt($("#transaksi1_" + xxid + "_nourut1").val());
+		}
+		var xid = (parseInt(xxid) + 1);
+		lastid++;
+		var tabel = '';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi1-' + xid + '"><input type="hidden" id="transaksi1_' + xid + '_iditem1"  class="form-control  iditem1" name="transaksi_iditem1[]" / ></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi1_' + xid + '_sku1" name="transaksi_sku1[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi1_' + xid + '_nameitem1"  class="form-control _nameitem" name="transaksi_nameitem1[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi1_' + xid + '_deskripsi1" autocomplete="off" class="form-control  _deskripsi1" name="transaksi_unit1[]' + xid + '_deskripsi"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi1_' + xid + '_harga1" autocomplete="off" class="form-control  _harga" name="transaksi_harga1[]' + xid + '_harga"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi1_' + xid + '_qtyin1" class="form-control  _qtyin1" value="0" name="transaksi_qtyin1[]" onchange="count1(' + xid + ')"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" readonly id="transaksi1_' + xid + '_balance1" class="form-control _balance1" value="0" name="transaksi_balance1[]"  onchange="count1(' + xid + ')"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input  autocomplete="off" type="date" id="transaksi1_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate1[]"></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi1-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi1(' + xid + ')"><b>+</b></button></td>';
+		tabel += '</tr>';
+		//return tabel;
+		$('#line-transaksi').val(xid);
+		$('#detailmovewh').append(tabel);
+		$('#transaksi1_' + xid + '_nourut1').val(lastid);
+		if (parseInt(xxid) != 0) {
+			var olddata = $('#transaksi1-tr-' + xxid + '').html();
+			var xdt = olddata.replace('onclick="add_row_transaksi1(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi1(' + xxid + ')"><b>x</b>');
+			$('#transaksi1-tr-' + xxid + '').html(xdt);
+		}
+	}
+
+	function add_row_transaksi2(xxid) {
+		var lastid = 0;
+		if (parseInt(xxid) != 0) {
+			lastid = parseInt($("#transaksi2_" + xxid + "_nourut2").val());
+		}
+		var xid = (parseInt(xxid) + 1);
+		lastid++;
+		var tabel = '';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi2-' + xid + '"><input type="hidden" id="transaksi2_' + xid + '_iditem2"  class="form-control  iditem2" name="transaksi_iditem2[]" / ></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku2" objtype="sku2" id="transaksi2_' + xid + '_sku2" name="transaksi_sku2[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi2_' + xid + '_nameitem2"  class="form-control _nameitem2" name="transaksi_nameitem2[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi2_' + xid + '_deskripsi2" autocomplete="off" class="form-control  _deskripsi2" name="transaksi_unit1[]' + xid + '_deskripsi"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi2_' + xid + '_qtyin2" class="form-control  _qtyin2" value="0" name="transaksi_qtyin2[]" onchange="count2(' + xid + ')"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input  autocomplete="off" type="date" id="transaksi2_' + xid + '_expiredate2" class="form-control _expiredate2" name="transaksi_expiredate2[]"></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi2-tr-' + xid + '"><button style="width:60px" id="transaksi2_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi2(' + xid + ')"><b>+</b></button></td>';
+		tabel += '</tr>';
+		//return tabel;
+		$('#line-transaksi').val(xid);
+		$('#detailreturn').append(tabel);
+		$('#transaksi2_' + xid + '_nourut2').val(lastid);
+		if (parseInt(xxid) != 0) {
+			var olddata = $('#transaksi2-tr-' + xxid + '').html();
+			var xdt = olddata.replace('onclick="add_row_transaksi2(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi2(' + xxid + ')"><b>x</b>');
+			$('#transaksi2-tr-' + xxid + '').html(xdt);
+		}
+	}
+
 
 	$(document).on('change', '.sku', function() {
 		var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
@@ -560,6 +722,53 @@ if ($data3 != "Not Found") {
 		calc();
 	});
 
+	$(document).on('change', '.sku', function() {
+		var xid = $(this).attr('id').replace("transaksi1_", "").replace("_sku1", "");
+		var val = $(this).val();
+		var xobj = $('#xitem option').filter(function() {
+			return this.value == val;
+		});
+		if ((val == "") || (xobj.val() == undefined)) {
+			$('#transaksi1_' + xid + '_sku1').val("");
+			$('#transaksi1_' + xid + '_iditem1').val("");
+			$('#transaksi1_' + xid + '_nameitem1').val("");
+			$('#transaksi1_' + xid + '_harga1').val(0);
+			$('#transaksi1_' + xid + '_deskripsi1').val("");
+			$('#transaksi1_' + xid + '_expiredate1').val("");
+		} else {
+			$('#transaksi1_' + xid + '_sku1').val(xobj.data('sku'));
+			$('#transaksi1_' + xid + '_iditem1').val(xobj.data('iditem'));
+			$('#transaksi1_' + xid + '_nameitem1').val(xobj.data('nameitem'));
+			$('#transaksi1_' + xid + '_harga1').val(xobj.data('price'));
+			$('#transaksi1_' + xid + '_deskripsi1').val(xobj.data('deskripsi'));
+			$('#transaksi1_' + xid + '_expiredate1').val(xobj.data('expiredate'));
+		}
+		calc();
+	});
+
+	$(document).on('change', '.sku2', function() {
+		var xid = $(this).attr('id').replace("transaksi2_", "").replace("_sku2", "");
+		var val = $(this).val();
+		var xobj = $('#xitem option').filter(function() {
+			return this.value == val;
+		});
+		if ((val == "") || (xobj.val() == undefined)) {
+			$('#transaksi2_' + xid + '_sku2').val("");
+			$('#transaksi2_' + xid + '_iditem2').val("");
+			$('#transaksi2_' + xid + '_nameitem2').val("");
+			$('#transaksi2_' + xid + '_harga2').val(0);
+			$('#transaksi2_' + xid + '_deskripsi2').val("");
+			$('#transaksi2_' + xid + '_expiredate2').val("");
+		} else {
+			$('#transaksi2_' + xid + '_sku2').val(xobj.data('sku'));
+			$('#transaksi2_' + xid + '_iditem2').val(xobj.data('iditem'));
+			$('#transaksi2_' + xid + '_nameitem2').val(xobj.data('nameitem'));
+			$('#transaksi2_' + xid + '_harga2').val(xobj.data('price'));
+			$('#transaksi2_' + xid + '_deskripsi2').val(xobj.data('deskripsi'));
+			$('#transaksi2_' + xid + '_expiredate2').val(xobj.data('expiredate'));
+		}
+		calc();
+	});
 
 	function loadreq() {
 		var xid = $('#idpo').val();
@@ -687,6 +896,12 @@ if ($data3 != "Not Found") {
 		var qtyins = $('#transaksi_' + xid + '_qtyin').val();
 		var totals = qtypos - qtyins;
 		$('#transaksi_' + xid + '_balance').val(totals);
+	}
+
+	function count1(xid) {
+		var qtyins = $('#transaksi1_' + xid + '_qtyin1').val();
+		var totals = qtyins;
+		$('#transaksi1_' + xid + '_balance1').val(totals);
 	}
 
 	$(document).ready(function() {

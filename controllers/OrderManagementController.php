@@ -39,9 +39,31 @@ class OrderManagementController extends CI_Controller
 
 	function orderreport()
 	{
+		$status         = $this->input->post('status');
+		$date1          = $this->input->post('date1');
+		$date2          = $this->input->post('date2');
+		$namecust       = $this->input->post('namecust');
+
+		if (!isset($status)) {
+			$status = '';
+		}
+
+		if (!isset($date1)) {
+			$date1 = '';
+		}
+
+		if (!isset($date2)) {
+			$date2 = '';
+		}
+
+		if (!isset($namecust)) {
+			$namecust = '';
+		}
+
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
-		$f["data1"] = $this->MasterData->getsalesorder();
+		$f["data"]  = $this->MasterData->getsalesorderfilter($status, $date1, $date2, $namecust);
+		$f["data1"] = $this->MasterData->getallsalesorder();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("SalesOrder/orderreport", $f);
 		$this->load->view("SuperAdmin/Footer");

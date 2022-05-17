@@ -376,6 +376,9 @@
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/InOutReport') ?>">IN/OUT Report</a>
             </li>
             <li>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Stockcard') ?>">Stock Card Report</a>
+            </li>
+            <li>
               <a class="dropdown-item m-2" href="#">Safety Stock Report</a>
             </li>
             <li>

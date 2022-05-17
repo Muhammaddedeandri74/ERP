@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('MasterDataControler/addsalesorder') ?>" method="POST" enctype="multipart/form-data" id="form">
+<form action="<?php echo base_url('OrderManagementController/orderreport') ?>" method="POST" enctype="multipart/form-data">
     <div class="header px-4 pt-2" style="height: 196px;">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
@@ -19,25 +19,23 @@
                     <div class="row">
                         <div class="col-3">
                             <label for="" class="form-label">Status Order</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" name="status" aria-label="Default select example">
+                                <option value="">Pilih</option>
+                                <option value="Waiting">Waiting</option>
+                                <option value="Process">Process</option>
+                                <option value="Finish">Finish</option>
+                                <option value="Cancel">Cancel</option>
                             </select>
                         </div>
                         <div class="col-3">
                             <label for="" class="form-label">Mulai Dari</label>
-                            <input type="date" class="form-control">
+                            <input type="date" name="date1" class="form-control">
                         </div>
                         <div class="col-3">
                             <label for="" class="form-label">Sampai Dengan</label>
-                            <input type="date" class="form-control">
+                            <input type="date" name="date2" class="form-control">
                         </div>
-                        <div class="col-3">
-                            <p></p>
-                            <a href="" class="btn btn-primary mt-3">Terapkan</a>
-                        </div>
+
                     </div>
                 </div>
                 <div class="col-6"></div>
@@ -45,7 +43,12 @@
             <div class="row mb-3">
                 <div class="col-3">
                     <label for="" class="form-label">Pencarian</label>
-                    <input type="text" class="form-control" placeholder="Cari Berdasarkan Customer" name="" id="">
+                    <input type="text" name="namecust" id="namecust" class="form-control" placeholder="Cari Berdasarkan Customer" autocomplete="off">
+                </div>
+                <div class="col-4">
+                    <p></p>
+                    <a href="<?php echo base_url('OrderManagementController/orderreport') ?>" class="btn btn-danger mt-3">Reload</a>
+                    <button type="submit" class="btn btn-primary mt-3">Terapkan</button>
                 </div>
             </div>
         </div>
@@ -54,7 +57,7 @@
                 <table class="table m-0">
                     <thead class="border-0">
                         <tr>
-                            <th><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></th>
+                            <th>No</th>
                             <th>No. Sales Order</th>
                             <th>Tgl. Transaksi</th>
                             <th>Customer</th>
@@ -66,19 +69,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            </td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                            <td>~</td>
-                        </tr>
+                        <?php if ($data != "Not Found") : ?>
+                            <?php $no = 1 ?>
+                            <?php foreach ($data as $key) : ?>
+                                <tr>
+                                    <td><?php echo $no++; ?></td>
+                                    <td><?php echo $key["codeso"] ?></td>
+                                    <td><?php echo $key["namecust"] ?></td>
+                                    <td><?php echo $key["dateso"] ?></td>
+                                    <td><?php echo $key["nameitem"] ?></td>
+                                    <td>Rp. <?php echo number_format($key['price'], 0, '.', ',') ?></td>
+                                    <td>Rp. <?php echo number_format($key['disnomdet'], 0, '.', ',') ?></td>
+                                    <td>Rp. <?php echo number_format($key['grandtotaldet'], 0, '.', ',') ?></td>
+                                    <td style="text-align:left;">
+                                        <?php if ($key["statusorder"] == "Waiting") : ?>
+                                            <p style="background-color:#E6ECFF;width:fit-content;text-color:#1143D8;" class="fs-6 px-3 rounded-pill"> <?php echo $key["statusorder"] ?></p>
+                                        <?php elseif ($key["statusorder"] == "Process") : ?>
+                                            <p style="background-color:#FCAA25;width:fit-content;text-color:white;" class="fs-6 px-3 text-white rounded-pill"> <?php echo $key["statusorder"] ?></p>
+                                        <?php elseif ($key["statusorder"] == "Finish") : ?>
+                                            <p style="background-color:#A6FFC6;width:fit-content;text-color:#008F43;" class="fs-6 px-3 rounded-pill"> <?php echo $key["statusorder"] ?></p>
+                                        <?php endif ?>
+                                    </td>
+                                </tr>
+
+                            <?php endforeach ?>
+                        <?php endif ?>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -97,17 +112,17 @@
                                 <div class="row">
                                     <label for="">Report</label>
                                     <div class="col-6">
-                                        <a href="" class="btn"><i class="bx bxs-download"></i>Download</a>
+                                        <a id="btn_exportexcel" class="btn"><i class="bx bxs-download"></i>Download</a>
                                     </div>
                                     <div class="col-6">
-                                        <a href="" class="btn"><i class="bx bx-printer"></i>Cetak</a>
+                                        <a class="btn" onclick="printdata()"><i class="bx bx-printer"></i>Cetak</a>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
                                     <label for=""><i style="color: #F56764" class="bx bxs-circle"></i> Total Semua Sales Order</label>
-                                    <p>Rp. 12.000.000,00</p>
+                                    <p></p>
                                 </div>
                             </td>
                             <td>
@@ -128,172 +143,72 @@
             </div>
         </div>
     </div>
+    <pre id="result" style="display: none"></pre>
+    <div class="excel" id="excel">
+    </div>
+    <div class="data" id="data">
+        <table class="table table-striped table-hover">
+            <thead style="background: purple">
+                <tr>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">#</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">No. Sales Order</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Transaksi</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Customer</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Item</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">DPP</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Discount</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Total Amount</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Status</td>
+                </tr>
+            </thead>
+            <tbody id="printt">
+                <?php if ($data != "Not Found") : ?>
+                    <?php $no = 1 ?>
+                    <?php foreach ($data as $key) : ?>
+                        <tr>
 
-    <form action="">
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header" style="background:#1143d8;color:white;">
-                        <h5 class="modal-title" id="exampleModalLabel">TAMBAH CUSTOMER BARU</h5>
-                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label for="" class="form-label">Code Customer</label>
-                                <input type="text" name="codesupp" class="form-control" value="<?php echo $idsupp ?>" readonly>
-                                <input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-                            </div>
-                            <div class="col-6">
-                                <label for="" class="form-label">Email</label>
-                                <input type="text" name="email" id="email" class="form-control" placeholder="Masukkan Email Pengguna" required autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label for="" class="form-label">Type Customer</label>
-                                <select name="typecust" class="form-select" aria-label="Default select example">
-                                    <option Value="">Pilih</option>
-                                    <option value="Buyer">Buyer</option>
-                                    <option value="Supplier">Supplier</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label for="" class="form-label">No. Telpon</label>
-                                <input type="text" name="notelp" id="notelp" class="form-control" placeholder="Masukkan Nomor Telepon Pengguna" name="" id="">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label for="" class="form-label">Nama Perusahaan</label>
-                                        <input type="text" name="namaperusahaan" id="" class="form-control" placeholder="Masukkan Nama Perusahaan">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="" class="form-label">Contact Person</label>
-                                        <input type="text" name="nocontact" class="form-control" placeholder="Masukkan Contact Person" name="" id="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label for="" class="form-label">Alamat</label>
-                                <textarea name="alamat" class="form-control" id="" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" cols="30" rows="4"></textarea>
-                                <div class="text-end">
-                                    <span style="font-size: 10px" class="text-muted">Maksimal 200 Karakter</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="" class="form-label fs-3 mb-3">Informasi Bank</label>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <td>Pilih Bank</td>
-                                            <td>Nomor Rekening</td>
-                                            <td>Attr/Beneficiary</td>
-                                            <td>Action</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>~</td>
-                                            <td>~</td>
-                                            <td>~</td>
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <a href="" class="btn btn-danger"><i class="bx bx-trash"></i></a>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <a href="" class="btn btn-primary"><i class="bx bx-plus"></i></a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">SIMPAN</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="modal fade" id="modaldata" tabindex="-1" aria-labelledby="modaldataLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header" style="background:#1143d8;color:white;">
-                    <h5 class="modal-title" id="exampleModalLabel">PILIH DATA QUOTATION</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-5 mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Pencarian</label>
-                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Cari Berdasarkan Customer">
-                        </div>
-                        <div class="col-1"></div>
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="col-4">
-                                    <label for="exampleFormControlInput1" class="form-label">Pencarian</label>
-                                    <input type="date" class="form-control" id="exampleFormControlInput1">
-                                </div>
-                                <div class="col-4">
-                                    <label for="exampleFormControlInput1" class="form-label">Pencarian</label>
-                                    <input type="date" class="form-control" id="exampleFormControlInput1">
-                                </div>
-                                <div class="col-4 mb-5">
-                                    <p></p>
-                                    <a href="" class="btn btn-primary mt-3">Terapkan</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        </div>
-                                    </td>
-                                    <td>No. Quotation</td>
-                                    <td>Judul Quotation</td>
-                                    <td>Customer</td>
-                                    <td>Qty Item</td>
-                                    <td>Total Amount</td>
-                                    <td>Status <i class='bx bx-down-arrow-alt'></i></td>
-                                    <td>Action</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td>sscanf</td>
-                                    <td><a href="" class="btn btn-primary">Pilih</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Simpan</button>
-                </div>
-            </div>
-        </div>
+                            <td style="border:solid;"><?php echo $no++; ?></td>
+                            <td style="border:solid;"><?php echo $key["codeso"] ?></td>
+                            <td style="border:solid;"><?php echo $key["dateso"] ?></td>
+                            <td style="border:solid;"><?php echo $key["namecust"] ?></td>
+                            <td style="border:solid;"><?php echo $key["nameitem"] ?></td>
+                            <td style="border:solid;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
+                            <td style="border:solid;"><?php echo $key["disnomdet"] ?></td>
+                            <td style="border:solid;"><?php echo $key["grandtotaldet"] ?></td>
+                            <td style="border:solid;"><?php echo $key["statusorder"] ?></td>
+                        </tr>
+
+                    <?php endforeach ?>
+                <?php endif ?>
+            </tbody>
+        </table>
     </div>
 </form>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $('#data').hide();
+
+    function printdata() {
+        var printContents = document.getElementById('data').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+
+    $("#btn_exportexcel").click(function(e) {
+        let file = new Blob([$('.data').html()], {
+            type: "application/vnd.ms-excel"
+        });
+        console.log(file)
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: "Sales Order Report.xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+</script>

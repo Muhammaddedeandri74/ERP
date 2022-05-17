@@ -32,19 +32,21 @@
                             <div class="row mb-3">
                                 <div class="col-8">
                                     <label for="exampleFormControlInput1" class="form-label">Customer</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Open this select menu</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select name="idsupp" class="form-select" aria-label="Default select example" onchange="supp(this.value)">
+                                        <option selected>Pilih</option>
+                                        <?php if ($data != "Not Found") : ?>
+                                            <?php foreach ($data as $key) : ?>
+                                                <option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
+                                            <?php endforeach ?>
+                                        <?php endif ?>
                                     </select>
                                 </div>
                                 <div class="col-4"></div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-8">
-                                    <label for="exampleFormControlInput1" class="form-label">Nama Kontak</label>
-                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" readonly>
+                                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
                                 </div>
                                 <div class="col-4"></div>
                             </div>
@@ -53,8 +55,8 @@
                             <label class="mb-3 fs-5">Judul Quotation </label>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <textarea name="" id="" class="form-control" cols="20" rows="4"></textarea>
+                                    <label for="exampleFormControlInput1" class="form-label">Alamat</label>
+                                    <textarea name="alamat" id="alamat" class="form-control" cols="20" rows="4"></textarea>
                                     <div class="row text-end">
                                         <span style="font-size: 10px;" class="text-muted">Maksimal 100 Karakter</span>
                                     </div>
@@ -73,26 +75,17 @@
                         </div>
                         <div class="col-3">
                             <label class="mb-3 fs-5">Akun Perbankan </label>
-                            <div class="card p-3 mb-3">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <p>Bank BCA</p>
-                                        <p>1923 2112 3123 2112 - Aww</p>
-                                    </div>
-                                    <div class="col-2 mt-4">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card p-3 ">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <p>Bank BCA</p>
-                                        <p>1923 2112 3123 2112 - Aww</p>
-                                    </div>
-                                    <div class="col-2 mt-4">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Norekening</label>
+                                    <select name="norekening" id="norekening" class="form-select" aria-label="Default select example">
+                                        <option selected>Pilih</option>
+                                        <?php if ($data != "Not Found") : ?>
+                                            <?php foreach ($data as $key) : ?>
+                                                <option value="<?php echo $key["norekening"] ?>"><?php echo $key["norekening"] ?> - <?php echo $key["namabank"] ?></option>
+                                            <?php endforeach ?>
+                                        <?php endif ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -201,3 +194,14 @@
         </div>
     </div>
 </form>
+<script>
+    function supp(x) {
+        var data = <?php echo json_encode($data) ?>;
+        for (let i = 0; i < data.length; i++) {
+            if (data[i]["idsupp"] == x) {
+                $('#norekening').val(data[i]["norekening"])
+            }
+
+        }
+    }
+</script>

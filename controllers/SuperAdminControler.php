@@ -182,7 +182,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["title"] = "customer";
-		$f["data"] = $this->MasterData->getsupplier();
+		$f["data"] =  $this->MasterData->getcustomer();
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Customer", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -366,6 +366,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["data"] = $this->MasterData->getsupplier();
+		$f["data2"]   = $this->MasterData->getcustomer();
 		$this->load->model("MasterData");
 		$this->load->view("SuperAdmin/Header", $f);
 		$this->load->view("SuperAdmin/AddSupplier", $f);

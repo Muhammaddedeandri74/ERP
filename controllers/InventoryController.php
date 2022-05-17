@@ -37,6 +37,24 @@ class InventoryController extends CI_Controller
 		$this->load->view("SuperAdmin/Footer");
 	}
 
+	function movewh()
+	{
+		$this->load->model("MasterData");
+		$f  = $this->session->userdata("data");
+		$f["title"]   = "Register Inventory In";
+		$f["data"]    = $this->MasterData->getitemmaterialinvin();
+		$f["data1"]   = $this->MasterData->getcurrency();
+		$f["data2"]   = $this->MasterData->getwarehouse();
+		$f["data3"]   = $this->MasterData->getlistinvin();
+		$f["data4"]   = $this->MasterData->getcustomer();
+		$f["data6"]   = $this->MasterData->getlistinvin();
+		$f["data7"]   = $this->MasterData->getlistpo();
+		$f["order"]   = $this->MasterData->getlistpoheader();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/AddinventoryinMoveWH", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
 	function getpo()
 	{
 		$id = $this->input->post("id");
@@ -120,7 +138,7 @@ class InventoryController extends CI_Controller
 
 		$this->load->model("MasterData");
 		$f["title"]    = "Register Inventory In";
-		$f["data"]     = $this->MasterData->getlistinvindet($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem);
+		$f["data"]     = $this->MasterData->getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem);
 		$f["data1"]    = $this->MasterData->getwarehouse();
 		$f["data2"]    = $this->MasterData->getcustomer();
 		$this->load->view("Superadmin/Header");
@@ -173,17 +191,6 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 	}
 
-	function movewarehouses()
-	{
-		$this->load->model("MasterData");
-		$f["title"]   = "Register Inventory Out";
-		$f["data"]    = $this->MasterData->getitem();
-		$f["data1"]    = $this->MasterData->getcustomer();
-		$this->load->view("Superadmin/Header");
-		$this->load->view("Inventory/InventoryOutMoveWh", $f);
-		$this->load->view("SuperAdmin/Footer");
-		$f = $this->session->userdata("data");
-	}
 
 	function AddPo()
 	{
@@ -300,6 +307,14 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/outstatus", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+	function stockcard()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/stockcard", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }
