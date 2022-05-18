@@ -287,7 +287,6 @@ if ($data3 != "Not Found") {
 		} ?>
 	</datalist>
 </body>
-
 <script type="text/javascript">
 	$(function() {
 		$("#check").click(function() {
@@ -408,7 +407,7 @@ if ($data3 != "Not Found") {
 			$('#transaksi_' + xid + '_sku').val("");
 			$('#transaksi_' + xid + '_iditem').val("");
 			$('#transaksi_' + xid + '_nameitem').val("");
-			$('#transaksi_' + xid + '_unit').val("0");
+			// $('#transaksi_' + xid + '_unit').val("0");
 			$('#transaksi_' + xid + '_deskripsi').val("");
 			$('#transaksi_' + xid + '_harga').val();
 			$('#transaksi_' + xid + '_qty').val(0);
@@ -416,7 +415,7 @@ if ($data3 != "Not Found") {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
 			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
-			$('#transaksi_' + xid + '_unit').val(xobj.data('unit'));
+			// $('#transaksi_' + xid + '_unit').val(xobj.data('nameunit'));
 			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
 			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
 			$('#transaksi_' + xid + '_qty').val(1);

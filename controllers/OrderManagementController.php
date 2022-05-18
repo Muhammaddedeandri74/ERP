@@ -26,7 +26,7 @@ class OrderManagementController extends CI_Controller
 		$f["title"]   = "Register Sales Order";
 		$f["data"]    = $this->MasterData->getitemmaterialso();
 		$f["data1"]   = $this->MasterData->getsalesorder();
-		$f["data2"]   = $this->MasterData->getcustomer();
+		$f["data2"]   = $this->MasterData->getcustomerso();
 		$f["data3"]   = $this->MasterData->getpaymentmethod();
 		$f["data4"]   = $this->MasterData->getcompany();
 

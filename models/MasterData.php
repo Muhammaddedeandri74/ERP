@@ -186,9 +186,34 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getcustomerso()
+	{
+		$query = "SELECT * FROM tb_customer,tb_customerdet WHERE tb_customer.idcust = tb_customerdet.idcust group by namecust";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idcust"]        =  $key->idcust;
+				$f["codecust"]      =  $key->codecust;
+				$f["typecust"]      =  $key->typecust;
+				$f["namecust"]      =  $key->namecust;
+				$f["norekening"]      =  $key->norekening;
+				$f["namabank"]      =  $key->namabank;
+				$f["nocontact"]      =  $key->nocontact;
+				$f["addresscust"]      =  $key->addresscust;
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getcustomerinvin()
 	{
-		$query = "SELECT DISTINCT typecust,idcust,namecust FROM tb_customer GROUP BY typecust";
+		$query = "SELECT * FROM tb_customer where typecust ='Supplier'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -437,18 +462,17 @@ class MasterData extends CI_Model
 				$f["itemgroup"]     =  $key->itemgroup;
 				$f["deskripsi"]     =  $key->deskripsi;
 				$f["gambar"]        =  $key->gambar;
-				array_push($respon, $f);
 
-				// $datax = array($f["idunit"]);
-				// $queryx = "SELECT * FROM tb_unit WHERE idunit = ?";
-				// $eksekusix = $this->db->query($queryx, $datax)->result_object();
-				// if (count($eksekusix) > 0) {
-				// 	foreach ($eksekusix as $keyx) {
-				// 		$f["idunit"]          =  $keyx->idunit;
-				// 		$f["nameunit"]        =  $keyx->nameunit;
-				// 		
-				// 	}
-				// }
+				$datax = array($f["idunit"]);
+				$queryx = "SELECT * FROM tb_item,tb_unit WHERE tb_item.idunit = tb_unit.idunit AND tb_unit.idunit = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idunit"]          =  $keyx->idunit;
+						$f["nameunit"]        =  $keyx->nameunit;
+					}
+				}
+				array_push($respon, $f);
 			}
 		} else {
 			$respon = "Not Found";
@@ -2296,27 +2320,36 @@ class MasterData extends CI_Model
 				$f["statusorder"] = $key->statusorder;
 
 				$datax = array($f["idso"]);
-				$queryx = "SELECT * FROM tb_salesorderdetail WHERE idso = ?";
+				$queryx = "SELECT * FROM tb_salesorderdetail,tb_item WHERE idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
-						$f["idso"]          =  $keyx->idso;
-						$f["idsodet"]       =  $keyx->idsodet;
-						$f["iditem"]        =  $keyx->iditem;
-						$f["price"]         =  $keyx->price;
+						$f["price"] = $keyx->price;
 						$f["grandtotaldet"] = $keyx->grandtotaldet;
+						$f["nameitem"] = $keyx->nameitem;
 					}
 				}
 
-				$datax  = array($f["iditem"]);
-				$queryx = "SELECT * FROM tb_item WHERE iditem = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $keyx) {
-						$f["iditem"]           =  $keyx->iditem;
-						$f["nameitem"]         =  $keyx->nameitem;
+				$data = array($f["idso"]);
+				$query1 = "SELECT * FROM tb_salesorder,tb_salesorderdetail, tb_item  WHERE tb_salesorder.idso = tb_salesorderdetail.idso AND tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem";
+				$eksekusi1 = $this->db->query($query1, $data)->result_object();
+				if (count($eksekusi1) > 0) {
+					$f["data"] = array();
+					foreach ($eksekusi1 as $keyx) {
+						$g["iditem"] = $keyx->iditem;
+						$g["codeso"] = $keyx->codeso;
+						$g["dateso"] =  $keyx->dateso;
+						$g["nameitem"]  = $keyx->nameitem;
+						$g["sku"]       = $keyx->sku;
+						$g["price"] = $keyx->price;
+						$g["deskripsi"] = $keyx->deskripsi;
+
+						array_push($f["data"], $g);
 					}
+				} else {
+					$f["data"] = "Not Found";
 				}
+
 				array_push($respon, $f);
 			}
 		} else {
@@ -4890,7 +4923,7 @@ class MasterData extends CI_Model
 		$transaksi_total,
 		$transaksi_discnominal,
 		$transaksi_discpersen,
-		$transaksi_grandtotal1
+		$transaksi_grandtotal
 	) {
 		date_default_timezone_set('Asia/Jakarta');
 		$fail   = 0;
@@ -4986,6 +5019,9 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "Code Invin telah terdaftar";
 		} else {
+			if ($idpo == "") {
+				$idpo = 0;
+			}
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
 			$query    = "INSERT INTO invin (codein,typein,idpo,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
@@ -5015,6 +5051,7 @@ class MasterData extends CI_Model
 								$respon = "Failed on Detail";
 								break;
 							}
+
 							$dataxs   = array($transaksi_qtyin[$i], $idpo, $transaksi_iditem[$i]);
 							$queryxs  = "UPDATE podet  set qtyindet = qtyindet + ? WHERE idpo = ? AND iditem = ?";
 							$eksekusisxs   = $this->db->query($queryxs, $dataxs);
@@ -5034,6 +5071,7 @@ class MasterData extends CI_Model
 							$respon = "Failed on Qtyin";
 							break;
 						}
+
 
 						$queryqtyin  = "UPDATE po  set qtyin = qtyin + " . $qtyin . " WHERE idpo = " . $idpo . "";
 						$eksekusis   = $this->db->query($queryqtyin);

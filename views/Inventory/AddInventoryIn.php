@@ -61,7 +61,7 @@ if ($data3 != "Not Found") {
 								<option value="">Pilih</option>
 								<?php if ($data4 != "Not Found") : ?>
 									<?php foreach ($data4 as $key) : ?>
-										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["typecust"] ?></option>
+										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 									<?php endforeach ?>
 								<?php endif ?>
 							</select>

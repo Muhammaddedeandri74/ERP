@@ -47,8 +47,8 @@
                 </div>
                 <div class="col-4">
                     <p></p>
-                    <a href="<?php echo base_url('OrderManagementController/orderreport') ?>" class="btn btn-danger mt-3">Reload</a>
-                    <button type="submit" class="btn btn-primary mt-3">Terapkan</button>
+                    <a href="<?php echo base_url('OrderManagementController/orderreport') ?>" class="btn btn-danger mt-3" style="font-size: 13px;">Reload</a>
+                    <button type="submit" class="btn btn-primary mt-3" style="font-size: 13px;">Terapkan</button>
                 </div>
             </div>
         </div>
@@ -66,6 +66,7 @@
                             <th>Discount</th>
                             <th>Total Amount</th>
                             <th>Status <i class='bx bx-down-arrow-alt'></i></th>
+                            <td>Action</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,11 +76,15 @@
                                 <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $key["codeso"] ?></td>
-                                    <td><?php echo $key["namecust"] ?></td>
                                     <td><?php echo $key["dateso"] ?></td>
+                                    <td><?php echo $key["namecust"] ?></td>
                                     <td><?php echo $key["nameitem"] ?></td>
                                     <td>Rp. <?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                                    <td>Rp. <?php echo number_format($key['disnomdet'], 0, '.', ',') ?></td>
+                                    <?php if ($key["disnomdet"] == "") : ?>
+                                        <td>Rp . 0</td>
+                                    <?php else : ?>
+                                        <td> Rp. <?php echo number_format($key['disnomdet'], 0, '.', ',') ?></td>
+                                    <?php endif ?>
                                     <td>Rp. <?php echo number_format($key['grandtotaldet'], 0, '.', ',') ?></td>
                                     <td style="text-align:left;">
                                         <?php if ($key["statusorder"] == "Waiting") : ?>
@@ -90,6 +95,7 @@
                                             <p style="background-color:#A6FFC6;width:fit-content;text-color:#008F43;" class="fs-6 px-3 rounded-pill"> <?php echo $key["statusorder"] ?></p>
                                         <?php endif ?>
                                     </td>
+                                    <td><a onclick="cekdetail(<?php echo $key['idso'] ?>)" class="btn btn-primary" style="font-size: 12px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
                                 </tr>
 
                             <?php endforeach ?>
@@ -98,7 +104,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="4">Total Order :</td>
-                            <td>100</td>
+                            <td>0 Item</td>
                             <td>Rp. 15.000.000</td>
                             <td>Rp. 15.000.000</td>
                             <td>Rp. 15.000.000</td>
@@ -112,10 +118,10 @@
                                 <div class="row">
                                     <label for="">Report</label>
                                     <div class="col-6">
-                                        <a id="btn_exportexcel" class="btn"><i class="bx bxs-download"></i>Download</a>
+                                        <a id="btn_exportexcel" class="btn"><i class="bx bxs-download" style="font-size: 13px;"></i>Download</a>
                                     </div>
                                     <div class="col-6">
-                                        <a class="btn" onclick="printdata()"><i class="bx bx-printer"></i>Cetak</a>
+                                        <a class="btn" onclick="printdata()"><i class="bx bx-printer" style="font-size: 13px;"></i>Cetak</a>
                                     </div>
                                 </div>
                             </td>
@@ -140,6 +146,39 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" style="background:#1143d8;color:white;">
+                    <h5 class="modal-title" id="exampleModalLabel">DETAIL DATA PURCHASE ORDER</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mx-3" style="overflow-x: auto;">
+                        <table class="table table-bordered table-striped" id="table-user">
+                            <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>No Purchase Order</td>
+                                    <td>Tanggal SO</td>
+                                    <td>Name Item</td>
+                                    <td>SKU</td>
+                                    <td>Deskripsi</td>
+                                    <td>Harga</td>
+                                </tr>
+                            </thead>
+                            <tbody id="xdetails">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -211,4 +250,28 @@
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
+
+    function cekdetail(x) {
+        var data = <?php echo json_encode($data) ?>;
+        var baris = "";
+        var ix = 1;
+        console.log(data)
+        for (var i = 0; i < data.length; i++) {
+            if (data[i]["idso"] == x) {
+                for (var a = 0; a < data[i]["data"].length; a++) {
+                    baris += '<tr>';
+                    baris += '<td scope="row">' + ix++ + '</td>';
+                    baris += '<td>' + data[i]["data"][a]["codeso"] + '</td>';
+                    baris += '<td>' + data[i]["data"][a]["dateso"] + '</td>';
+                    baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
+                    baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
+                    baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
+                    baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
+                    baris += '</tr>';
+                }
+                break;
+            }
+        }
+        $('#xdetails').html(baris);
+    }
 </script>

@@ -65,7 +65,7 @@ if ($data1 != "Not Found") {
 								<div class="row mb-3">
 									<div class="col-8">
 										<label for="" class="form-label">Customer</label>
-										<select name="idcust" id="idcust" class="form-select selectpicker" data-live-search="true" required onchange="supp(this.value)">
+										<select name="idcust" id="idcust" class="form-select" required onchange="customer(this.value)">
 											<option value="">Pilih</option>
 											<?php if ($data2 != "Not Found") : ?>
 												<?php foreach ($data2 as $key) : ?>
@@ -439,6 +439,7 @@ if ($data2 != "Not Found") {
 		</div>
 	</div>
 </div>
+<!-- <?php print_r($data) ?> -->
 <datalist id="xitem">
 	<?php
 	if ($data != 'Not Found') {
@@ -467,7 +468,7 @@ if ($data2 != "Not Found") {
 		});
 	});
 
-	function supp(x) {
+	function customer(x) {
 		var data = <?php echo json_encode($data2) ?>;
 		for (let i = 0; i < data.length; i++) {
 			if (data[i]["idcust"] == x) {

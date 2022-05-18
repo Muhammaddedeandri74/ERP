@@ -184,6 +184,8 @@
               <thead>
                 <tr>
                   <td>#</td>
+                  <td>No. Purchase Order</td>
+                  <td>Tanggal Po</td>
                   <td>Nama Item</td>
                   <td>SKU</td>
                   <td>Desc</td>
@@ -276,6 +278,8 @@
         for (var a = 0; a < data[i]["data"].length; a++) {
           baris += '<tr>';
           baris += '<td scope="row">' + ix++ + '</td>';
+          baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
