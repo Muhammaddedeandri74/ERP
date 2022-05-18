@@ -1,38 +1,12 @@
 <html>
 
 <head>
-
-	<!-- Link Font dari adobe -->
-	<link rel="stylesheet" href="https://use.typekit.net/vke3pqz.css">
-	<!-- Link Box Icon -->
-	<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-
-	<link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="<?= base_url('assets/css/indexxxx.css') ?>" />
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-	</script>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
-
-	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css"> -->
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-	<!-- DataTables -->
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') ?>">
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') ?>">
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') ?>">
 
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/i18n/defaults-*.min.js"></script>
 	<title>S-ERP</title>
 </head>
 <?php
@@ -71,7 +45,7 @@ if ($data3 != "Not Found") {
 							<input type="text" name="tanggalmasuk" class="form-control">
 						</div>
 						<div class="col-2 mt-4">
-							<button type="button" class="btn btn-primary">Terapkan</button>
+							<button type="button" class="btn btn-primary" style="font-size: 13px;;">Terapkan</button>
 						</div>
 					</div>
 					<div class="row mx-3" style="overflow-x: auto;">
@@ -100,7 +74,7 @@ if ($data3 != "Not Found") {
 											<td><?php echo $key["qty"] ?></td>
 											<td><?php echo $key["grandtotal"] ?></td>
 											<td><?php echo $key["statuspo"] ?></td>
-											<td><a href="<?php echo base_url('MasterDataControler/getdatapobyid?id=' . base64_encode($key['idpo'])) ?>">Pilih</a></td>
+											<td><a href="<?php echo base_url('MasterDataControler/getdatapobyid?id=' . base64_encode($key['idpo'])) ?>" class="btn btn-primary" style="font-size:12px;">Pilih</a></td>
 										</tr>
 									<?php endforeach ?>
 								<?php endif ?>
@@ -160,7 +134,7 @@ if ($data3 != "Not Found") {
 											<label for="">No. Request PO</label>
 											<input type="text" name="aa" class="form-control" value="" readonly>
 										</div>
-										<!-- <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
+										<!-- <button type="button" style="height:36px;font-size:12px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
 									</div>
 
 									<div class="d-flex mb-3" style="align-items: flex-end;">
@@ -185,11 +159,11 @@ if ($data3 != "Not Found") {
 									<div class="d-flex mb-3" style="align-items: flex-end;">
 										<div class="me-3" style="width:50%;">
 											<label for="">Tanggal PO</label>
-											<input type="date" name="datepo" id="datepo" style="cursor: pointer;" class="form-control">
+											<input type="date" name="datepo" id="date1" style="cursor: pointer;" class="form-control">
 										</div>
 										<div class="" style=" width:50%;">
 											<label for="">Tanggal Pengiriman</label>
-											<input type="date" name="delivedate" id="delivedate" value="" style="cursor: pointer;" class="form-control">
+											<input type="date" name="delivedate" id="tanggalpengiriman" value="" style="cursor: pointer;" class="form-control">
 										</div>
 									</div>
 
@@ -314,25 +288,8 @@ if ($data3 != "Not Found") {
 		} ?>
 	</datalist>
 </body>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables/jquery.dataTables.min.js ') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/jszip/jszip.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/pdfmake/pdfmake.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/pdfmake/vfs_fonts.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.print.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') ?>"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 
 <script type="text/javascript">
-	// $(function() {
-	// 	$('.selectpicker').selectpicker();
-	// });
-
 	$(function() {
 		$("#check").click(function() {
 			if ($(this).is(":checked")) {
@@ -410,7 +367,7 @@ if ($data3 != "Not Found") {
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_unit"  class="form-control "name="transaksi_unit[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga" readonly></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_total" objtype="_total" class="form-control  _total" name="transaksi_total[]' + xid + '_total" autocomplete="off" value="0" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discnominal"  class="form-control _discnominal" name="transaksi_discnominal[]' + xid + '_discnominal"  value="0" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discpersen"  class="form-control _discpersen" name="transaksi_discpersen[]' + xid + '_discpersen"  max="100" min="0" oninput="discountpersent(' + xid + ',this.value)" ></td>';
@@ -455,7 +412,7 @@ if ($data3 != "Not Found") {
 			$('#transaksi_' + xid + '_unit').val("0");
 			$('#transaksi_' + xid + '_deskripsi').val("");
 			$('#transaksi_' + xid + '_harga').val();
-			$('#transaksi_' + xid + 'qty').val(0);
+			$('#transaksi_' + xid + '_qty').val(0);
 		} else {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
 			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
@@ -463,7 +420,7 @@ if ($data3 != "Not Found") {
 			$('#transaksi_' + xid + '_unit').val(xobj.data('unit'));
 			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
 			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
-			$('#transaksi_' + xid + 'qty').val(xobj.data('qty'));
+			$('#transaksi_' + xid + '_qty').val(1);
 		}
 		calc();
 	});
@@ -489,23 +446,16 @@ if ($data3 != "Not Found") {
 		var xval = 0;
 		var sts = 1;
 
-		xval = $("#supplier").val();
-		if (xval == "") {
-			alert('Input Supplier');
+		xval = $("#qty").val();
+		if ((xval == '0')) {
+			alert('Input Produk');
 			sts = 0;
 			return false;
 		}
 
-		xval = $("#namewarehouse").val();
-		if (xval == "") {
-			alert('Input Gudang Penerima');
-			sts = 0;
-			return false;
-		}
-
-		xval = $("#datepo").val();
-		if ($("#datepo").val() == '') {
-			alert('Input Tanggal Masuk');
+		xval = $("#tanggalpengiriman").val();
+		if ($("#tanggalpengiriman").val() == "") {
+			alert('Input Tangal Pengiriman ');
 			sts = 0;
 			return false;
 		}
@@ -517,9 +467,9 @@ if ($data3 != "Not Found") {
 			return false;
 		}
 
-		xval = $("#_qty").val();
-		if ($("#_qty").val() == 0) {
-			alert('Input QTY');
+		xval = $("#exchange").val();
+		if ($("#exchange").val() == '') {
+			alert('Input Exchange Rate');
 			sts = 0;
 			return false;
 		}
@@ -529,7 +479,6 @@ if ($data3 != "Not Found") {
 		} else {
 			return false;
 		}
-		//return 'ok';
 	}
 
 	function count(xid) {
@@ -597,4 +546,12 @@ if ($data3 != "Not Found") {
 	function cancelorder() {
 		location.reload();
 	}
+
+	$(document).ready(function() {
+		var today = new Date();
+		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
+		if ($("#date1").val() == '') {
+			$("#date1").val(date);
+		}
+	});
 </script>
