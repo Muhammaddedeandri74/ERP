@@ -164,7 +164,7 @@ if ($data3 != "Not Found") {
 						</div>
 						<div class="row">
 							<div class="col-5">
-								<label for="" class="form-label">Tanggal Masuk1</label>
+								<label for="" class="form-label">Tanggal Masuk</label>
 								<input type="date" class="form-control" name="datein1" id="datein1">
 							</div>
 							<div class="col-5">
@@ -194,7 +194,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="datein2" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -473,7 +473,6 @@ if ($data3 != "Not Found") {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 	var datax = <?php echo json_encode($data7); ?>;
-	console.log(datax)
 
 	function ubah(x) {
 		if (x == "supplier") {
@@ -766,9 +765,6 @@ if ($data3 != "Not Found") {
 				$("#idpo").val(data.headertrans['idpo']);
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
-
-				console.log(xid);
-
 
 				var xiddet = 0;
 				var xlost = 0;

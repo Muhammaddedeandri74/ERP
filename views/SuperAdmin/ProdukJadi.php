@@ -36,13 +36,11 @@
                                     <div class="mb-3">
                                         <p class="m-0">Item Group</p>
                                         <div class="col">
-                                            <select name="itemgroup" id="itemgroup" class="form-select" required onchange="location = this.options[this.selectedIndex].value;">
-                                                <?php
-                                                if ($data1 != 'Not Found') {
-                                                    foreach ($data1 as $key) : ?>
-                                                        <option value="<?php echo $key["namecomm"] ?>"><?php echo $key["attrib1"] ?></option>
-                                                <?php endforeach;
-                                                } ?>
+                                            <select name="itemgroup" class="form-control" onchange="location = this.options[this.selectedIndex].value;" required>
+                                                <option value="">Pilih..</option>
+                                                <option value="Produk"><a href="<?php echo base_url('SuperAdminControler/Produk') ?>">Produk</a></option>
+                                                <option value="ProdukJadi" selected><a href="<?php echo base_url('SuperAdminControler/ProdukJadi') ?>">Produk Jadi</a></option>
+                                                <option value="BahanMaterial"><a href="<?php echo base_url('SuperAdminControler/BahanMaterial') ?>">Bahan Baku/Material </a></option>
                                             </select>
                                         </div>
                                     </div>

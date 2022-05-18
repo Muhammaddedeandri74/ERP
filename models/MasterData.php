@@ -408,6 +408,7 @@ class MasterData extends CI_Model
 			$respon = array();
 			foreach ($eksekusi as $key) {
 				$f["iditem"]        =  $key->iditem;
+				$f["idunit"]        =  $key->idunit;
 				$f["nameitem"]      =  $key->nameitem;
 				$f["sku"]           =  $key->sku;
 				$f["price"]         =  $key->price;
@@ -417,6 +418,17 @@ class MasterData extends CI_Model
 				$f["deskripsi"]     =  $key->deskripsi;
 				$f["gambar"]        =  $key->gambar;
 				array_push($respon, $f);
+
+				// $datax = array($f["idunit"]);
+				// $queryx = "SELECT * FROM tb_unit WHERE idunit = ?";
+				// $eksekusix = $this->db->query($queryx, $datax)->result_object();
+				// if (count($eksekusix) > 0) {
+				// 	foreach ($eksekusix as $keyx) {
+				// 		$f["idunit"]          =  $keyx->idunit;
+				// 		$f["nameunit"]        =  $keyx->nameunit;
+				// 		
+				// 	}
+				// }
 			}
 		} else {
 			$respon = "Not Found";

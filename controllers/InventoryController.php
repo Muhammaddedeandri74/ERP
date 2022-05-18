@@ -201,7 +201,7 @@ class InventoryController extends CI_Controller
 		$f["data2"]   = $this->MasterData->getcurrency();
 		$f["data3"]   = $this->MasterData->getpo();
 		$f["data4"]   = $this->MasterData->getlistpo();
-		$f["data5"]   = $this->MasterData->getcustomer();
+		$f["data5"]   = $this->MasterData->getsupplier();
 		$f["data6"]   = $this->MasterData->getcompany();
 		$f["stat"]    = "";
 		$f["headertrans"] = "Not Found";

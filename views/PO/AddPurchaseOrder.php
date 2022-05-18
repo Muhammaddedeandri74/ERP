@@ -166,12 +166,12 @@ if ($data3 != "Not Found") {
 									<div class="d-flex mb-3" style="align-items: flex-end;">
 										<div class="me-2" style="width:75%;">
 											<label for="">Supplier</label>
-											<select class="form-control selectpicker" name="supplier" id="supplier" data-live-search="true" required onchange="customer(this.value)">
+											<select class="form-control selectpicker" name="supplier" id="supplier" data-live-search="true" required onchange="supp(this.value)">
 												<option>Pilih Supplier</option>
 												<?php
 												if ($data5 != 'Not Found') {
 													foreach ($data5 as $key) : ?>
-														<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
+														<option value="<?php echo $key["idsupp"] ?>"><?php echo $key["namesupp"] ?></option>
 												<?php endforeach;
 												} ?>
 											</select>
@@ -225,7 +225,7 @@ if ($data3 != "Not Found") {
 												<option value="">Pilih</option>
 												<?php if ($data5 != "Not Found") : ?>
 													<?php foreach ($data5 as $key) : ?>
-														<option value="<?php echo $key["namecust"] ?>"><?php echo $key["namecust"] ?> - <?php echo $key["namecust"] ?></option>
+														<option value="<?php echo $key["norekening"] ?>"><?php echo $key["norekening"] ?> - <?php echo $key["namabank"] ?></option>
 													<?php endforeach ?>
 												<?php endif ?>
 											</select>
@@ -259,6 +259,7 @@ if ($data3 != "Not Found") {
 									<tr>
 										<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
 										<th style="background:#1143d8;color:white;text-align:center;">Nama Item</th>
+										<th style="background:#1143d8;color:white;text-align:center;">Unit</th>
 										<th style="background:#1143d8;color:white;text-align:center;">Deskripsi</th>
 										<th style="background:#1143d8;color:white;text-align:center;width:10.25rem;">Harga</th>
 										<!-- <th style="background:#1143d8;color:white;text-align:center;width:7.25rem;">VAT</th> -->
@@ -308,7 +309,7 @@ if ($data3 != "Not Found") {
 		if ($data != 'Not Found') {
 			foreach ($data as $key) {
 		?>
-				<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
+				<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"];  ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
 		<?php }
 		} ?>
 	</datalist>
@@ -343,38 +344,17 @@ if ($data3 != "Not Found") {
 		});
 	});
 
-	function customer(x) {
+	function supp(x) {
 		var data = <?php echo json_encode($data5) ?>;
 		for (let i = 0; i < data.length; i++) {
-			if (data[i]["idcust"] == x) {
-				$('#norekening').val(data[i]["norekening"], data[i]["namabank"])
+			if (data[i]["idsupp"] == x) {
+				$('#norekening').val(data[i]["norekening"])
 			}
 
 		}
 	}
 
 	add_row_transaksi(0)
-	var xitem = '';
-	xitem = '<?php
-				$x = '';
-				if ($data != 'Not Found') {
-					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["iditem"] . '" price="' . $key["price"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
-					}
-				}
-				echo $x;
-				?>';
-
-	var xunit = '';
-	xunit = '<?php
-				$x = '';
-				if ($data != 'Not Found') {
-					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '">' . $key["nameitem"] . ' - ' . $key["nameitem"] . '</option>';
-					}
-				}
-				echo $x;
-				?>';
 
 	function calc() {
 		var xcnt = 0;
@@ -427,6 +407,7 @@ if ($data3 != "Not Found") {
 		tabel += '<tr class="result transaksi-row" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / >';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_unit"  class="form-control "name="transaksi_unit[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';
@@ -471,6 +452,7 @@ if ($data3 != "Not Found") {
 			$('#transaksi_' + xid + '_sku').val("");
 			$('#transaksi_' + xid + '_iditem').val("");
 			$('#transaksi_' + xid + '_nameitem').val("");
+			$('#transaksi_' + xid + '_unit').val("0");
 			$('#transaksi_' + xid + '_deskripsi').val("");
 			$('#transaksi_' + xid + '_harga').val();
 			$('#transaksi_' + xid + 'qty').val(0);
@@ -478,6 +460,7 @@ if ($data3 != "Not Found") {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
 			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+			$('#transaksi_' + xid + '_unit').val(xobj.data('unit'));
 			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
 			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
 			$('#transaksi_' + xid + 'qty').val(xobj.data('qty'));
