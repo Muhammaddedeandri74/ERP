@@ -250,7 +250,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_balance1     = $this->input->post("transaksi_balance1");
 		$transaksi_expiredate1  = $this->input->post("transaksi_expiredate1");
 
-		$namewarehouse2         = $this->input->post("namewarehouse2");
+		$namewarehouse2         = $this->input->post("namewh");
 		$datein2                = $this->input->post("datein2");
 		$currency2              = $this->input->post("currency2");
 		$transaksi_iditem2      = $this->input->post("transaksi_iditem2");
@@ -281,6 +281,7 @@ class MasterDataControler extends CI_Controller
 				$transaksi_expiredate,
 				$userid
 			);
+			echo $cek;
 		} elseif ($tipeingoing == "warehouse") {
 			$cek                   = $this->MasterData->newinvinmovewh(
 				$codein,
@@ -299,6 +300,7 @@ class MasterDataControler extends CI_Controller
 				$transaksi_expiredate1,
 				$userid
 			);
+			echo $cek;
 		} elseif ($tipeingoing == "return") {
 			$cek                   = $this->MasterData->newinvinreturn(
 				$codein,

@@ -28,7 +28,7 @@ class InventoryController extends CI_Controller
 		$f["data1"]   = $this->MasterData->getcurrency();
 		$f["data2"]   = $this->MasterData->getwarehouse();
 		$f["data3"]   = $this->MasterData->getlistinvin();
-		$f["data4"]   = $this->MasterData->getcustomer();
+		$f["data4"]   = $this->MasterData->getcustomerinvin();
 		$f["data6"]   = $this->MasterData->getlistinvin();
 		$f["data7"]   = $this->MasterData->getlistpo();
 		$f["order"]   = $this->MasterData->getlistpoheader();
@@ -140,7 +140,7 @@ class InventoryController extends CI_Controller
 		$f["title"]    = "Register Inventory In";
 		$f["data"]     = $this->MasterData->getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem);
 		$f["data1"]    = $this->MasterData->getwarehouse();
-		$f["data2"]    = $this->MasterData->getcustomer();
+		$f["data2"]    = $this->MasterData->getsupplier();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/IngoingStatus", $f);
 		$this->load->view("SuperAdmin/Footer");

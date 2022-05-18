@@ -233,10 +233,9 @@ if ($data3 != "Not Found") {
 									<tr>
 										<th style="background:#1143d8;color:white;text-align:center;">SKU</th>
 										<th style="background:#1143d8;color:white;text-align:center;">Nama Item</th>
-										<th style="background:#1143d8;color:white;text-align:center;">Unit</th>
+										<!-- <th style="background:#1143d8;color:white;text-align:center;">Unit</th> -->
 										<th style="background:#1143d8;color:white;text-align:center;">Deskripsi</th>
 										<th style="background:#1143d8;color:white;text-align:center;width:10.25rem;">Harga</th>
-										<!-- <th style="background:#1143d8;color:white;text-align:center;width:7.25rem;">VAT</th> -->
 										<th style="background:#1143d8;color:white;text-align:center;width:7.25rem;">Qty</th>
 										<th style="background:#1143d8;color:white;text-align:center;width:10.25rem;">Total</th>
 										<th style="background:#1143d8;color:white;text-align:center;width:7.25rem;">Disc Nominal</th>
@@ -364,7 +363,7 @@ if ($data3 != "Not Found") {
 		tabel += '<tr class="result transaksi-row" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / >';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_unit"  class="form-control "name="transaksi_unit[]" value=""/></td>';
+		// tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_unit"  class="form-control "name="transaksi_unit[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';

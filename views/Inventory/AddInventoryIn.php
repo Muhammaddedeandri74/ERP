@@ -56,12 +56,12 @@ if ($data3 != "Not Found") {
 					</div>
 					<div class="row mb-3">
 						<div class="col-8">
-							<label for="" class="form-label">Customer</label>
-							<select name="namecust" id="" class="form-select" required>
+							<label for="" class="form-label">Supplier</label>
+							<select name="namecust" id="namecust" class="form-select" required>
 								<option value="">Pilih</option>
 								<?php if ($data4 != "Not Found") : ?>
 									<?php foreach ($data4 as $key) : ?>
-										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
+										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["typecust"] ?></option>
 									<?php endforeach ?>
 								<?php endif ?>
 							</select>
@@ -79,7 +79,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-4 mb-3">
 								<p></p>
-								<a href="#" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary mt-3">Cari Data</a>
+								<a href="#" data-mdb-toggle="modal" data-mdb-target="#exampleModal" class="btn btn-primary mt-3" style="font-size:13px;">Cari Data</a>
 							</div>
 						</div>
 
@@ -95,7 +95,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-4 mb-3">
 								<p></p>
-								<a href="" data-mdb-toggle="modal" data-mdb-target="#modalgudang" class="btn btn-primary mt-3">Cari Data</a>
+								<a href="" data-mdb-toggle="modal" data-mdb-target="#modalgudang" class="btn btn-primary mt-3" style="font-size: 13px;">Cari Data</a>
 							</div>
 						</div>
 					</div>
@@ -108,7 +108,8 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse" id="" class="form-select" required>
+								<select name="namewarehouse" id="namewh" class="form-select" required>
+									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -118,14 +119,15 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="datein2" id="date" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="datein" id="date1" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
 						<div class="row">
 							<div class="col-5">
 								<label for="" class="form-label">Mata Uang</label>
-								<select name="currency2" id="" class="form-select" required>
+								<select name="currency" id="namecur" class="form-select" required>
+									<option value="">Pilih</option>
 									<?php if ($data1 != "Not Found") : ?>
 										<?php foreach ($data1 as $key) : ?>
 											<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
@@ -165,7 +167,7 @@ if ($data3 != "Not Found") {
 						<div class="row">
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" class="form-control" name="datein1" id="datein1">
+								<input type="date" class="form-control" name="datein1" id="date1">
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Mata Uang</label>
@@ -184,7 +186,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse2" id="" class="form-select" aria-label="Disabled select example" disabled>
+								<select name="namewh" id="" class="form-select" aria-label="Disabled select example">
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -194,14 +196,14 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="datein2" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="datein2" id="date1" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
 						<div class="row">
 							<div class="col-5">
 								<label for="" class="form-label">Mata Uang</label>
-								<select name="currency" id="" class="form-select" required>
+								<select name="currency2" id="" class="form-select" required>
 									<?php if ($data1 != "Not Found") : ?>
 										<?php foreach ($data1 as $key) : ?>
 											<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
@@ -251,7 +253,7 @@ if ($data3 != "Not Found") {
 			</table>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()" style="font-size:13px;">Buat Transaksi</button>
 			</div>
 		</div>
 
@@ -278,7 +280,7 @@ if ($data3 != "Not Found") {
 			</table>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()" style="font-size:13px;">Buat Transaksi</button>
 			</div>
 		</div>
 
@@ -303,7 +305,7 @@ if ($data3 != "Not Found") {
 			</table>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()" style="font-size:13px;">Buat Transaksi</button>
 			</div>
 		</div>
 
@@ -422,7 +424,7 @@ if ($data3 != "Not Found") {
 								</div>
 								<div class="col-4">
 									<p></p>
-									<a href="" class="btn btn-primary mt-3">Terapkan</a>
+									<a href="" class="btn btn-primary mt-3" style="font-size: 13px;">Terapkan</a>
 								</div>
 							</div>
 						</div>
@@ -455,7 +457,7 @@ if ($data3 != "Not Found") {
 											<td><?php echo $key["qtyin"] ?></td>
 											<td><?php echo $key["grandtotal"] ?></td>
 											<td><?php echo $key["statuspo"] ?></td>
-											<td><a data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
+											<td><a data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')" style="font-size: 13px;">Pilih</a></td>
 										</tr>
 									<?php endforeach ?>
 								<?php endif ?>
@@ -564,6 +566,18 @@ if ($data3 != "Not Found") {
 		});
 	}
 
+	function reorder1() {
+		$('input[objtype=nourut1]').each(function(i, obj) {
+			$(this).val(i + 1);
+		});
+	}
+
+	function reorder2() {
+		$('input[objtype=nourut2]').each(function(i, obj) {
+			$(this).val(i + 1);
+		});
+	}
+
 	function del_row_transaksi(xid) {
 		$('#transaksi-' + xid + '').remove();
 		reorder();
@@ -572,13 +586,13 @@ if ($data3 != "Not Found") {
 
 	function del_row_transaksi1(xid) {
 		$('#transaksi1-' + xid + '').remove();
-		reorder();
+		reorder1();
 		calc();
 	}
 
 	function del_row_transaksi2(xid) {
 		$('#transaksi2-' + xid + '').remove();
-		reorder();
+		reorder2();
 		calc();
 	}
 
@@ -605,7 +619,7 @@ if ($data3 != "Not Found") {
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi1-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control _nameitem" name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_deskripsi" autocomplete="off" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]' + xid + '_deskripsi"></td>';
@@ -840,12 +854,28 @@ if ($data3 != "Not Found") {
 			sts = 0;
 			return false;
 		}
-		// xval = $("#datein").val();
-		// if ($("#datein").val() == '') {
-		// 	alert('Input Tanggal Masuk');
+
+		xval = $("#namecust").val();
+		if ($("#namecust").val() == '') {
+			alert('Input Nama Customer');
+			sts = 0;
+			return false;
+		}
+
+		// xval = $("#namewh").val();
+		// if ($("#namewh").val() == '') {
+		// 	alert('Pilih Gudang Penerima');
 		// 	sts = 0;
 		// 	return false;
 		// }
+
+		// xval = $("#namecur").val();
+		// if ($("#namecur").val() == '') {
+		// 	alert('Pilih Mata Uang');
+		// 	sts = 0;
+		// 	return false;
+		// }
+
 
 		$('input[objtype=expiredate]').each(function(i, obj) {
 
@@ -893,8 +923,8 @@ if ($data3 != "Not Found") {
 	$(document).ready(function() {
 		var today = new Date();
 		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
-		if ($("#date").val() == '') {
-			$("#date").val(date);
+		if ($("#date1").val() == '') {
+			$("#date1").val(date);
 		}
 	});
 </script>

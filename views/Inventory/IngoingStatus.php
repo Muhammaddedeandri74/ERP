@@ -49,7 +49,7 @@
                     <option value="">Pilih</option>
                     <?php if ($data2 != "Not Found") : ?>
                       <?php foreach ($data2 as $key) : ?>
-                        <option value="<?php echo $key["namecomm"] ?>"><?php echo $key["namecomm"] ?></option>
+                        <option value="<?php echo $key["namesupp"] ?>"><?php echo $key["namesupp"] ?></option>
                       <?php endforeach ?>
                     <?php endif ?>
                   </select>
@@ -79,10 +79,9 @@
               <div class="row mb-3">
                 <div class="col-10">
                   <div class="row">
-                    <div class="col-6"></div>
                     <div class="col-6">
-                      <a href="<?php echo base_url('InventoryController/ingoingstatus') ?>" class="btn  btn-danger" style="margin-left: 10px;">Reset</a>
-                      <button type="submit" class="btn btn-primary" style="margin-left: 11px;">Pencarian</button>
+                      <a href="<?php echo base_url('InventoryController/ingoingstatus') ?>" class="btn  btn-danger" style="margin-left: 10px; font-size:13px;">Reset</a>
+                      <button type="submit" class="btn btn-primary" style="margin-left: 11px; font-size:13px;">Pencarian</button>
                     </div>
                   </div>
                 </div>
@@ -101,23 +100,22 @@
       </div>
       <div class="row">
         <label for="" class="form-label fs-4 mb-3">Item/Produk</label>
-        <table class="table table-bordered table-striped list-akses">
+        <table class="table table-bordered table-striped list-akses" id="table-user">
           <thead class="border-0">
             <tr>
-              <td style="background:#1143d8;color:white;min-width: auto;">No</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">No. Transaksi</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">No. Purchase Order</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Supplier</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Nama Item</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">SKU</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Gudang Penerima</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Tangal InventoryIn</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Tipe Ingoing</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Tipe Item</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">QtyPo</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">QtyIn</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Harga</td>
-              <td style="background:#1143d8;color:white;min-width: auto;">Deskripsi</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">No</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">No. Transaksi</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Datein</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Supplier</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Ingoing</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Gudang Penerima</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Nama Item</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">SKU</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Item</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">QtyPo</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">QtyIn</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Harga</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Deskripsi</td>
             </tr>
           </thead>
           <tbody>
@@ -125,20 +123,19 @@
               <?php $no = 1; ?>
               <?php foreach ($data as $key) : ?>
                 <tr>
-                  <td><?php echo $no++; ?></td>
-                  <td><?php echo $key["codein"] ?></td>
-                  <td><?php echo $key["codepo"] ?></td>
-                  <td><?php echo $key["namesupp"] ?></td>
-                  <td><?php echo $key["nameitem"] ?></td>
-                  <td><?php echo $key["sku"] ?></td>
-                  <td><?php echo $key["namewarehouse"] ?></td>
-                  <td><?php echo $key["datein"] ?></td>
-                  <td><?php echo $key["typein"] ?></td>
-                  <td><?php echo $key["itemgroup"] ?></td>
-                  <td><?php echo $key["qtypodet"] ?></td>
-                  <td><?php echo $key["qtyindet"] ?></td>
-                  <td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                  <td><?php echo $key["deskripsi"] ?></td>
+                  <td style="text-align: center;"><?php echo $no++; ?></td>
+                  <td style="text-align: center;"><?php echo $key["codein"] ?></td>
+                  <td style="text-align: center;"><?php echo $key["datein"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["namesupp"] ?></td>
+                  <td style="text-align: center;"><?php echo $key["typein"] ?></td>
+                  <td style="text-align: center;"><?php echo $key["namewarehouse"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["nameitem"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["sku"] ?></td>
+                  <td style="text-align: center;"><?php echo $key["itemgroup"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["qtypodet"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["qtyindet"] ?></td>
+                  <td style="text-align: left;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
+                  <td style="text-align: left;"><?php echo $key["deskripsi"] ?></td>
                 </tr>
               <?php endforeach ?>
             <?php endif ?>
@@ -152,20 +149,19 @@
         <table class="table table-striped table-hover">
           <thead style="background: purple">
             <tr>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">No</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">No. Transaksi</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">No. Purchase Order</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Supplier</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Nama Item</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">SKU</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Gudang Penerima</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Tangal InventoryIn</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Tipe Ingoing</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Tipe Item</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">QtyPo</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">QtyIn</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Harga</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;">Deskripsi</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">No</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">No. Transaksi</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Datein</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Supplier</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Ingoing</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Gudang Penerima</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Nama Item</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">SKU</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Item</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">QtyPo</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">QtyIn</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Harga</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Deskripsi</td>
             </tr>
           </thead>
           <tbody id="printt">
@@ -175,13 +171,12 @@
                 <tr>
                   <td style="border:solid;"><?php echo $no++; ?></td>
                   <td style="border:solid;"><?php echo $key["codein"] ?></td>
-                  <td style="border:solid;"><?php echo $key["codepo"] ?></td>
+                  <td style="border:solid;"><?php echo $key["datein"] ?></td>
                   <td style="border:solid;"><?php echo $key["namesupp"] ?></td>
+                  <td style="border:solid;"><?php echo $key["namewarehouse"] ?></td>
+                  <td style="border:solid;"><?php echo $key["typein"] ?></td>
                   <td style="border:solid;"><?php echo $key["nameitem"] ?></td>
                   <td style="border:solid;"><?php echo $key["sku"] ?></td>
-                  <td style="border:solid;"><?php echo $key["namewarehouse"] ?></td>
-                  <td style="border:solid;"><?php echo $key["datein"] ?></td>
-                  <td style="border:solid;"><?php echo $key["typein"] ?></td>
                   <td style="border:solid;"><?php echo $key["itemgroup"] ?></td>
                   <td style="border:solid;"><?php echo $key["qtypodet"] ?></td>
                   <td style="border:solid;"><?php echo $key["qtyindet"] ?></td>

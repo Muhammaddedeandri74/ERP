@@ -27,8 +27,8 @@
                 <label class="fs-5 mb-3">Informasi Dasar</label>
                 <div class="row mb-3">
                   <div class="col-8">
-                    <label for="">No. Purchase Order</label>
-                    <input type="text" name="codepo" value="<?= set_value('codepo') ?>" class="form-control" autocomplete="off" placeholder="Cari Berdasarkan PO . ." autofocus>
+                    <label for="">Purchase Order</label>
+                    <input type="text" name="codepo" value="<?= set_value('codepo') ?>" class="form-control" autocomplete="off" autofocus>
                   </div>
                   <div class="col-4 mt-2">
                     <p></p>
@@ -54,13 +54,6 @@
                 <label class="fs-5 mb-3">Informasi Gudang & Mata Uang </label>
                 <div class="row mb-3">
                   <div class="col-4">
-                    <label for="">Tipe Periode</label>
-                    <select name="filter" <?= set_value('filter') ?> id="" class="form-select">
-                      <option value="datepo">Tanggal PO</option>
-                      <option value="delivedate">Tanggal Delivery</option>
-                    </select>
-                  </div>
-                  <div class="col-4">
                     <label for="">Mulai Dari</label>
                     <input type="date" class="form-control" name="date1" id="date1" value="<?= set_value('date1') ?>">
                   </div>
@@ -69,8 +62,16 @@
                     <input type="date" class="form-control" name="date2" id="date2" value="<?= set_value('date2') ?>">
                   </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row">
                   <div class="col-4">
+                    <label for="">Tipe Periode</label>
+                    <select name="filter" <?= set_value('filter') ?> id="" class="form-select">
+                      <option value="">Pilih</option>
+                      <option value="datepo">Tanggal PO</option>
+                      <option value="delivedate">Tanggal Delivery</option>
+                    </select>
+                  </div>
+                  <div class="col-4 mb-3">
                     <label for="">Status Purchase Order</label>
                     <select name="status" id="" class="form-select">
                       <option value="">Pilih</option>
@@ -80,14 +81,13 @@
                       <option value="Cancel">Cancel</option>
                     </select>
                   </div>
-                  <div class="col-4"></div>
-                </div>
-                <div class="d-flex mb-3">
-                  <div class="me-3">
+                  <div></div>
+                  <div class="mb-3">
                     <a href="<?php echo base_url('InventoryController/PoStatus') ?>" class="btn btn-danger">Reset</a>
                     <button name="submit" name="submit" class="btn btn-primary">Pencarian</button>
                   </div>
                 </div>
+
               </div>
               <div class="col-3">
                 <label class="fs-5 mb-3">Cetak & Download</label>
@@ -131,14 +131,14 @@
                     <?php $a = 1;
                     foreach ($data as $key) : ?>
                       <tr>
-                        <td><?php echo $a++ ?></td>
-                        <td><?php echo $key["codepo"] ?></td>
+                        <td style="text-align: center;"><?php echo $a++ ?></td>
+                        <td style="text-align: center;"><?php echo $key["codepo"] ?></td>
                         <td><?php echo $key["namesupp"] ?></td>
-                        <td><?php echo $key["datepo"] ?></td>
-                        <td><?php echo $key["delivedate"] ?></td>
-                        <td><?php echo $key["namecomm"] ?></td>
+                        <td style="text-align: center;"><?php echo $key["datepo"] ?></td>
+                        <td style="text-align: center;"><?php echo $key["delivedate"] ?></td>
+                        <td style="text-align: center;"><?php echo $key["namecomm"] ?></td>
                         <td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                        <td>
+                        <td style="text-align: center;">
                           <?php if ($key["vat"]) : ?>
                             <p>Yes</p>
                           <?php else : ?>
