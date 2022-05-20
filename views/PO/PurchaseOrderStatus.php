@@ -120,7 +120,6 @@
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Delivery</td>
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Mata Uang</td>
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Harga</td>
-                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">VAT</td>
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Total</td>
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Status</td>
                     <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Action</td>
@@ -133,18 +132,11 @@
                       <tr>
                         <td style="text-align: center;"><?php echo $a++ ?></td>
                         <td style="text-align: center;"><?php echo $key["codepo"] ?></td>
-                        <td><?php echo $key["namesupp"] ?></td>
+                        <td><?php echo $key["namecust"] ?></td>
                         <td style="text-align: center;"><?php echo $key["datepo"] ?></td>
                         <td style="text-align: center;"><?php echo $key["delivedate"] ?></td>
                         <td style="text-align: center;"><?php echo $key["namecomm"] ?></td>
                         <td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                        <td style="text-align: center;">
-                          <?php if ($key["vat"]) : ?>
-                            <p>Yes</p>
-                          <?php else : ?>
-                            <p>No</p>
-                          <?php endif ?>
-                        </td>
                         <td><?php echo $key["grandtotal"] ?></td>
                         <td>
                           <center>
@@ -158,7 +150,7 @@
                           </center>
                         </td>
                         <td>
-                          <center><a style="height:36px;font-size:10px;" onclick="cekdetail(<?= $key['idpo'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></center>
+                          <center><a style="height:36px;font-size:10px;" onclick="cekdetail(<?php echo $key['idpo'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></center>
                         </td>
                       </tr>
                     <?php endforeach ?>
@@ -230,7 +222,7 @@
             <tr>
               <td style="border:solid;"><?php echo $a++ ?></td>
               <td style="border:solid;"><?php echo $key["codepo"] ?></td>
-              <td style="border:solid;"><?php echo $key["namesupp"] ?></td>
+              <td style="border:solid;"><?php echo $key["namecust"] ?></td>
               <td style="border:solid;"><?php echo $key["datepo"] ?></td>
               <td style="border:solid;"><?php echo $key["delivedate"] ?></td>
               <td style="border:solid;"><?php echo $key["namecomm"] ?></td>
@@ -270,16 +262,16 @@
 
   function cekdetail(x) {
     var data = <?php echo json_encode($data) ?>;
+    console.log(data)
     var baris = "";
     var ix = 1;
-    console.log(data)
     for (var i = 0; i < data.length; i++) {
       if (data[i]["idpo"] == x) {
         for (var a = 0; a < data[i]["data"].length; a++) {
           baris += '<tr>';
           baris += '<td scope="row">' + ix++ + '</td>';
           baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';
-          baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["datepo"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';

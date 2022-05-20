@@ -308,7 +308,10 @@
               </a>
               <ul class="dropdown-menu dropdown-submenu mt-2" style="border-radius: 10px;">
                 <li>
-                  <a class="dropdown-item m-2" href="">Register Request PO</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Requestpo') ?>">Register Request PO</a>
+                </li>
+                <li>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Statuspo') ?>">Register PO Status</a>
                 </li>
                 <li>
                   <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/PoStatus') ?>">Register PO List</a>

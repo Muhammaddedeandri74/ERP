@@ -214,6 +214,25 @@ class InventoryController extends CI_Controller
 		$this->load->view("xfooter");
 	}
 
+	function getlistpo()
+	{
+		$filter     = $this->input->post("filter");
+		$search     = $this->input->post("search");
+		$statuspo   = $this->input->post("statuspo");
+		$datestart  = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek        =  $this->MasterData->getlistpodet($filter, $search, $statuspo, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function detailpo()
+	{
+		$idpo = $this->input->post("idpo");
+
+		$cek  = $this->MasterData->detailpo($idpo);
+		echo json_encode($cek);
+	}
+
 	function PoStatus()
 	{
 		$codepo         = $this->input->post('codepo');
@@ -309,12 +328,33 @@ class InventoryController extends CI_Controller
 		$this->load->view("Inventory/outstatus", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
+
 	function stockcard()
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/stockcard", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function statuspo()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/statuspo", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function requestpo()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getrequestpo();
+		$f["data1"] = $this->MasterData->getitemmaterialpo();
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/requestpo", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }

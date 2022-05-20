@@ -2,10 +2,10 @@
     <div class="header px-4 pt-2" style="height: 196px;">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Order Management </a></li>
-                <li class="breadcrumb-item m-0 bc-active" aria-current="page">Quotation</li>
+                <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Inventory Management</a></li>
+                <li class="breadcrumb-item m-0 bc-active" aria-current="page">Request Form</li>
             </ol>
-            <h3 class="text-white">Quotation Report</h3>
+            <h3 class="text-white">Request PO Status</h3>
         </nav>
     </div>
     <div class="content bg-white mx-4">
@@ -58,99 +58,77 @@
                                 <div class="col-3">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Sampai Dengan</label>
-                                        <input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-t') ?>">
+                                        <input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-d') ?>">
                                     </div>
                                 </div>
                                 <div class="col-3 mt-3">
                                     <p></p>
-                                    <a href="#" class="btn btn-primary" onclick="loaddata()">Terapkan</a>
+                                    <a href="" class="btn btn-primary">Terapkan</a>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-1">
-                    </div>
-                    <div class="row mb-5" style="overflow-x: auto;">
-                        <h5>Item/Produk</h5>
-                        <table class="table table-bordered table-striped list-akses p-0 m-0 " id="table-user">
-                            <thead class="text-white" style="background:#1143d8">
-                                <tr>
-                                    <td>No. Quotation</td>
-                                    <td>Judul Quotation</td>
-                                    <td>Customer</td>
-                                    <td>Tanggal Exp</td>
-                                    <td>Total Amount</td>
-                                    <td>Status <i class='bx bx-down-arrow-alt'></i></td>
-                                </tr>
-                            </thead>
-                            <tbody id="detailx">
-                                <tr>
-                                    <td>as</td>
-                                    <td>as</td>
-                                    <td>as</td>
-                                    <td>as</td>
-                                    <td>as</td>
-                                    <td>as</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5">Total Quotation</td>
-                                    <td id="total">Rp. 24.000.000,00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <table class="table p-0 m-0">
-                            <tbody style="background-color: #0000001E;">
-                                <tr>
-                                    <td>
-                                        <div class="row">
-                                            <label for="" class="form-label">Report</label>
-                                            <div class="col-6">
-                                                <a href="" class="btn"><i class="bx bxs-download"></i>Download</a>
-                                            </div>
-                                            <div class="col-5">
-                                                <a href="" class="btn"><i class="bx bx-printer"></i>Cetak</a>
-                                            </div>
+                    <table class="table table-bordered " id="table-user">
+                        <thead class="text-white" style="background:#1143d8">
+                            <tr>
+                                <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                <td>No. Request PO</td>
+                                <td>Due Date <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Qty Item</td>
+                                <td>Total Amount <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Status <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody id="detailx">
+                            <tr>
+                                <td>as</td>
+                                <td>as</td>
+                                <td>as</td>
+                                <td>as</td>
+                                <td>as</td>
+                                <td>as</td>
+                                <td>Detail <i class='bx bx-windows'></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table p-0 m-0">
+                        <tbody style="background-color: #0000001E;">
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <label for="" class="form-label">Report</label>
+                                        <div class="col-6">
+                                            <a href="" class="btn"><i class="bx bxs-download"></i>Download</a>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <label for=""><i style="color: blue" class='bx bxs-circle'></i> Total Semua Quotation</label>
-                                            <p id="all">Rp. 12.000.000,00</p>
+                                        <div class="col-5">
+                                            <a href="" class="btn"><i class="bx bx-printer"></i>Cetak</a>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <label for=""><i style="color: yellow" class='bx bxs-circle'></i> Total Quotation Waiting</label>
-                                            <p id="waiting">Rp. 12.000.000,00</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <label for=""><i style="color: orange" class='bx bxs-circle'></i> Total Quotation Proses</label>
-                                            <p id="process">Rp. 12.000.000,00</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <label for=""><i style="color: green" class='bx bxs-circle'></i> Total Quotation Finish</label>
-                                            <p id="finish">Rp. 12.000.000,00</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <label for=""><i style="color: red" class='bx bxs-circle'></i> Total Quotation Cancel</label>
-                                            <p id="cancel">Rp. 12.000.000,00</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <label for=""><i style="color: blue" class='bx bxs-circle'></i> Total Semua Request PO</label>
+                                        <p id="all">Rp. 12.000.000,00</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <label for=""><i style="color: yellow" class='bx bxs-circle'></i> Total Request PO Pending</label>
+                                        <p id="waiting">Rp. 12.000.000,00</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <label for=""><i style="color: green" class='bx bxs-circle'></i> Total Request PO Finish</label>
+                                        <p id="finish">Rp. 12.000.000,00</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -210,12 +188,9 @@
 
                 }
                 $('#detailx').html(baris)
-                $('#total').html(formatRupiah(totalquo + " ", "Rp."))
-                $('#all').html(formatRupiah(totalquo + " ", "Rp."))
-                $('#waiting').html(formatRupiah(waiting + "", "Rp."))
-                $('#process').html(formatRupiah(process + "", "Rp."))
-                $('#finish').html(formatRupiah(finish + "", "Rp."))
-                $('#cancel').html(formatRupiah(cancel + "", "Rp."))
+                $('#total').html(totalquo)
+                $('#all').html(totalquo)
+                $('#waiting').html(waiting)
             }
 
         });

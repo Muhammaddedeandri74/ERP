@@ -16,7 +16,7 @@ class QuotationController extends CI_Controller
             $this->session->unset_userdata("data");
             redirect('');
         }
-        $this->load->model("Salesinvoice");
+        $this->load->model("MQuotation");
         $this->load->model("MasterData");
     }
 
@@ -24,18 +24,75 @@ class QuotationController extends CI_Controller
     {
         $this->load->Model("MasterData");
         $f = $this->session->userdata("data");
-        $f["data"] = $this->MasterData->getsupplier();
+        $f["data"]  =  $this->MasterData->getcustomer();
+        $f["data1"] =  $this->MQuotation->getquotationlast();
+
+        $f["data2"] =  $this->MQuotation->getcompanydata();
+        $f["item"] =  $this->MQuotation->getitem();
         $this->load->view("SuperAdmin/header");
         $this->load->view("Quotation/addquot", $f);
         $this->load->view("SuperAdmin/Footer");
+    }
+
+    function getlistquo()
+    {
+        $filter = $this->input->post("filter");
+        $search = $this->input->post("search");
+        $statusquo = $this->input->post("statusquo");
+        $datestart = $this->input->post("datestart");
+        $finishdate = $this->input->post("finishdate");
+        $cek =  $this->MQuotation->getlistquotation($filter, $search, $statusquo, $datestart, $finishdate);
+        echo json_encode($cek);
     }
 
     function reportquot()
     {
         $this->load->Model("MasterData");
         $f = $this->session->userdata("data");
+
         $this->load->view("SuperAdmin/header");
         $this->load->view("Quotation/reportquot", $f);
         $this->load->view("SuperAdmin/Footer");
+    }
+
+    function addquo()
+    {
+        $f = $this->session->userdata("data");
+        $date = date('Y-m-d H:i:s');
+        $iduser = $f["iduser"];
+        $norek = $this->input->post('norek');
+        $codequo = $this->input->post('codequo');
+        $idcust = $this->input->post('idcust');
+        $address = $this->input->post('address');
+        $judulquo = $this->input->post('judulquo');
+        $startquo = $this->input->post('startquo');
+        $expquo = $this->input->post('expquo');
+        $subtotal = $this->input->post('subtotal');
+        $disnoms = $this->input->post('disnoms');
+        $ppn = $this->input->post('ppn');
+        $grandtotal = $this->input->post('grandtotal');
+        $iditem = $this->input->post('iditem');
+        $qty = $this->input->post('qty');
+        $disnom = $this->input->post('disnom');
+        $harga = $this->input->post('harga');
+        $total = $this->input->post('total');
+
+        $cek = $this->MQuotation->addquo($date, $iduser, $norek, $codequo, $idcust, $address, $judulquo, $startquo, $expquo, $subtotal, $disnoms, $ppn, $grandtotal, $iditem, $qty, $disnom, $harga, $total);
+        $this->session->set_flashdata('message', '<div class="alert alert-primary" role="alert">' . $cek . '</div>');
+        redirect("QuotationController/addquot");
+    }
+
+    function detailquo()
+    {
+        $idquo = $this->input->post("idquo");
+        $cek = $this->MQuotation->detailquo($idquo);
+        echo json_encode($cek);
+    }
+
+    function cancelquo()
+    {
+        $codequo = $this->input->post("codequo");
+        $cek = $this->MQuotation->cancelquo($codequo);
+        echo json_encode($cek);
     }
 }

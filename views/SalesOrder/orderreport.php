@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-3">
                             <label for="" class="form-label">Status Order</label>
-                            <select class="form-select" name="status" aria-label="Default select example">
+                            <select class="form-select" name="status" id="status" aria-label="Default select example">
                                 <option value="">Pilih</option>
                                 <option value="Waiting">Waiting</option>
                                 <option value="Process">Process</option>
@@ -29,11 +29,11 @@
                         </div>
                         <div class="col-3">
                             <label for="" class="form-label">Mulai Dari</label>
-                            <input type="date" name="date1" class="form-control">
+                            <input type="date" name="date1" id="datestart" value="<?php echo date('Y-m-d') ?>" class="form-control">
                         </div>
                         <div class="col-3">
                             <label for="" class="form-label">Sampai Dengan</label>
-                            <input type="date" name="date2" class="form-control">
+                            <input type="date" name="date2" id="finishdate" value="<?php echo date('Y-m-t') ?>" class="form-control">
                         </div>
 
                     </div>
@@ -43,12 +43,25 @@
             <div class="row mb-3">
                 <div class="col-3">
                     <label for="" class="form-label">Pencarian</label>
-                    <input type="text" name="namecust" id="namecust" class="form-control" placeholder="Cari Berdasarkan Customer" autocomplete="off">
+
+
+                    <div class="row">
+                        <div class="col-6">
+                            <select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
+                                <option value="codeso">No. Sales Order</option>
+                                <option value="namecust">Nama Customer</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan Filter">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-4">
                     <p></p>
                     <a href="<?php echo base_url('OrderManagementController/orderreport') ?>" class="btn btn-danger mt-3" style="font-size: 13px;">Reload</a>
-                    <button type="submit" class="btn btn-primary mt-3" style="font-size: 13px;">Terapkan</button>
+                    <button type="button" onclick="loaddata()" class="btn btn-primary mt-3" style="font-size: 13px;">Terapkan</button>
                 </div>
             </div>
         </div>
@@ -62,15 +75,16 @@
                             <th>Tgl. Transaksi</th>
                             <th>Customer</th>
                             <th>Item</th>
-                            <th>DPP</th>
-                            <th>Discount</th>
+                            <th>Sub Total</th>
+                            <th>VAT</th>
+                            <th>Ongkos Kirim</th>
                             <th>Total Amount</th>
                             <th>Status <i class='bx bx-down-arrow-alt'></i></th>
                             <td>Action</td>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php if ($data != "Not Found") : ?>
+                    <tbody id="detailx">
+                        <!-- <?php if ($data != "Not Found") : ?>
                             <?php $no = 1 ?>
                             <?php foreach ($data as $key) : ?>
                                 <tr>
@@ -99,15 +113,16 @@
                                 </tr>
 
                             <?php endforeach ?>
-                        <?php endif ?>
+                        <?php endif ?> -->
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="4">Total Order :</td>
-                            <td>0 Item</td>
-                            <td>Rp. 15.000.000</td>
-                            <td>Rp. 15.000.000</td>
-                            <td>Rp. 15.000.000</td>
+                            <td id="totalitem">0 Item</td>
+                            <td id="totalsub">Rp. 15.000.000</td>
+                            <td id="totalvat">Rp. 15.000.000</td>
+                            <td id="totalongkir">Rp. 15.000.000</td>
+                            <td id="totalamount">Rp. 15.000.000</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -125,22 +140,35 @@
                                     </div>
                                 </div>
                             </td>
+
                             <td>
                                 <div class="row">
-                                    <label for=""><i style="color: #F56764" class="bx bxs-circle"></i> Total Semua Sales Order</label>
-                                    <p></p>
+                                    <label for=""><i style="color: blue" class='bx bxs-circle'></i> Total Semua Sales Order</label>
+                                    <p id="all">Rp. 12.000.000,00</p>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
-                                    <label for=""><i style="color: #FCAA25" class="bx bxs-circle"></i> Total Sales Order Pending</label>
-                                    <p>Rp. 12.000.000,00</p>
+                                    <label for=""><i style="color: yellow" class='bx bxs-circle'></i> Total Sales Order Waiting</label>
+                                    <p id="waiting">Rp. 12.000.000,00</p>
                                 </div>
                             </td>
                             <td>
                                 <div class="row">
-                                    <label for=""><i style="color: #008F43" class="bx bxs-circle"></i> Total Sales Order Selesai</label>
-                                    <p>Rp. 12.000.000,00</p>
+                                    <label for=""><i style="color: orange" class='bx bxs-circle'></i> Total Sales Order Proses</label>
+                                    <p id="process">Rp. 12.000.000,00</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <label for=""><i style="color: green" class='bx bxs-circle'></i> Total Sales Order Finish</label>
+                                    <p id="finish">Rp. 12.000.000,00</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <label for=""><i style="color: red" class='bx bxs-circle'></i> Total Sales Order Cancel</label>
+                                    <p id="cancel">Rp. 12.000.000,00</p>
                                 </div>
                             </td>
                         </tr>
@@ -166,8 +194,8 @@
                                     <td>Tanggal SO</td>
                                     <td>Name Item</td>
                                     <td>SKU</td>
-                                    <td>Deskripsi</td>
-                                    <td>Harga</td>
+                                    <td>Qty</td>
+                                    <td>Harga Total</td>
                                 </tr>
                             </thead>
                             <tbody id="xdetails">
@@ -194,7 +222,7 @@
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Transaksi</td>
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Customer</td>
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Item</td>
-                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">DPP</td>
+                    <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Sub Total</td>
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Discount</td>
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Total Amount</td>
                     <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Status</td>
@@ -252,26 +280,139 @@
     });
 
     function cekdetail(x) {
-        var data = <?php echo json_encode($data) ?>;
-        var baris = "";
+
         var ix = 1;
-        console.log(data)
-        for (var i = 0; i < data.length; i++) {
-            if (data[i]["idso"] == x) {
-                for (var a = 0; a < data[i]["data"].length; a++) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('OrderManagementController/detailsalesorder') ?>",
+            data: "idso=" + x,
+            dataType: "JSON",
+            success: function(hasil) {
+                var baris = "";
+
+                for (var i = 0; i < hasil["data"].length; i++) {
+
                     baris += '<tr>';
                     baris += '<td scope="row">' + ix++ + '</td>';
-                    baris += '<td>' + data[i]["data"][a]["codeso"] + '</td>';
-                    baris += '<td>' + data[i]["data"][a]["dateso"] + '</td>';
-                    baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
-                    baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
-                    baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
-                    baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
+                    baris += '<td>' + hasil["codeso"] + '</td>';
+                    baris += '<td>' + hasil["dateso"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["nameitem"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["sku"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["qtyso"] + '</td>';
+                    baris += '<td>' + formatRupiah(hasil["data"][i]["grandtotaldet"] + "", "Rp.") + '</td>';
                     baris += '</tr>';
+
                 }
-                break;
+                console.log(hasil)
+                $('#xdetails').html(baris);
             }
+        })
+
+
+
+    }
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
         }
-        $('#xdetails').html(baris);
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+
+    loaddata()
+
+    function loaddata() {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('OrderManagementController/orderreportload') ?>",
+            data: "filter=" + $('#filter').val() + "&search=" + $('#search').val() + "&status=" + $('#status').val() + "&date1=" + $('#datestart').val() + "&date2=" + $('#finishdate').val(),
+            dataType: "JSON",
+            success: function(hasil) {
+
+                console.log(hasil)
+                var baris = ""
+                totalquo = 0
+                totalitem = 0
+                totalsub = 0
+                totalvat = 0
+                totalongkir = 0
+                totalamount = 0
+                waiting = 0
+                finish = 0
+                cancel = 0
+                process = 0;
+                if (hasil != "Not Found") {
+
+                    for (let i = 0; i < hasil.length; i++) {
+
+
+                        baris += `  <tr>
+                                    <td>` + (Number(i) + Number(1)) + `</td>
+                                    <td>` + hasil[i]["codeso"] + `</td>
+                                    <td>` + hasil[i]["dateso"] + `</td>
+                                    <td>` + hasil[i]["namecust"] + `</td>
+                                    <td>` + hasil[i]["data"].length + `</td>
+                                    <td>` + formatRupiah(hasil[i]["subtotal"] + " ", "Rp.") + `</td>
+                                    <td>` + formatRupiah(hasil[i]["vat"] + " ", "Rp.") + `</td>
+                                    <td>` + formatRupiah(hasil[i]["ongkir"] + " ", "Rp.") + `</td>
+                                    
+                                    <td>` + formatRupiah(hasil[i]["grandtotalso"] + " ", "Rp.") + `</td>
+                                    <td style="text-align:left;">
+                                        ` + hasil[i]["statusorder"] + `
+                                    </td>
+                                    <td><a onclick="cekdetail(` + hasil[i]["idso"] + `)" class="btn btn-primary" style="font-size: 12px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
+                                </tr>`
+
+                        totalquo = Number(totalquo) + Number(hasil[i]["grandtotalso"])
+                        totalitem = Number(totalitem) + Number(hasil[i]["data"].length)
+                        totalsub = Number(totalsub) + Number(hasil[i]["subtotal"])
+                        totalvat = Number(totalvat) + Number(hasil[i]["vat"])
+                        totalongkir = Number(totalongkir) + Number(hasil[i]["ongkir"])
+                        totalamount = Number(totalamount) + Number(hasil[i]["grandtotalso"])
+
+                        if (hasil[i]["statusorder"] == "Waiting") {
+                            waiting = Number(waiting) + Number(hasil[i]["grandtotalso"])
+                        }
+
+                        if (hasil[i]["statusorder"] == "Process") {
+                            process = Number(process) + Number(hasil[i]["grandtotalso"])
+                        }
+
+                        if (hasil[i]["statusorder"] == "Cancel") {
+                            cancel = Number(cancel) + Number(hasil[i]["grandtotalso"])
+                        }
+                        if (hasil[i]["statusorder"] == "Finish") {
+                            finish = Number(finish) + Number(hasil[i]["grandtotalso"])
+                        }
+                    }
+
+
+                }
+                $('#detailx').html(baris)
+                $('#totalitem').html(totalitem + " Item")
+                $('#totalsub').html(formatRupiah(totalsub + " ", "Rp."))
+                $('#totalvat').html(formatRupiah(totalvat + " ", "Rp."))
+                $('#totalongkir').html(formatRupiah(totalongkir + " ", "Rp."))
+                $('#totalamount').html(formatRupiah(totalamount + " ", "Rp."))
+
+                $('#total').html(formatRupiah(totalquo + " ", "Rp."))
+                $('#all').html(formatRupiah(totalquo + " ", "Rp."))
+                $('#waiting').html(formatRupiah(waiting + "", "Rp."))
+                $('#process').html(formatRupiah(process + "", "Rp."))
+                $('#finish').html(formatRupiah(finish + "", "Rp."))
+                $('#cancel').html(formatRupiah(cancel + "", "Rp."))
+            }
+
+        });
     }
 </script>

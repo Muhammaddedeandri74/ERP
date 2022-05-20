@@ -109,13 +109,7 @@
               <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Supplier</td>
               <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Ingoing</td>
               <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Gudang Penerima</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Nama Item</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">SKU</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Item</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">QtyPo</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">QtyIn</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Harga</td>
-              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Deskripsi</td>
+              <td style="background:#1143d8;color:white;min-width: auto;text-align: center;">Action</td>
             </tr>
           </thead>
           <tbody>
@@ -127,15 +121,9 @@
                   <td style="text-align: center;"><?php echo $key["codein"] ?></td>
                   <td style="text-align: center;"><?php echo $key["datein"] ?></td>
                   <td style="text-align: left;"><?php echo $key["namesupp"] ?></td>
-                  <td style="text-align: center;"><?php echo $key["typein"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["typein"] ?></td>
                   <td style="text-align: center;"><?php echo $key["namewarehouse"] ?></td>
-                  <td style="text-align: left;"><?php echo $key["nameitem"] ?></td>
-                  <td style="text-align: left;"><?php echo $key["sku"] ?></td>
-                  <td style="text-align: center;"><?php echo $key["itemgroup"] ?></td>
-                  <td style="text-align: left;"><?php echo $key["qtypodet"] ?></td>
-                  <td style="text-align: left;"><?php echo $key["qtyindet"] ?></td>
-                  <td style="text-align: left;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                  <td style="text-align: left;"><?php echo $key["deskripsi"] ?></td>
+                  <td style="text-align: center;"><a style="height:36px;font-size:12px;" onclick="cekdetail(<?php echo $key['idin'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
                 </tr>
               <?php endforeach ?>
             <?php endif ?>
@@ -191,30 +179,46 @@
     </form>
   </div>
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#1143d8;color:white;">
+        <h5 class="modal-title" id="exampleModalLabel">DETAIL DATA PURCHASE ORDER</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mx-3" style="overflow-x: auto;">
+          <table class="table table-bordered table-striped" id="table-user">
+            <thead>
+              <tr>
+                <td>#</td>
+                <td>Code In</td>
+                <td>Date In</td>
+                <td>Nama Item</td>
+                <td>SKU</td>
+                <td>Harga</td>
+                <td>Itemgroup</td>
+                <td>Desc</td>
+              </tr>
+            </thead>
+            <tbody id="xdetails">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
   $('#data').hide();
-
-  $(function() {
-    $("#table-user").DataTable({
-      "responsive": true,
-      "lengthChange": false,
-      "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
 
   function printdata() {
     var printContents = document.getElementById('data').innerHTML;
@@ -236,4 +240,29 @@
     }).appendTo("body").get(0).click();
     e.preventDefault();
   });
+
+  function cekdetail(x) {
+    var data = <?php echo json_encode($data) ?>;
+    console.log(data)
+    var baris = "";
+    var ix = 1;
+    for (var i = 0; i < data.length; i++) {
+      if (data[i]["idpo"] == x) {
+        for (var a = 0; a < data[i]["data"].length; a++) {
+          baris += '<tr>';
+          baris += '<td scope="row">' + ix++ + '</td>';
+          baris += '<td>' + data[i]["data"][a]["codein"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["datein"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
+          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
+          baris += '<td>' + data[i]["data"][a]["itemgroup"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
+          baris += '</tr>';
+        }
+        break;
+      }
+    }
+    $('#xdetails').html(baris);
+  }
 </script>
