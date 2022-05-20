@@ -775,6 +775,7 @@ class MasterDataControler extends CI_Controller
 
 	function addpo()
 	{
+		$idpox                   = $this->input->post("idpo");
 		$codepo                  = $this->input->post("codepo");
 		$supplier                = $this->input->post("idsupp");
 		$judulpurchase           = $this->input->post("judulpurchase");
@@ -804,6 +805,7 @@ class MasterDataControler extends CI_Controller
 
 
 		$cek                     = $this->MasterData->addpo(
+			$idpox,
 			$codepo,
 			$supplier,
 			$judulpurchase,
@@ -963,7 +965,7 @@ class MasterDataControler extends CI_Controller
 	{
 		$f = $this->session->userdata("data");
 		$iduser = $f["iduser"];
-		$idso                  = $this->input->post("idso");
+		$idso                    = $this->input->post("idso");
 		$codeso                  = $this->input->post("codeso");
 		$idquo                   = $this->input->post("idquo");
 		$tipeorder               = $this->input->post("tipeorder");

@@ -4933,82 +4933,7 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function addpo(
-		$codepo,
-		$supplier,
-		$judulpurchase,
-		$datepo,
-		$delivedate,
-		$matauang,
-		$exchange,
-		$vat,
-		$norekening,
-		$subtotal,
-		$disnoms,
-		$distotal,
-		$ppn,
-		$grandtotal,
-		$iditem,
-		$sku,
-		$nameitem,
-		$harga,
-		$qty,
-		$disnom,
-		$discpercent,
-		$sub,
-		$totaldisc,
-		$total,
-		$iduser
-	) {
-		date_default_timezone_set('Asia/Jakarta');
-		$fail   = 0;
-		$data1  = array($codepo);
-		$query1 = "SELECT * FROM po WHERE codepo = ?";
-		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
-		if (count($eksekusi1) > 0) {
-			$respon = "Code Po telah terdaftar";
-		} else {
-			$data     = array($codepo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $vat, $norekening, date('Y-m-d H:i:s'), $iduser);
-			$query    = "INSERT INTO po(codepo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,vat,norekening,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
-			$eksekusi = $this->db->query($query, $data);
-			if ($eksekusi == true) {
-				$datax = array($codepo);
-				$queryx = "SELECT * FROM po WHERE codepo = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $key) {
-						$idpo = $key->idpo;
-						$totalqtypo = 0;
 
-						for ($i = 0; $i < count($iditem); $i++) {
-							$dataxx     = array($idpo, $iditem[$i], $harga[$i], $qty[$i], $disnom[$i], $discpercent[$i], $sub[$i], $totaldisc[$i], $total[$i]);
-							$queryxx    = "INSERT INTO podet (idpo,iditem,price,qty,disnom,disper,subpo,totaldisc,grandtotal)VALUES(?,?,?,?,?,?,?,?,?)";
-							$eksekusixx = $this->db->query($queryxx, $dataxx);
-							if ($eksekusixx == true) {
-								$respon = "Success";
-
-								$totalqtypo += $qty[$i];
-							} else {
-								$respon = "Failed on Detail";
-							}
-						}
-						$querypo  = "UPDATE po set qtypo = " . $totalqtypo . " where codepo = '" . $codepo . "'";
-						$eksekusipo = $this->db->query($querypo);
-						if ($eksekusixx == true) {
-							$respon = "Success";
-						} else {
-							$respon = "Failed on Qtypo";
-						}
-					}
-				} else {
-					$respon = "Failed on Detail";
-				}
-			} else {
-				$respon = "Failed on Detail";
-			}
-			return $respon;
-		}
-	}
 
 	function addporeq(
 		$codereqpo,
@@ -5310,6 +5235,127 @@ class MasterData extends CI_Model
 			$this->db->trans_rollback();
 		}
 		return $respon;
+	}
+
+	function addpo(
+		$idpox,
+		$codepo,
+		$supplier,
+		$judulpurchase,
+		$datepo,
+		$delivedate,
+		$matauang,
+		$exchange,
+		$vat,
+		$norekening,
+		$subtotal,
+		$disnoms,
+		$distotal,
+		$ppn,
+		$grandtotal,
+		$iditem,
+		$sku,
+		$nameitem,
+		$harga,
+		$qty,
+		$disnom,
+		$discpercent,
+		$sub,
+		$totaldisc,
+		$total,
+		$iduser
+	) {
+		if ($idpox == "" || $idpox == 0) {
+			date_default_timezone_set('Asia/Jakarta');
+			$fail   = 0;
+			$data1  = array($codepo);
+			$query1 = "SELECT * FROM po WHERE codepo = ?";
+			$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+			if (count($eksekusi1) > 0) {
+				$respon = "Code Po telah terdaftar";
+			} else {
+				if ($idpox == "" || $idpox == 0) {
+					$data     = array($codepo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $vat, $norekening, date('Y-m-d H:i:s'), $iduser);
+					$query    = "INSERT INTO po(codepo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,vat,norekening,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
+					$eksekusi = $this->db->query($query, $data);
+					if ($eksekusi == true) {
+						$datax = array($codepo);
+						$queryx = "SELECT * FROM po WHERE codepo = ?";
+						$eksekusix = $this->db->query($queryx, $datax)->result_object();
+						if (count($eksekusix) > 0) {
+							foreach ($eksekusix as $key) {
+								$idpo = $key->idpo;
+								$totalqtypo = 0;
+
+								for ($i = 0; $i < count($iditem); $i++) {
+									$dataxx     = array($idpo, $iditem[$i], $harga[$i], $qty[$i], $disnom[$i], $discpercent[$i], $sub[$i], $totaldisc[$i], $total[$i]);
+									$queryxx    = "INSERT INTO podet (idpo,iditem,price,qty,disnom,disper,subpo,totaldisc,grandtotal)VALUES(?,?,?,?,?,?,?,?,?)";
+									$eksekusixx = $this->db->query($queryxx, $dataxx);
+									if ($eksekusixx == true) {
+										$respon = "Success";
+
+										$totalqtypo += $qty[$i];
+									} else {
+										$respon = "Failed on Detail";
+									}
+								}
+								$querypo  = "UPDATE po set qtypo = " . $totalqtypo . " where codepo = '" . $codepo . "'";
+								$eksekusipo = $this->db->query($querypo);
+								if ($eksekusixx == true) {
+									$respon = "Success";
+								} else {
+									$respon = "Failed on Qtypo";
+								}
+							}
+						} else {
+							$respon = "Failed on Detail";
+						}
+					} else {
+						$respon = "Failed on Detail";
+					}
+				}
+				return $respon;
+			}
+		} else {
+
+			$datax = array($idpox);
+			$queryx = "SELECT * FROM po where idpo = ?";
+			$eksekusix = $this->db->query($queryx, $datax)->result_object();
+			if (count($eksekusix) > 0) {
+				foreach ($eksekusix as $key) {
+
+					$data      = array($codepo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $vat, $norekening, date('Y-m-d H:i:s'), $iduser, $idpox);
+					$query     = "UPDATE po set codepo = ?, idcust = ? , deskripsi = ?, datepo = ? , delivedate = ? , idcurr = ?, exchange = ?, vat = ?, norekening= ?,  madelog = ?, madeuser=? WHERE idpo = ?";
+					$eksekusi  = $this->db->query($query, $data);
+					if ($eksekusi == true) {
+						$datax     = array($idpox);
+						$queryx    = "DELETE FROM podet WHERE idpo = ?";
+						$eksekusix = $this->db->query($queryx, $datax);
+						if ($eksekusix == true) {
+							$idpoxs = $idpox;
+							for ($i = 0; $i < count($iditem); $i++) {
+								if ($iditem[$i] != "") {
+									$dataxx     = array($idpoxs, $iditem[$i], $harga[$i], $qty[$i], $disnom[$i], $discpercent[$i], $sub[$i], $totaldisc[$i], $total[$i]);
+									$queryxx    = "INSERT INTO podet (idpo,iditem,price,qty,disnom,disper,subpo,totaldisc,grandtotal)VALUES(?,?,?,?,?,?,?,?,?)";
+									$eksekusixx = $this->db->query($queryxx, $dataxx);
+									if ($eksekusixx == true) {
+										$respon = "Success";
+									} else {
+										$respon = "Failed on Detail";
+									}
+								}
+							}
+						} else {
+							$respon = "Failed on Detail";
+						}
+					} else {
+						$respon = "Failed on Detail";
+					}
+				}
+			} else {
+				$respon = "Purchase Order Tidak Ditemukan";
+			}
+		}
 	}
 
 	function getdatapobyid($idpo)

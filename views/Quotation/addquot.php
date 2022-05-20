@@ -63,23 +63,25 @@
                         <div class="col-3">
                             <label class="mb-3 fs-5">Informasi Judul & Lainnya </label>
                             <div class="row mb-3">
-                                <div class="col-12">
+                                <div class="col-10">
                                     <label for="exampleFormControlInput1" class="form-label">Judul Penawaran</label>
                                     <textarea name="judulquo" id="judulquo" class="form-control" cols="20" rows="4" required></textarea>
                                     <div class="row text-end">
                                         <span style="font-size: 10px;" class="text-muted">Maksimal 100 Karakter</span>
                                     </div>
                                 </div>
+                                <div class="col-2"></div>
                             </div>
                             <div class="row">
-                                <div class="col-6 mb-3">
+                                <div class="col-5 mb-3">
                                     <label for="startquo" class="form-label">Penawaran Berlaku</label>
                                     <input type="date" class="form-control" id="startquo" name="startquo" placeholder="name@example.com" value="<?php echo date('Y-m-d') ?>">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <label for="expquo" class="form-label">Tanggal Expired</label>
                                     <input type="date" class="form-control" id="expquo" name="expquo" placeholder="name@example.com" value="<?php echo date('Y-m-d') ?>">
                                 </div>
+                                <div class="col-2"></div>
                             </div>
                         </div>
                         <div class="col-3">
@@ -93,14 +95,16 @@
                                 </div>
                             </div>
                             <label class="mb-3 fs-5">Akun Perbankan </label>
-                            <select class="form-select" aria-label="Default select example" name="norek" id="norek" required>
-                                <option value="">Pilih Akun Bank</option>
-                                <?php if ($data2 != "Not Found") {
-                                    foreach ($data2 as $key) { ?>
-                                        <option value="<?php echo $key["norekening"] ?>"><?php echo  $key["beneficiary"] ?> - <?php echo $key["norekening"] ?> ( <?php echo $key["bank"]  ?> )</option>
-                                <?php }
-                                } ?>
-                            </select>
+                            <div class="mb-3">
+                                <select class="form-select" aria-label="Default select example" name="norek" id="norek" required>
+                                    <option value="">Pilih Akun Bank</option>
+                                    <?php if ($data2 != "Not Found") {
+                                        foreach ($data2 as $key) { ?>
+                                            <option value="<?php echo $key["norekening"] ?>"><?php echo  $key["beneficiary"] ?> - <?php echo $key["norekening"] ?> ( <?php echo $key["bank"]  ?> )</option>
+                                    <?php }
+                                    } ?>
+                                </select>
+                            </div>
                             <div id="bank"></div>
 
                             <div class="row" id="action" style="display: none;">
@@ -109,7 +113,7 @@
                                     <a href="#" class="btn"><i class="bx bxs-download"></i> PDF</a>
                                 </div>
                                 <div class="col-4">
-                                    <a href="#" class="btn"><i class="bx bx-printer"></i> Cetak</a>
+                                    <a href="#" class="btn" onclick="printDiv('quot')" data-dismiss="modal"><i class="bx bx-printer"></i> Cetak</a>
                                 </div>
                                 <div class="col-4">
                                     <a href="<?php echo base_url('QuotationController/addquot') ?>" class="btn"><i class='bx bx-reset'></i> Baru</a>
@@ -124,19 +128,18 @@
                     </div>
                     <div class="row mb-5" style="overflow-x: auto;">
                         <h5>Item/Produk</h5>
-                        <table class="table table-bordered table-striped list-akses" id="table-user">
-                            <thead>
+                        <table class="table table-bordered table-striped " id="table-user">
+                            <thead class="text-white text-center" style="background:#1143d8;">
                                 <tr>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Sku</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Nama Item</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Harga</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Qty</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Discount Percent</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Discount Nominal</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Sub Total</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Total Discount</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Grand Total</td>
-                                    <td style="background:#1143d8;color:white;text-align:center;min-width: auto;">Action</td>
+                                    <td>Sku</td>
+                                    <td>Nama Item</td>
+                                    <td>Harga</td>
+                                    <td>Qty</td>
+                                    <td>Discount Nominal</td>
+                                    <td>Sub Total</td>
+                                    <td>Total Discount</td>
+                                    <td>Grand Total</td>
+                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody id="detail">
@@ -192,6 +195,96 @@
                         <button type="button" class="btn btn-primary" id="cancel" style="display: none;" onclick="cancelorder()">Cancel</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bay" style="display: none;" id="quot">
+        <div class="card-header pl-5 border-0">
+            <div class="row d-flex justify-content-between p-3">
+                <div class="col-3">
+
+                </div>
+                <div class="col-8">
+
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <p style="border-top: 2px solid black;"></p>
+            <div class="row d-flex justify-content-between">
+                <div class="col-1">
+                </div>
+                <div class="col-5 mt-3">
+                    <div class="input-group">
+                        <p class="col-4" style="text-align: right;">FROM :</p>
+                        <p style="margin-left: 2vw;" id="pt"></p>
+                    </div>
+                    <div class="input-group">
+                        <p class="col-4" style="text-align: right;">ATTN :</p>
+                        <p style="margin-left: 2vw;" id="cust"></p>
+                    </div>
+                </div>
+                <div class="col-5 mt-3">
+                    <div class="input-group">
+                        <p class="col-4" style="text-align: right;">No :</p>
+                        <p style="margin-left: 2vw;" id="no"></p>
+                    </div>
+                    <div class="input-group">
+                        <p class="col-4" style="text-align: right;">DATE :</p>
+                        <p style="margin-left: 2vw;" id="dates"></p>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+                <div class="col text-center mt-3">
+                    <label for="" class="form-label fs-3"><u>QUOTATION</u> </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table border">
+                        <thead style="border: 2px solid black">
+                            <tr>
+                                <td>Sku</td>
+                                <td>Nama Item</td>
+                                <td>Harga</td>
+                                <td>Qty</td>
+                                <td>Discount Nominal</td>
+                                <td>Sub Total</td>
+                                <td>Total Discount</td>
+                                <td>Grand Total</td>
+                            </tr>
+                        </thead>
+                        <tbody id="bodys">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 40vh">
+                <div class="col-8 mt-4" style="line-height: 0.5rem;">
+                </div>
+                <div class="col-4 mt-3" style="float: right;">
+                    <div class="input-group flex-nowrap">
+                        <p class="col-sm-4 " style="text-align: right;"></p>
+                        <p></p>
+                    </div>
+                    <div class="input-group flex-nowrap">
+                        <p class="col-sm-4 " style="text-align: right;"></p>
+                        <p></p>
+                    </div>
+                    <div class="input-group flex-nowrap">
+                        <p class="col-sm-4 " style="text-align: right;"></p>
+                        <p></p>
+                    </div>
+                    <div class="input-group flex-nowrap">
+                        <p class="col-sm-4" style="text-align: right;"></p>
+                        <p style="padding-top: 2.5vh;">( MARKETING )</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -265,22 +358,12 @@
                                 </tr>
                             </thead>
                             <tbody id="detailx">
-                                <!-- <?php if ($data3 != "Not Found") {
-                                            foreach ($data3 as $key) { ?>
-                                        <tr>
-                                            <td><?php echo $key["codequo"] ?></td>
-                                            <td><?php echo $key["namequotation"] ?></td>
-                                            <td><?php echo $key["namecust"] ?></td>
-                                            <td><?php echo $key["expquo"] ?></td>
-                                            <td><?php echo $key["statusquo"] ?></td>
-                                            <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailquo(<?php echo $key["idquo"] ?>)">Pilih</a></td>
-                                        </tr>
-                                <?php }
-                                        } ?> -->
+
                             </tbody>
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -318,30 +401,32 @@
             data: "filter=" + $('#filter').val() + "&search=" + $('#search').val() + "&statusquo=" + $('#statusquo').val() + "&datestart=" + $('#datestart').val() + "&finishdate=" + $('#finishdate').val(),
             dataType: "JSON",
             success: function(hasil) {
-
                 console.log(hasil)
                 var baris = ""
                 if (hasil != "Not Found") {
-
                     for (let i = 0; i < hasil.length; i++) {
-
-
-                        baris += `  <tr>
-                                            <td>` + hasil[i]["codequo"] + `</td>
-                                            <td>` + hasil[i]["namequotation"] + `</td>
-                                            <td>` + hasil[i]["namecust"] + `</td>
-                                            <td>` + hasil[i]["expquo"] + `</td>
-                                            <td>` + hasil[i]["statusquo"] + `</td>
-                                            <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailquo(` + hasil[i]["idquo"] + `)">Pilih</a></td>
-                                        </tr>`
+                        baris += `<tr>
+                                    <td>` + hasil[i]["codequo"] + `</td>
+                                    <td>` + hasil[i]["namequotation"] + `</td>
+                                    <td>` + hasil[i]["namecust"] + `</td>
+                                    <td>` + hasil[i]["expquo"] + `</td>
+                                    <td>` + hasil[i]["statusquo"] + `</td>
+                                    <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailquo(` + hasil[i]["idquo"] + `)">Pilih</a></td>
+                                </tr>`
                     }
-
-
                 }
                 $('#detailx').html(baris)
             }
-
         });
+    }
+
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
     }
 
     function detailquo(x) {
@@ -352,7 +437,12 @@
             dataType: "JSON",
             success: function(hasil) {
                 console.log(hasil)
+                var baris = "";
                 $('#custname').val(hasil["namecust"]);
+                $('#pt').html(hasil["namecust"]);
+                $('#cust').html(hasil["namecust"]);
+                $('#no').html(hasil["codequo"]);
+                $('#dates').html(hasil["datequo"]);
                 $('#address').html(hasil["delivaddr"]);
                 $('#codequo').val(hasil["codequo"]);
                 $('#judulquo').val(hasil["namequotation"]);
@@ -362,6 +452,20 @@
                 $('#norek').val(hasil["norek"]);
                 $('#action').show();
                 $('#detail').html("")
+                for (var a = 0; a < hasil["data"].length; a++) {
+                    var totaldisc = hasil["data"][a]["disc"] * hasil["data"][a]["qty"];
+                    var subtotal = Number(hasil["data"][a]["totalprice"]) + Number(totaldisc);
+                    baris += `<tr>
+                                <td>` + hasil["data"][a]["sku"] + `</td>
+                                <td>` + hasil["data"][a]["nameitem"] + `</td>
+                                <td>` + hasil["data"][a]["price"] + `</td>
+                                <td>` + hasil["data"][a]["qty"] + `</td>
+                                <td>` + hasil["data"][a]["disc"] + `</td>
+                                <td>` + subtotal + `</td>
+                                <td>` + totaldisc + `</td>
+                                <td>` + hasil["data"][a]["totalprice"] + `</td>
+                            </tr>`;
+                }
                 var val = hasil["namecust"];
                 var xobj = $('#xcust option').filter(function() {
                     return this.value == val;
@@ -407,7 +511,7 @@
                         document.getElementById('transaksi_' + xid + '_discpercent').readOnly = true;
                         document.getElementById('transaksi_' + xid + '_disnom').readOnly = true;
                     } else {
-                        cal();
+
                         $('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
                         $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
                         $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
@@ -447,7 +551,7 @@
                     }
 
                 }
-
+                $('#bodys').html(baris);
             }
         });
     }
@@ -465,14 +569,12 @@
         var xobj = $('#xcust option').filter(function() {
             return this.value == val;
         });
-
         if ((val == "") || (xobj.val() == undefined)) {
             $('#idcust').val("");
             $('#email').val("");
             $('#address').html("");
             $('#phone').val("");
         } else {
-
             $('#idcust').val(xobj.data('idcust'));
             $('#email').val(xobj.data('email'));
             $('#address').html(xobj.data('address'));
@@ -514,12 +616,10 @@
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_nameitem"  class="form-control"name="nameitem[]" value=""/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_harga"  class="form-control"name="harga[]" oninput="cal(' + xid + ')" value=""/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_qty"  class="form-control"name="qty[]" value="" oninput="cal(' + xid + ')"/></td>';
-        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_discpercent" oninput="discx(' + xid + ')"  class="form-control"name="discpercent[]" value="" oninput="discp(' + xid + ')"/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_disnom" oninput="discxx(' + xid + ')"  class="form-control"name="disnom[]" value="" oninput="disn(' + xid + ')"/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_sub"  class="form-control"name="sub[]" value="" oninput="disn(' + xid + ')"/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_totaldisc"  class="form-control"name="totaldisc[]" value="" oninput="disn(' + xid + ')"/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_total"  class="form-control"name="total[]" value=""/></td>';
-
         tabel += '<td style="border:none"height:1px" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control" type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
         tabel += '</tr>';
         //return tabel;
@@ -535,10 +635,7 @@
 
     function del_row_transaksi(xid) {
         $('#transaksi-' + xid + '').remove();
-
-
     }
-
     $(document).on('input', '.sku', function() {
         var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
         var val = $(this).val();
@@ -546,7 +643,6 @@
             return this.value == val;
         });
         if ((val == "") || (xobj.val() == undefined)) {
-
             $('#transaksi_' + xid + '_iditem').val("");
             $('#transaksi_' + xid + '_nameitem').val("");
             $('#transaksi_' + xid + '_deskripsi').val("");
@@ -557,7 +653,6 @@
             $('#transaksi_' + xid + '_totaldisc').val("");
             $('#transaksi_' + xid + '_total').val("");
             $('#transaksi_' + xid + '_sub').val("");
-
             document.getElementById('transaksi_' + xid + '_qty').readOnly = true;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = true;
             document.getElementById('transaksi_' + xid + '_discpercent').readOnly = true;
@@ -574,7 +669,6 @@
             $('#transaksi_' + xid + '_totaldisc').val(0);
             $('#transaksi_' + xid + '_total').val(xobj.data('price'));
             $('#transaksi_' + xid + '_sub').val(xobj.data('price'));
-
             document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
             document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
@@ -594,7 +688,6 @@
     }
 
     function discx(xid) {
-
         console.log($('#transaksi_' + xid + '_discpercent').val() + " " + xid)
         $('#transaksi_' + xid + '_disnom').val($('#transaksi_' + xid + '_harga').val() * $('#transaksi_' + xid + '_discpercent').val() / 100);
         cal(xid)
@@ -613,23 +706,16 @@
             xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
             if ($('#transaksi_' + xid + '_iditem').val() != '') {
                 xttl += parseFloat($('#transaksi_' + xid + '_total').val().replaceAll(',', ''));
-
             }
-
         });
-
-
-
         if ($("#check").is(":checked") == true) {
             vat = (xttl - $('#disnom').val()) * 11 / 100;
         } else {
             vat = 0;
         }
         grandtot = Number((xttl - $('#disnom').val())) + Number(vat)
-
         $("#ppn").val(vat)
         $("#subtotal").val(xttl)
         $("#grandtotal").val(grandtot)
-
     }
 </script>
