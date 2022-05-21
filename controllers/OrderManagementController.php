@@ -31,6 +31,7 @@ class OrderManagementController extends CI_Controller
 		$f["data3"]   = $this->MasterData->getpaymentmethod();
 		$f["data4"]   = $this->MasterData->getcompany();
 		$f["data5"] =  $this->MQuotation->getcompanydata();
+		$f["data6"]    = $this->MasterData->getwarehouse();
 
 		$this->load->view("Superadmin/Header");
 		$this->load->view("SalesOrder/AddSalesorder", $f);

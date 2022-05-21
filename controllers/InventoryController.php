@@ -17,6 +17,7 @@ class InventoryController extends CI_Controller
 			redirect('');
 		}
 		$this->load->model("MasterData");
+		$this->load->model("MInventoryOut");
 	}
 
 	function newinvin()
@@ -161,6 +162,7 @@ class InventoryController extends CI_Controller
 		$f["title"]   = "Register Inventory Out";
 		$f["data"]    = $this->MasterData->getitem();
 		$f["data1"]    = $this->MasterData->getcustomer();
+		$f["codeout"]    = $this->MInventoryOut->getlastoutid();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/InventoryOutSales", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -225,11 +227,30 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+	function getlistreqpo()
+	{
+		$filter     = $this->input->post("filter");
+		$search     = $this->input->post("search");
+		$statuspo   = $this->input->post("statuspo");
+		$datestart  = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek        =  $this->MasterData->getlistreqpodetail($filter, $search, $statuspo, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
 	function detailpo()
 	{
 		$idpo = $this->input->post("idpo");
 
 		$cek  = $this->MasterData->detailpo($idpo);
+		echo json_encode($cek);
+	}
+
+	function detailreqpo()
+	{
+		$idreqpo = $this->input->post("idreqpo");
+
+		$cek  = $this->MasterData->detailreqpo($idreqpo);
 		echo json_encode($cek);
 	}
 

@@ -777,6 +777,8 @@ class MasterDataControler extends CI_Controller
 	{
 		$idpox                   = $this->input->post("idpo");
 		$codepo                  = $this->input->post("codepo");
+		$idreqpo                 = $this->input->post("idreqpo");
+		$codereqpo               = $this->input->post("codereqpo");
 		$supplier                = $this->input->post("idsupp");
 		$judulpurchase           = $this->input->post("judulpurchase");
 		$datepo                  = $this->input->post("datepo");
@@ -803,10 +805,14 @@ class MasterDataControler extends CI_Controller
 		$total                   = $this->input->post("total");
 		$iduser                  = $this->input->post("userid");
 
+		// print_r($qty);
+
 
 		$cek                     = $this->MasterData->addpo(
 			$idpox,
 			$codepo,
+			$idreqpo,
+			$codereqpo,
 			$supplier,
 			$judulpurchase,
 			$datepo,
@@ -965,8 +971,10 @@ class MasterDataControler extends CI_Controller
 	{
 		$f = $this->session->userdata("data");
 		$iduser = $f["iduser"];
-		$idso                    = $this->input->post("idso");
+		$idwh                  = $this->input->post("idwh");
+		$idso                  = $this->input->post("idso");
 		$codeso                  = $this->input->post("codeso");
+		$statusso                  = $this->input->post("statusso");
 		$idquo                   = $this->input->post("idquo");
 		$tipeorder               = $this->input->post("tipeorder");
 		$idcust                  = $this->input->post("idcustx");
@@ -999,8 +1007,10 @@ class MasterDataControler extends CI_Controller
 
 
 		$cek                     = $this->MasterData->addso(
+			$idwh,
 			$idso,
 			$codeso,
+			$statusso,
 			$idquo,
 			$tipeorder,
 			$idcust,
