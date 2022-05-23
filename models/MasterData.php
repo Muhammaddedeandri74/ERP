@@ -5655,30 +5655,32 @@ class MasterData extends CI_Model
 						$qtyin = 0;
 						$qtypo = 0;
 						for ($i = 0; $i < count($transaksi_iditem); $i++) {
-							$dataxx     = array(
-								$idin, $idpo, $transaksi_iditem[$i], $transaksi_harga[$i], $transaksi_qtypo[$i],
-								$transaksi_qtyin[$i], $transaksi_balance[$i], $transaksi_expiredate[$i]
-							);
-							$queryxx    = "INSERT INTO invindet (idin,idpo,iditem,harga,qtypodet,qtyindet,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
-							$eksekusixx = $this->db->query($queryxx, $dataxx);
-							if ($eksekusixx == true) {
-								$respon    = "Success";
-								$qtyin    += $transaksi_qtyin[$i];
-								$qtypo    += $transaksi_qtypo[$i];
-								$listqtyin = $transaksi_qtyin[$i];
-							} else {
-								$respon = "Failed on Detail";
-								break;
-							}
+							if ($transaksi_iditem[$i] != "") {
+								$dataxx     = array(
+									$idin, $idpo, $transaksi_iditem[$i], $transaksi_harga[$i], $transaksi_qtypo[$i],
+									$transaksi_qtyin[$i], $transaksi_balance[$i], $transaksi_expiredate[$i]
+								);
+								$queryxx    = "INSERT INTO invindet (idin,idpo,iditem,harga,qtypodet,qtyindet,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
+								$eksekusixx = $this->db->query($queryxx, $dataxx);
+								if ($eksekusixx == true) {
+									$respon    = "Success";
+									$qtyin    += $transaksi_qtyin[$i];
+									$qtypo    += $transaksi_qtypo[$i];
+									$listqtyin = $transaksi_qtyin[$i];
+								} else {
+									$respon = "Failed on Detail";
+									break;
+								}
 
-							$dataxs   = array($transaksi_qtyin[$i], $idpo, $transaksi_iditem[$i]);
-							$queryxs  = "UPDATE podet  set qtyindet = qtyindet + ? WHERE idpo = ? AND iditem = ?";
-							$eksekusisxs   = $this->db->query($queryxs, $dataxs);
-							if ($eksekusisxs == true) {
-								$respon  = "Success";
-							} else {
-								$respon  = "Failed on Qtyin";
-								break;
+								$dataxs   = array($transaksi_qtyin[$i], $idpo, $transaksi_iditem[$i]);
+								$queryxs  = "UPDATE podet  set qtyindet = qtyindet + ? WHERE idpo = ? AND iditem = ?";
+								$eksekusisxs   = $this->db->query($queryxs, $dataxs);
+								if ($eksekusisxs == true) {
+									$respon  = "Success";
+								} else {
+									$respon  = "Failed on Qtyin";
+									break;
+								}
 							}
 						}
 
@@ -5729,52 +5731,54 @@ class MasterData extends CI_Model
 			}
 			if ($respon == "Success") {
 				for ($x = 0; $x < count($transaksi_iditem); $x++) {
-					$data2  = array($transaksi_iditem[$x], $namewarehouse);
-					$query2 = "SELECT * FROM tb_itemqty WHERE iditem = ? AND idwh = ?";
-					$eksekusi2 = $this->db->query($query2, $data2)->result_object();
-					if (count($eksekusi2) > 0) {
-						$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse,);
-						$query3    = "UPDATE tb_itemqty SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? ";
-						$eksekusi3 = $this->db->query($query3, $data3);
-						if ($eksekusi3 == true) {
-							$respon = "Success";
+					if ($transaksi_iditem[$x] != "") {
+						$data2  = array($transaksi_iditem[$x], $namewarehouse);
+						$query2 = "SELECT * FROM tb_itemqty WHERE iditem = ? AND idwh = ?";
+						$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+						if (count($eksekusi2) > 0) {
+							$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse,);
+							$query3    = "UPDATE tb_itemqty SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? ";
+							$eksekusi3 = $this->db->query($query3, $data3);
+							if ($eksekusi3 == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
 						} else {
-							$respon = "Failed on Qtyin";
-							break;
+							$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_qtyin[$x], $transaksi_qtyin[$x]);
+							$query4    = "INSERT INTO tb_itemqty(iditem,idwh,beginqty,inqty,outqty,endqty,qtyso)VALUES(?,?,0,?,0,?,0)";
+							$eksekusi4 = $this->db->query($query4, $data4);
+							if ($eksekusi4 == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
 						}
-					} else {
-						$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_qtyin[$x], $transaksi_qtyin[$x]);
-						$query4    = "INSERT INTO tb_itemqty(iditem,idwh,beginqty,inqty,outqty,endqty,qtyso)VALUES(?,?,0,?,0,?,0)";
-						$eksekusi4 = $this->db->query($query4, $data4);
-						if ($eksekusi4 == true) {
-							$respon = "Success";
+						$data2     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+						$query2    = "SELECT * FROM tb_itemqtyexp WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+						$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+						if (count($eksekusi2) > 0) {
+							$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+							$query3    = "UPDATE tb_itemqtyexp SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+							$eksekusi3 = $this->db->query($query3, $data3);
+							if ($eksekusi3 == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
 						} else {
-							$respon = "Failed on Qtyin";
-							break;
-						}
-					}
-					$data2     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
-					$query2    = "SELECT * FROM tb_itemqtyexp WHERE iditem = ? AND idwh = ? AND expdate = ? ";
-					$eksekusi2 = $this->db->query($query2, $data2)->result_object();
-					if (count($eksekusi2) > 0) {
-						$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
-						$query3    = "UPDATE tb_itemqtyexp SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? AND expdate = ? ";
-						$eksekusi3 = $this->db->query($query3, $data3);
-						if ($eksekusi3 == true) {
-							$respon = "Success";
-						} else {
-							$respon = "Failed on Qtyin";
-							break;
-						}
-					} else {
-						$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x], $transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_harga[$x]);
-						$query4    = "INSERT INTO tb_itemqtyexp(iditem,idwh,expdate,beginqty,inqty,outqty,endqty,hpp)VALUES(?,?,?,0,?,0,?,?)";
-						$eksekusi4 = $this->db->query($query4, $data4);
-						if ($eksekusi4 == true) {
-							$respon = "Success";
-						} else {
-							$respon = "Failed on Qtyin";
-							break;
+							$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x], $transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_harga[$x]);
+							$query4    = "INSERT INTO tb_itemqtyexp(iditem,idwh,expdate,beginqty,inqty,outqty,endqty,hpp)VALUES(?,?,?,0,?,0,?,?)";
+							$eksekusi4 = $this->db->query($query4, $data4);
+							if ($eksekusi4 == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
 						}
 					}
 				}

@@ -220,7 +220,7 @@ if ($data3 != "Not Found") {
 					<h5 class="modal-title" id="exampleModalLabel">List Purchase Order</h5>
 					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
 				</div>
-				<input type="hidden" name="idcust" id="idcust">
+				<!-- <input type="hidden" name="idcust" id="idcust"> -->
 				<div class="modal-body">
 					<div class="row mb-4">
 						<div class="col-6">
@@ -563,7 +563,7 @@ if ($data3 != "Not Found") {
 					$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_discpercent').val(0);
 					$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
-					$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["totalprice"]);
+					$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["total"]);
 					$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
 					$('#transaksi_' + xid + '_total').val(hasil["data"][i]["price"] * hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_grandtotal').val(hasil["data"][i]["totalprice"]);

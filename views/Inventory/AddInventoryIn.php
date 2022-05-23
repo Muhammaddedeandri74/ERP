@@ -56,11 +56,19 @@ if ($data3 != "Not Found") {
 					</div>
 					<div class="row mb-3">
 						<div class="col-8">
-							<label for="" class="form-label">Customer</label>
-							<input type="text" id="namecust" class="form-control" objectype="cust" list="xcust" name="namecust" autocomplete="off" required>
-							<input type="hidden" id="idcust" name="idcust">
+							<label for="" class="form-label">Supplier</label>
+							<select name="namecust" id="namecust" class="form-select">
+								<option value="">Pilih Supplier</option>
+								<?php if ($data4 != "Not Found") : ?>
+									<?php foreach ($data4 as $key) : ?>
+										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+
+							</select>
 						</div>
-						<div class="col-4 mb-3"></div>
+						<div class=" col-4 mb-3">
+						</div>
 					</div>
 					<div id="supplierx">
 						<div class="row">
@@ -583,6 +591,17 @@ if ($data3 != "Not Found") {
 		}
 	}
 
+	$(document).on('input', '#namecust', function() {
+		var val = $(this).val();
+		var xobj = $('#xcust option').filter(function() {
+			return this.value == val;
+		});
+
+		if ((val == "") || (xobj.val() == undefined)) {
+			$('#idcust').val("");
+		}
+	});
+
 	function add_row_transaksi(xxid) {
 		var lastid = 0;
 		if (parseInt(xxid) != 0) {
@@ -774,7 +793,7 @@ if ($data3 != "Not Found") {
 						}
 					}
 				}
-				// add_row_transaksi(xiddet);
+				add_row_transaksi(xiddet);
 				calc();
 			}
 		});
@@ -827,12 +846,14 @@ if ($data3 != "Not Found") {
 			sts = 0;
 			return false;
 		}
-		// xval = $("#datein").val();
-		// if ($("#datein").val() == '') {
-		// 	alert('Input Tanggal Masuk');
-		// 	sts = 0;
-		// 	return false;
-		// }
+
+		xval = $("#namecust").val();
+		if ($("#namecust").val() == '') {
+			alert('Input Supplier');
+			sts = 0;
+			return false;
+		}
+
 
 		$('input[objtype=expiredate]').each(function(i, obj) {
 
@@ -852,6 +873,7 @@ if ($data3 != "Not Found") {
 		}
 		//return 'ok';
 	}
+
 
 	function cancelorder() {
 		location.reload();
