@@ -2552,6 +2552,23 @@ class MasterData extends CI_Model
 						$g["iditem"] = $keyx->iditem;
 						$g["nameitem"] = $keyx->nameitem;
 						$g["qtyso"] = $keyx->qtyso;
+						$g["desc"] = $keyx->deskripsi;
+						$g["data"] = array();
+
+						$dataxx = array($g["iditem"]);
+						$queryxx = "SELECT * FROM tb_itemdetail,tb_item, tb_itemqty WHERE tb_itemdetail.iditem = ? AND tb_itemdetail.iditembom = tb_item.iditem AND tb_item.iditem = tb_itemqty.iditem";
+						$eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
+						if (count($eksekusixx) > 0) {
+							foreach ($eksekusixx as $keyxx) {
+								$h["sku"] = $keyxx->sku;
+								$h["iditem"] = $keyxx->iditem;
+								$h["nameitem"] = $keyxx->nameitem;
+								$h["qty"] = $keyxx->endqty - $keyxx->qtyso;
+
+								array_push($g["data"], $h);
+							}
+						}
+
 
 						array_push($f["data"], $g);
 					}
@@ -2959,6 +2976,173 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem)
+	{
+		$data = "";
+		$query = "";
+
+		if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($namewarehouse);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ?";
+		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($tipein);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND typein = ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($namesupp);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namecust = ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
+			$data  = array($date1, $date2);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
+			$data  = array("%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND nameitem like ?";
+		} else if ($namewarehouse != "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($namewarehouse, $tipein);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND typein = ? ";
+		} else if ($namewarehouse != "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($namewarehouse, $namesupp);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND namecust = ? ";
+		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
+			$data  = array($namewarehouse, $date1, $date2);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ? ";
+		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
+			$data  = array($namewarehouse, "%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND nameitem like ? ";
+		} else if ($namewarehouse == "" && $tipein != "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
+			$data  = array($tipein, $namesupp);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND typein = ? AND namecust = ?";
+		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
+			$data  = array($tipein, $date1, $date2);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND typein = ? AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ?";
+		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
+			$data  = array($tipein, "%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND typein = ? AND nameitem like ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem == "") {
+			$data  = array($namesupp, $date1, $date2);
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namecust = ? AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem != "") {
+			$data  = array($namesupp, "%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namecust = ? AND nameitem like ?";
+		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem != "") {
+			$data  = array($date1, $date2, "%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
+		} else if ($namewarehouse != "" && $tipein != "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem != "") {
+			$data  = array($namewarehouse, $tipein, $namesupp, $date1, $date2, "%" . $nameitem . "%");
+			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
+			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
+		    AND invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND typein = ? AND namecust = ? AND REPLACE(datein, ' ', '') >= ? 
+			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
+		} else {
+			$data  = array();
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
+			AND invin.idcust = tb_customer.idcust";
+		}
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"]	        = $key->idin;
+				$f["idpo"]	        = $key->idpo;
+				$f["codein"]	    = $key->codein;
+				$f["datein"]	    = $key->datein;
+				$f["typein"]	    = $key->typein;
+				$f["namewarehouse"]       = $key->namewarehouse;
+				$f["namecust"]       = $key->namecust;
+
+				$datax = array($f["idin"]);
+				$queryx = "SELECT * FROM invindet WHERE idin = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idin"] = $keyx->idin;
+						$f["idindet"] = $keyx->idindet;
+					}
+				}
+
+				$data = array($f["idin"]);
+				$query1 = "SELECT * FROM invin,invindet, tb_item  WHERE invin.idin = invindet.idin AND  invindet.iditem = tb_item.iditem AND invindet.idin = ?";
+				$eksekusi1 = $this->db->query($query1, $data)->result_object();
+				if (count($eksekusi1) > 0) {
+					$f["data"] = array();
+					foreach ($eksekusi1 as $keyx) {
+						$g["idin"] = $keyx->idin;
+						$g["idindet"] = $keyx->idindet;
+						$g["codein"] = $keyx->codein;
+						$g["datein"] = $keyx->datein;
+						$g["iditem"] = $keyx->iditem;
+						$g["nameitem"]  = $keyx->nameitem;
+						$g["sku"]       = $keyx->sku;
+						$g["price"] = $keyx->price;
+						$g["deskripsi"] = $keyx->deskripsi;
+						$g["itemgroup"] = $keyx->itemgroup;
+
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$f["data"] = "Not Found";
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
 	function getlistpodetail($codepo, $namesupp, $filter, $date1, $date2, $status)
 	{
 		// $query = "SELECT * FROM po AS a INNER JOIN podet AS b ON a.idpo = b.idpo INNER JOIN tb_item AS c ON b.iditem = c.iditem INNER JOIN tb_supplier AS d ON a.idsupp = d.idsupp INNER JOIN tb_user AS e ON a.madeuser = e.iduser";
@@ -3278,168 +3462,7 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem)
-	{
-		$data = "";
-		$query = "";
 
-		if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($namewarehouse);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ?";
-		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($tipein);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND typein = ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namesupp = ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
-			$data  = array($date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
-			$data  = array("%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND nameitem like ?";
-		} else if ($namewarehouse != "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($namewarehouse, $tipein);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ? AND typein = ? ";
-		} else if ($namewarehouse != "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($namewarehouse, $namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ? AND namesupp = ? ";
-		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
-			$data  = array($namewarehouse, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ? AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ? ";
-		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
-			$data  = array($namewarehouse, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ? AND nameitem like ? ";
-		} else if ($namewarehouse == "" && $tipein != "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
-			$data  = array($tipein, $namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND typein = ? AND namesupp = ?";
-		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
-			$data  = array($tipein, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND typein = ? AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ?";
-		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
-			$data  = array($tipein, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND typein = ? AND nameitem like ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem == "") {
-			$data  = array($namesupp, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namesupp = ? AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem != "") {
-			$data  = array($namesupp, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namesupp = ? AND nameitem like ?";
-		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem != "") {
-			$data  = array($date1, $date2, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
-		} else if ($namewarehouse != "" && $tipein != "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem != "") {
-			$data  = array($namewarehouse, $tipein, $namesupp, $date1, $date2, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_supplier 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp AND namewarehouse = ? AND typein = ? AND namesupp = ? AND REPLACE(datein, ' ', '') >= ? 
-			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
-		} else {
-			$data  = array();
-			$query = "SELECT * FROM invin,tb_warehouse,tb_supplier 
-			WHERE invin.idwh = tb_warehouse.idwarehouse 
-			AND invin.idsupp = tb_supplier.idsupp";
-		}
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			$respon = array();
-			foreach ($eksekusi as $key) {
-				$f["idin"]	        = $key->idin;
-				$f["idpo"]	        = $key->idpo;
-				$f["codein"]	    = $key->codein;
-				$f["datein"]	    = $key->datein;
-				$f["typein"]	    = $key->typein;
-				$f["namewarehouse"]       = $key->namewarehouse;
-				$f["namesupp"]       = $key->namesupp;
-
-				$datax = array($f["idin"]);
-				$queryx = "SELECT * FROM invindet WHERE idin = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $keyx) {
-						$f["idin"] = $keyx->idin;
-					}
-				}
-
-				$data = array($f["idin"]);
-				$query1 = "SELECT * FROM invin,invindet,tb_item  WHERE invin.idin=invindet.idin AND invindet.iditem = tb_item.iditem AND invindet.idindet = ?";
-				$eksekusi1 = $this->db->query($query1, $data)->result_object();
-				if (count($eksekusi1) > 0) {
-					$f["data"] = array();
-					foreach ($eksekusi1 as $keyx) {
-						$g["idin"] = $keyx->idin;
-						$g["codein"] = $keyx->codein;
-						$g["datein"] = $keyx->datein;
-						$g["iditem"] = $keyx->iditem;
-						$g["nameitem"]  = $keyx->nameitem;
-						$g["sku"]       = $keyx->sku;
-						$g["price"] = $keyx->price;
-						$g["itemgroup"] = $keyx->itemgroup;
-						$g["deskripsi"] = $keyx->deskripsi;
-
-						array_push($f["data"], $g);
-					}
-				} else {
-					$f["data"] = "Not Found";
-				}
-				array_push($respon, $f);
-			}
-		} else {
-			$respon = "Not Found";
-		}
-		return $respon;
-	}
 
 	function getsalesorderpersentasebydate($finish)
 	{
@@ -5620,7 +5643,7 @@ class MasterData extends CI_Model
 			}
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idpo,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);

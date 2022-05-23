@@ -112,7 +112,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Tanggal Masuk</label>
-								<input type="date" name="datein2" id="date" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<input type="date" name="datein" id="date" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -187,7 +187,7 @@ if ($data3 != "Not Found") {
 								</select>
 							</div>
 							<div class="col-5">
-								<label for="" class="form-label">Tanggal Masuk</label>
+								<label for="" class="form-label">Tanggal Masuk1</label>
 								<input type="date" name="datein2" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>

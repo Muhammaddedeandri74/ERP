@@ -45,14 +45,8 @@
               <div class="row mb-3">
                 <div class="col-10">
                   <label for="" class="form-label">Supplier</label>
-                  <select name="namesupp" id="namesupp" class="form-select">
-                    <option value="">Pilih</option>
-                    <?php if ($data2 != "Not Found") : ?>
-                      <?php foreach ($data2 as $key) : ?>
-                        <option value="<?php echo $key["namesupp"] ?>"><?php echo $key["namesupp"] ?></option>
-                      <?php endforeach ?>
-                    <?php endif ?>
-                  </select>
+                  <input type="text" id="namecust" class="form-control" objectype="cust" list="xcust" name="namecust" autocomplete="off">
+                  <input type="hidden" id="idcust" name="idcust">
                 </div>
                 <div class="col-2"></div>
               </div>
@@ -120,7 +114,7 @@
                   <td style="text-align: center;"><?php echo $no++; ?></td>
                   <td style="text-align: center;"><?php echo $key["codein"] ?></td>
                   <td style="text-align: center;"><?php echo $key["datein"] ?></td>
-                  <td style="text-align: left;"><?php echo $key["namesupp"] ?></td>
+                  <td style="text-align: left;"><?php echo $key["namecust"] ?></td>
                   <td style="text-align: left;"><?php echo $key["typein"] ?></td>
                   <td style="text-align: center;"><?php echo $key["namewarehouse"] ?></td>
                   <td style="text-align: center;"><a style="height:36px;font-size:12px;" onclick="cekdetail(<?php echo $key['idin'] ?>)" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
@@ -213,6 +207,15 @@
     </div>
   </div>
 </div>
+<datalist id="xcust">
+  <?php
+  if ($data2 != 'Not Found' || !empty($data2)) {
+    foreach ($data2 as $key) {
+  ?>
+      <option value="<?php echo $key["namecust"]; ?>" namecust="<?php echo $key["namecust"]; ?>" data-idcust="<?php echo $key["idcust"]; ?>" data-email="<?php echo $key["email"]; ?>" data-address="<?php echo $key["addresscust"]; ?>" data-phone="<?php echo $key["phonecust"]; ?>"><?php echo $key["codecust"] . ' - ' . $key["namecust"]; ?></option>
+  <?php }
+  } ?>
+</datalist>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
@@ -247,7 +250,7 @@
     var baris = "";
     var ix = 1;
     for (var i = 0; i < data.length; i++) {
-      if (data[i]["idpo"] == x) {
+      if (data[i]["idin"] == x) {
         for (var a = 0; a < data[i]["data"].length; a++) {
           baris += '<tr>';
           baris += '<td scope="row">' + ix++ + '</td>';

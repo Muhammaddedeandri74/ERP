@@ -141,7 +141,7 @@ class InventoryController extends CI_Controller
 		$f["title"]    = "Register Inventory In";
 		$f["data"]     = $this->MasterData->getlistinvindetfilter($namewarehouse, $tipein, $namesupp, $date1, $date2, $nameitem);
 		$f["data1"]    = $this->MasterData->getwarehouse();
-		$f["data2"]    = $this->MasterData->getsupplier();
+		$f["data2"]    = $this->MasterData->getcustomerinvin();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/IngoingStatus", $f);
 		$this->load->view("SuperAdmin/Footer");
