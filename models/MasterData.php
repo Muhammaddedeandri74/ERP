@@ -528,6 +528,7 @@ class MasterData extends CI_Model
 				$f["nameitem"]      =  $key->nameitem;
 				$f["sku"]           =  $key->sku;
 				$f["price"]         =  $key->price;
+				$f["jenisqty"]           =  $key->jenisqty;
 				$f["bom"]           =  $key->bom;
 				$f["usebom"]        =  $key->usebom;
 				$f["itemgroup"]     =  $key->itemgroup;
@@ -2855,7 +2856,7 @@ class MasterData extends CI_Model
 	function getlistpo()
 	{
 		$query = "SELECT *,a.idpo AS idpox FROM po AS a 
-		INNER JOIN podet AS b ON a.idpo = b.idpo WHERE qtypo !=qtyin AND qtyin < qtypo";
+		INNER JOIN podet AS b ON a.idpo = b.idpo WHERE qtypo !=qtyin AND qtyin < qtypo AND statuspo not in('Finish')";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -2925,84 +2926,72 @@ class MasterData extends CI_Model
 		if ($codepo != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $status == "") {
 			$data  = array("%" . $codepo . "%");
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust 
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE codepo like ?";
 		} elseif ($codepo == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $status == "") {
 			$data  = array($namesupp);
 			$query = "SELECT * FROM po AS a 
-			 INNER JOIN podet AS b ON a.idpo = b.idpodet
 			 INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			 INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			 WHERE namecust = ?";
 		} elseif ($codepo == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $status == "") {
 			$data  = array($date1, $date2);
 			$query = "SELECT * FROM po AS a 
-				INNER JOIN podet AS b ON a.idpo = b.idpodet
 				INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 				INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 				WHERE REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
 		} elseif ($codepo == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $status == "") {
 			$data  = array($date1, $date2);
 			$query = "SELECT * FROM po AS a 
-				INNER JOIN podet AS b ON a.idpo = b.idpodet
 				INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 				INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 				WHERE REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
 		} elseif ($codepo == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $status != "") {
 			$data  = array($status);
 			$query = "SELECT * FROM po AS a 
-				INNER JOIN podet AS b ON a.idpo = b.idpodet
 				INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 				INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 				WHERE statuspo = ? ";
 		} else if ($codepo != "" && $namesupp != "" && $date1 == "" && $date2 == "" && $status == "") {
 			$data  = array("%" . $codepo . "%", $namesupp);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
-			WHERE codepo like ? AND WHERE namecust";
+			WHERE codepo like ? AND namecust = ?";
 		} else if ($codepo != "" && $namesupp == "" && $date1 != "" && $date2 != "" && $status == "") {
 			$data  = array("%" . $codepo . "%", $date1, $date2);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE codepo like ? AND REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
 		} else if ($codepo != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $status != "") {
 			$data  = array("%" . $codepo . "%", $status);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE codepo like ? AND statuspo = ?";
 		} else if ($codepo == "" && $namesupp != "" && $date1 != "" && $date2 != "" && $status == "") {
 			$data  = array($namesupp, $date1, $date2);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE namecust AND REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
 		} else if ($codepo == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $status != "") {
 			$data  = array($namesupp, $status);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE namecust AND statuspo = ?";
 		} else if ($codepo == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $status != "") {
 			$data  = array($date1, $date2, $status);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ? AND statuspo = ?";
 		} else if ($codepo != "" && $namesupp != "" && $date1 != "" && $date2 != "" && $status != "") {
 			$data  = array("%" . $codepo . "%", $namesupp, $date1, $date2, $status);
 			$query = "SELECT * FROM po AS a 
-			INNER JOIN podet AS b ON a.idpo = b.idpodet
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust 
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			WHERE codepo like ? AND namecust AND REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ? AND statuspo = ?";
@@ -3014,7 +3003,6 @@ class MasterData extends CI_Model
 		}
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
-		// echo ($this->db->last_query());
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
@@ -3027,7 +3015,8 @@ class MasterData extends CI_Model
 				$f["statuspo"]      = $key->statuspo;
 				$f["qtypo"]         = $key->qtypo;
 				$f["qtyin"]         = $key->qtyin;
-				$f["namecust"]         = $key->namecust;
+				$f["namecust"]      = $key->namecust;
+				$f["vat"]           = $key->vat;
 
 				if ($f["qtyin"] == 0) {
 					$f["statuspo"] = "Waiting";
@@ -4893,7 +4882,28 @@ class MasterData extends CI_Model
 		$query = "UPDATE tb_salesorder SET statusorder = 'Cancel' , madeuser = ? ,madelog = ? WHERE idso = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
+			$data1 = array($idso);
+			$query1 = "SELECT * FROM tb_salesorderdetail,tb_salesorder where tb_salesorderdetail.idso = ? AND tb_salesorderdetail.idso = tb_salesorder.idso";
+			$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+			if (count($eksekusi1) > 0) {
+				foreach ($eksekusi1 as $key1) {
+					$data2 = array($key1->qtyso, $key1->iditem, $key1->idwh);
+					$query2 = "UPDATE tb_itemqty SET qtyso = qtyso - ? WHERE iditem = ? AND idwh = ?";
+					$eksekusi2 = $this->db->query($query2, $data2);
+					if ($eksekusi2 == true) {
+						$respon = "Success Update QTY ITEM";
+					} else {
+						$respon = "Failed Update QTY ITEM";
+						break;
+					}
+				}
+			} else {
+				$respon = "Sales Order Detail TIdak Ditemukan";
+			}
+
 			if ($idquo != "") {
+
+
 				$datax = array($iduser, date('Y-m-d H:i:s'), $idquo);
 				$queryx = "UPDATE tb_quotation SET statusquo = 'Waiting' , madeuser = ? ,madelog = ? WHERE idquo = ?";
 				$eksekusix = $this->db->query($queryx, $datax);
@@ -5243,9 +5253,18 @@ class MasterData extends CI_Model
 									$queryxx    = "INSERT INTO tb_salesorderdetail (idso,iditem,price,qtyso,totalso,disnomdet,disperdet,grandtotaldet)VALUES(?,?,?,?,?,?,?,?)";
 									$eksekusixx = $this->db->query($queryxx, $dataxx);
 									if ($eksekusixx == true) {
-										$respon = "Success";
+										$data1 = array($transaksi_qty[$i], $transaksi_iditem[$i], $idwh);
+										$query1 = "UPDATE tb_itemqty SET qtyso = qtyso + ? WHERE iditem = ? AND idwh = ?";
+										$eksekusi1 = $this->db->query($query1, $data1);
+										if ($eksekusi1 == true) {
+											$respon = "Success";
+										} else {
+											$respon = "Failed Update Item QTY";
+											break;
+										}
 									} else {
 										$respon = "Failed on Detail";
+										break;
 									}
 								}
 							}
@@ -5287,6 +5306,27 @@ class MasterData extends CI_Model
 					$query     = "UPDATE tb_salesorder set idwh = ?, codeso = ?, idquo = ? , tipeorder = ?, idcust = ? , dateso = ? , delivdate = ?, nopesanan = ?, nocontact = ?, delivaddr= ?, typepayment =? , norekening = ?, subtotal =?, disnomdet =? , disperdet =? , totaldisc =?, vat = ? , ongkir=? , grandtotalso =?, madelog = ?, madeuser=?, statusorder = ? WHERE idso = ?";
 					$eksekusi  = $this->db->query($query, $data);
 					if ($eksekusi == true) {
+
+						$data1 = array($idsox);
+						$query1 = "SELECT * FROM tb_salesorderdetail where idso = ?";
+						$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+						if (count($eksekusi1) > 0) {
+							foreach ($eksekusi1 as $key1) {
+								$data2 = array($key1->qtyso, $key1->iditem, $idwh);
+								$query2 = "UPDATE tb_itemqty SET qtyso = qtyso - ? WHERE iditem = ? AND idwh = ?";
+								$eksekusi2 = $this->db->query($query2, $data2);
+								if ($eksekusi2 == true) {
+									$respon = "Success Update QTY ITEM";
+								} else {
+									$respon = "Failed Update QTY ITEM";
+									break;
+								}
+							}
+						} else {
+							$respon = "Sales Order Detail TIdak Ditemukan";
+							break;
+						}
+
 						$datax     = array($idsox);
 						$queryx    = "DELETE FROM tb_salesorderdetail WHERE idso = ?";
 						$eksekusix = $this->db->query($queryx, $datax);
@@ -5298,9 +5338,19 @@ class MasterData extends CI_Model
 									$queryxx    = "INSERT INTO tb_salesorderdetail (idso,iditem,price,qtyso,totalso,disnomdet,disperdet,grandtotaldet)VALUES(?,?,?,?,?,?,?,?)";
 									$eksekusixx = $this->db->query($queryxx, $dataxx);
 									if ($eksekusixx == true) {
-										$respon = "Success";
+
+										$data1 = array($transaksi_qty[$i], $transaksi_iditem[$i], $idwh);
+										$query1 = "UPDATE tb_itemqty SET qtyso = qtyso + ? WHERE iditem = ? AND idwh = ?";
+										$eksekusi1 = $this->db->query($query1, $data1);
+										if ($eksekusi1 == true) {
+											$respon = "Success";
+										} else {
+											$respon = "Failed Update Item QTY";
+											break;
+										}
 									} else {
 										$respon = "Failed on Detail";
+										break;
 									}
 								}
 							}
@@ -5579,6 +5629,26 @@ class MasterData extends CI_Model
 						} else {
 							$respon  = "Failed on Qtyin";
 							break;
+						}
+
+						if ($qtypo != $qtyin) {
+							$querystatus  = "UPDATE po  set statuspo='Process' WHERE idpo = " . $idpo . "";
+							$eksekusiss   = $this->db->query($querystatus);
+							if ($eksekusiss == true) {
+								$respon  = "Success";
+							} else {
+								$respon  = "Failed on Qtyin";
+								break;
+							}
+						} else {
+							$querystatusa  = "UPDATE po  set statuspo='Finish' WHERE idpo = " . $idpo . "";
+							$eksekusissa   = $this->db->query($querystatusa);
+							if ($eksekusissa == true) {
+								$respon  = "Success";
+							} else {
+								$respon  = "Failed on Qtyin";
+								break;
+							}
 						}
 					}
 				} else {

@@ -258,10 +258,12 @@ class InventoryController extends CI_Controller
 	{
 		$codepo         = $this->input->post('codepo');
 		$namesupp       = $this->input->post('namesupp');
-		$filter         = $this->input->post('filter');
+		$filter         = $this->input->post('filterx');
 		$date1          = $this->input->post('date1');
 		$date2          = $this->input->post('date2');
 		$status         = $this->input->post('status');
+
+		print_r($filter);
 
 		if (!isset($codepo)) {
 			$codepo = '';

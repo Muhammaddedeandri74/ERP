@@ -31,9 +31,10 @@
             <div class="col-10">
               <label for="" class="form-label">Supplier</label>
               <select name="namesupp" id="" class="form-select" value="<?= set_value('codepo') ?>">
+                <option value="">Pilih</option>
                 <?php if ($data2 != "Not Found") : ?>
                   <?php foreach ($data2 as $key) : ?>
-                    <option value="<?php echo $key["namesupp"] ?>"><?php echo $key["namesupp"] ?></option>
+                    <option value="<?php echo $key["namecust"] ?>"><?php echo $key["namecust"] ?></option>
                   <?php endforeach ?>
                 <?php endif ?>
               </select>
@@ -46,11 +47,10 @@
           <div class="row mb-3">
             <div class="col-4">
               <label for="" class="form-label">Tipe Periode</label>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select name="filterx" class="form-select" aria-label="Default select example">
+                <option value="">Pilih</option>
+                <option value="datepo">Tanggal Po</option>
+                <option value="delivedate">Tanggal Delivery</option>
               </select>
             </div>
             <div class="col-4">
@@ -63,14 +63,6 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-4">
-              <label for="" class="form-label">Tipe Item</label>
-              <select name="filter" <?= set_value('filter') ?> id="" class="form-select">
-                <option value="">Pilih</option>
-                <option value="datepo">Tanggal PO</option>
-                <option value="delivedate">Tanggal Delivery</option>
-              </select>
-            </div>
             <div class="col-4 mb-3">
               <label for="" class="form-label">Status Purchase Order</label>
               <select name="status" id="" class="form-select">
@@ -81,13 +73,13 @@
                 <option value="Cancel">Cancel</option>
               </select>
             </div>
+
             <div class="col-4">
               <div class="row mt-4">
                 <div class="col">
                   <a href="<?php echo base_url('InventoryController/PoStatus') ?>" class="btn btn-danger mt-2">Reset</a>
-                </div>
-                <div class="col">
                   <button name="submit" name="submit" class="btn btn-primary mt-2">Pencarian</button>
+
                 </div>
               </div>
             </div>
@@ -272,7 +264,6 @@
           <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Tgl. Delivery</td>
           <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Mata Uang</td>
           <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Harga</td>
-          <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">VAT</td>
           <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Total</td>
           <td style="border:solid;background-color:#1143d8;color:white;text-align:center;min-width: auto;">Status</td>
         </tr>
@@ -289,14 +280,7 @@
               <td style="border:solid;"><?php echo $key["delivedate"] ?></td>
               <td style="border:solid;"><?php echo $key["namecomm"] ?></td>
               <td style="border:solid;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-              <td style="border:solid;">
-                <?php if ($key["vat"]) : ?>
-                  <p>Yes</p>
-                <?php else : ?>
-                  <p>No</p>
-                <?php endif ?>
-              </td>
-              <td style="border:solid;"><?php echo $key["grandtotal"] ?></td>
+              <td style="border:solid;"><?php echo number_format($key['grandtotal'], 0, '.', ',') ?></td>
               <td style="border:solid;">
                 <center>
                   <?php if ($key["statuspo"] == "Waiting") : ?>
@@ -333,8 +317,8 @@
           baris += '<tr>';
           baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
-          baris += '<td>' + data[i]["data"][a]["datepo"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
           baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
           baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
           baris += '</tr>';

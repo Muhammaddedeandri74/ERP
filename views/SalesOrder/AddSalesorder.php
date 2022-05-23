@@ -1142,19 +1142,23 @@ if ($data2 != "Not Found") {
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			$('#transaksi_' + xid + '_iditem').val()
-			if ($('#transaksi_' + xid + '_qtystock').val() < $('#transaksi_' + xid + '_qty').val()) {
+			console.log($('#transaksi_' + xid + '_qtystock').val() + " " + $('#transaksi_' + xid + '_qty').val())
+			if (Number($('#transaksi_' + xid + '_qtystock').val()) < Number($('#transaksi_' + xid + '_qty').val())) {
 				pending = Number(pending) + Number(1);
-
+				console.log("X")
+			} else {
+				console.log("Y")
 			}
 
 		});
-
+		console.log(pending)
 		if (pending == 0) {
 			$('#statusso').val('Waiting');
 
+
 		} else {
 			$('#statusso').val('Pending');
+
 
 		}
 
@@ -1219,18 +1223,26 @@ if ($data2 != "Not Found") {
 				grandtot = totaldisc + vat;
 
 				var dataitem = <?php echo json_encode($data) ?>;
-				for (let i = 0; i < dataitem.length; i++) {
-					if (dataitem[i]["iditem"] == $('#transaksi_' + xid + '_iditem').val()) {
-						for (let x = 0; x < dataitem[i]["data"].length; x++) {
-							console.log(dataitem[i]["data"][x]["idwh"] + " " + $('#idwh').val())
-							if (dataitem[i]["data"][x]["idwh"] == $('#idwh').val()) {
-								$('#transaksi_' + xid + '_qtystock').val(dataitem[i]["data"][x]["balance"])
-								break;
-							} else {
-								$('#transaksi_' + xid + '_qtystock').val(0)
-							}
 
+				for (let i = 0; i < dataitem.length; i++) {
+
+					if (dataitem[i]["iditem"] == $('#transaksi_' + xid + '_iditem').val()) {
+						console.log(dataitem[i])
+						if (dataitem[i]["data"].length > 0) {
+							for (let x = 0; x < dataitem[i]["data"].length; x++) {
+								console.log(dataitem[i]["data"][x]["idwh"] + " " + $('#idwh').val() + "x")
+								if (dataitem[i]["data"][x]["idwh"] == $('#idwh').val()) {
+									$('#transaksi_' + xid + '_qtystock').val(dataitem[i]["data"][x]["balance"])
+									break;
+								} else {
+									$('#transaksi_' + xid + '_qtystock').val(0)
+								}
+
+							}
+						} else {
+							$('#transaksi_' + xid + '_qtystock').val(0)
 						}
+
 					}
 
 				}
@@ -1261,6 +1273,17 @@ if ($data2 != "Not Found") {
 	}
 
 	function addorder() {
+		if ($('#statusso').val() == "Pending") {
+			if (confirm("Sales Ini akan menjadi pending, yakin ingin melanjutkan ??")) {
+				addorderx()
+			}
+		} else {
+			addorderx()
+		}
+
+	}
+
+	function addorderx() {
 		var cx = $('#form').serialize();
 		$.post("<?php echo base_url('MasterDataControler/addsalesorder') ?>", cx,
 			function(data) {

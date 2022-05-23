@@ -106,8 +106,8 @@ if ($data3 != "Not Found") {
 					<div class="row my-3">
 						<div class="col-10">
 							<label for="" class="form-label">No. Rekening Customer </label>
-							<select name="norekening" id="norekening" class="form-select" required>
-								<option value="">Pilih</option>
+							<select name="norekening" id="norekenings" class="form-select" required>
+								<option value="">a</option>
 							</select>
 						</div>
 						<div class="col-2"></div>
@@ -119,7 +119,7 @@ if ($data3 != "Not Found") {
 						</div>
 						<div class="col-3">
 							<div class="form-check form-switch">
-								<input type="checkbox" name="vat" value="1" class="form-check-input" id="check" checked>
+								<input type="checkbox" name="vat" value="11" class="form-check-input" id="check" checked>
 							</div>
 						</div>
 						<div class="col-2"></div>
@@ -391,7 +391,6 @@ if ($data3 != "Not Found") {
 			dataType: "JSON",
 			success: function(hasil) {
 
-
 				var baris = ""
 				if (hasil != "Not Found") {
 
@@ -463,7 +462,7 @@ if ($data3 != "Not Found") {
 				$('#matauang').val(hasil["idcurr"]);
 				$('#exchange').val(hasil["exchange"]);
 				$('#judulpurchase').val(hasil["deskripsi"]);
-				$('#norekening').val(hasil["norek"]);
+				$('#norekenings').val(hasil["norek"]);
 				$('#vat').val(hasil["vat"]);
 				$('#action').show();
 				$('#detail').html("")
