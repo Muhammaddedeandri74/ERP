@@ -115,7 +115,7 @@
 <body class="body">
   <nav class="navbar navbar-expand-lg navbar-light header px-4 nav-link">
     <div class="container-fluid">
-      <a class="navbar-brand mt-2 mt-lg-0" href="#">
+      <a class="navbar-brand mt-2 mt-lg-0" href="<?php echo base_url('AuthControler/mainpage') ?>">
         <img src="<?php echo base_url('assets/icon/logo_yubi.png') ?>" height="25" alt="MDB Logo" loading="lazy" />
       </a>
       <ul class="navbar-nav ms-lg-5">
@@ -385,6 +385,9 @@
             </li>
             <li>
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Stockcard') ?>">Stock Card Report</a>
+            </li>
+            <li>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Stockready') ?>">Stock Ready</a>
             </li>
             <li>
               <a class="dropdown-item m-2" href="#">Safety Stock Report</a>

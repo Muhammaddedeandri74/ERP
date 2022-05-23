@@ -164,25 +164,25 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-2">
-              <label for="" class="form-label">No. Purchase Order</label>
-              <p>PO-2022121</p>
+            <div class="col-3">
+              <label for="" class="form-label"> &nbsp;&nbsp;&nbsp;No. Purchase Order</label>
+              <p>&nbsp;&nbsp;&nbsp;<?php echo $data[0]["codepo"] ?></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Supplier</label>
-              <p>POduin</p>
+              <p><?php echo $data[0]["namecust"] ?></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Tgl. Transaksi</label>
-              <p>PO-2022121</p>
+              <p><?php echo $data[0]["datepo"] ?></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Tgl. Pengiriman</label>
-              <p>PO-2022121</p>
+              <p><?php echo $data[0]["delivedate"] ?></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Status</label>
-              <p>PO-2022121</p>
+              <p><?php echo $data[0]["statuspo"] ?></p>
             </div>
             <div class="col-2"></div>
           </div>
@@ -192,7 +192,7 @@
                 <tr>
                   <td>No. Purchase Order</td>
                   <td>SKU</td>
-                  <td>Unit</td>
+                  <td>Name Item</td>
                   <td>Spesifikasi</td>
                   <td>Harga</td>
                   <td>QTY</td>
@@ -320,7 +320,10 @@
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
           baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
-          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["qty"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["vat"] + '</td>';
+          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["disctrans"]).toFixed(0)) + '</td>';
+          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["grandtotal"]).toFixed(0)) + '</td>';
           baris += '</tr>';
         }
         break;

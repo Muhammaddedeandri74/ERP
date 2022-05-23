@@ -78,7 +78,7 @@
 													<img style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/register_customer.png') ?>" alt="">
 												</div>
 											</a>
-											<label class="form-label fs-5">Register Supplier</label>
+											<label class="form-label fs-5">Register Customer</label>
 										</div>
 									</div>
 								</div>
@@ -94,7 +94,7 @@
 													<img style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/list_user.png') ?>" alt="">
 												</div>
 											</a>
-											<label class="form-label fs-5">List Supplier</label>
+											<label class="form-label fs-5">List Customer</label>
 										</div>
 									</div>
 								</div>

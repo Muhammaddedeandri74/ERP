@@ -57,14 +57,8 @@ if ($data3 != "Not Found") {
 					<div class="row mb-3">
 						<div class="col-8">
 							<label for="" class="form-label">Customer</label>
-							<select name="namecust" id="" class="form-select" required>
-								<option value="">Pilih</option>
-								<?php if ($data4 != "Not Found") : ?>
-									<?php foreach ($data4 as $key) : ?>
-										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
-									<?php endforeach ?>
-								<?php endif ?>
-							</select>
+							<input type="text" id="namecust" class="form-control" objectype="cust" list="xcust" name="namecust" autocomplete="off" required>
+							<input type="hidden" id="idcust" name="idcust">
 						</div>
 						<div class="col-4 mb-3"></div>
 					</div>
@@ -495,7 +489,15 @@ if ($data3 != "Not Found") {
 		}
 	}
 </script>
-
+<datalist id="xcust">
+	<?php
+	if ($data4 != 'Not Found' || !empty($data4)) {
+		foreach ($data4 as $key) {
+	?>
+			<option value="<?php echo $key["namecust"]; ?>" namecust="<?php echo $key["namecust"]; ?>" data-idcust="<?php echo $key["idcust"]; ?>" data-email="<?php echo $key["email"]; ?>" data-address="<?php echo $key["addresscust"]; ?>" data-phone="<?php echo $key["phonecust"]; ?>"><?php echo $key["codecust"] . ' - ' . $key["namecust"]; ?></option>
+	<?php }
+	} ?>
+</datalist>
 <datalist id="xitem">
 	<?php if ($data != 'Not Found') {
 		foreach ($data as $key) { ?>
@@ -739,16 +741,17 @@ if ($data3 != "Not Found") {
 
 	function loadreq() {
 		var xid = $('#idpo').val();
-
 		$.post("<?php echo base_url('InventoryController/getpo?'); ?>", {
 			id: xid
 		}, function(result) {
 			var data = $.parseJSON(result);
+			console.log(data)
 			if (data.headertrans != "Not Found") {
 				$('#detailx').html('');
 				$("#idpo").val(data.headertrans['idpo']);
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
+				$("#namecust").val(data.headertrans['namecust']);
 
 				var xiddet = 0;
 				var xlost = 0;
@@ -879,6 +882,18 @@ if ($data3 != "Not Found") {
 		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
 		if ($("#date").val() == '') {
 			$("#date").val(date);
+		}
+	});
+
+	$(document).ready(function() {
+		var today = new Date();
+		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
+		if ($("#date2").val() == '') {
+			$("#date2").val(date);
+		}
+		date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-01';
+		if ($("#date1").val() == '') {
+			$("#date1").val(date);
 		}
 	});
 </script>

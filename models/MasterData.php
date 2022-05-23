@@ -186,6 +186,47 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getcustomers()
+	{
+		$query = "SELECT * FROM tb_customer ";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idcust"]        =  $key->idcust;
+				$f["codecust"]      =  $key->codecust;
+				$f["typecust"]      =  $key->typecust;
+				$f["namecust"]      =  $key->namecust;
+				$f["phonecust"]     =  $key->phonecust;
+				$f["email"]         =  $key->email;
+				$f["nocontact"]     =  $key->nocontact;
+				$f["addresscust"]   =  $key->addresscust;
+				$f["madelog"]       =  $key->madelog;
+				$f["madeuser"]      =  $key->madeuser;
+				$f["data"] = array();
+				$datax = array($f["idcust"]);
+				$queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["idcustdet"]     =  $keyx->idcustdet;
+						$g["norekening"]    =  $keyx->norekening;
+						$g["namabank"]      =  $keyx->namabank;
+						$g["beneficiary"]   =  $keyx->beneficiary;
+
+						array_push($f["data"], $g);
+					}
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getsupplier()
 	{
 		$query = "SELECT * FROM tb_customer WHERE typecust = 'Supplier'";
@@ -246,7 +287,7 @@ class MasterData extends CI_Model
 				$f["vat"] = $key->vat;
 				$f["qtypo"] = $key->qtypo;
 				$f["qtyin"] = $key->qtyin;
-				$f["norek"] = $key->norekening;
+				$f["norekening"] = $key->norekening;
 				$f["deskripsi"] = $key->deskripsi;
 				$f["statuspo"] = $key->statuspo;
 				$f["data"] = array();
@@ -318,6 +359,10 @@ class MasterData extends CI_Model
 				$f["idcust"]        =  $key->idcust;
 				$f["typecust"]      =  $key->typecust;
 				$f["namecust"]      =  $key->namecust;
+				$f["codecust"]      =  $key->codecust;
+				$f["email"]         =  $key->email;
+				$f["addresscust"]   =  $key->addresscust;
+				$f["phonecust"]     =  $key->phonecust;
 
 				array_push($respon, $f);
 			}
@@ -2855,8 +2900,7 @@ class MasterData extends CI_Model
 
 	function getlistpo()
 	{
-		$query = "SELECT *,a.idpo AS idpox FROM po AS a 
-		INNER JOIN podet AS b ON a.idpo = b.idpo WHERE qtypo !=qtyin AND qtyin < qtypo AND statuspo not in('Finish')";
+		$query = "SELECT *,idpo AS idpox FROM po  WHERE qtypo !=qtyin AND qtyin < qtypo AND statuspo not in('Finish')";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -2864,8 +2908,6 @@ class MasterData extends CI_Model
 				$f["idpo"]	    = $key->idpox;
 				$f["codepo"]	    = $key->codepo;
 				$f["datepo"]	    = $key->datepo;
-				$f["qty"]	        = $key->qty;
-				$f["price"]	        = $key->price;
 				$f["grandtotal"]	    = $key->grandtotal;
 				$f["delivedate"]	    = $key->delivedate;
 				$f["qtypo"]	    = $key->qtypo;
@@ -3016,7 +3058,6 @@ class MasterData extends CI_Model
 				$f["qtypo"]         = $key->qtypo;
 				$f["qtyin"]         = $key->qtyin;
 				$f["namecust"]      = $key->namecust;
-				$f["vat"]           = $key->vat;
 
 				if ($f["qtyin"] == 0) {
 					$f["statuspo"] = "Waiting";
@@ -3049,7 +3090,12 @@ class MasterData extends CI_Model
 						$g["nameitem"]  = $keyx->nameitem;
 						$g["sku"]       = $keyx->sku;
 						$g["price"] = $keyx->price;
+						$g["qty"] = $keyx->qty;
+						$g["vat"] = $keyx->vat;
 						$g["deskripsi"] = $keyx->deskripsi;
+						$g["grandtotal"] = $keyx->grandtotal;
+						$g["disctrans"]      = $key->disctrans;
+
 
 						array_push($f["data"], $g);
 					}
@@ -3106,7 +3152,7 @@ class MasterData extends CI_Model
 	function readheaderpo($idtrans)
 	{
 		$data = array($idtrans);
-		$query = "SELECT * from po WHERE idpo = ?";
+		$query = "SELECT * from po,tb_customer WHERE po.idcust = tb_customer.idcust AND  idpo = ?";
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
@@ -3115,6 +3161,8 @@ class MasterData extends CI_Model
 				$f["idpo"]   	= $key->idpo;
 				$f["codepo"]	= $key->codepo;
 				$f["idcurr"]	= $key->idcurr;
+				$f["idcust"]	= $key->idcust;
+				$f["namecust"]	= $key->namecust;
 				$f["datepo"]	= $key->datepo;
 				$f["qtypo"]   	= $key->qtypo;
 				$f["qtyin"]   	= $key->qtyin;
@@ -3130,7 +3178,7 @@ class MasterData extends CI_Model
 	function readdetailposum($idtrans)
 	{
 		$data = array($idtrans);
-		$query = "SELECT b.*,a.sku,a.nameitem,a.idunit,qty,b.iditem,a.deskripsi FROM  (SELECT idpo,iditem,MAX(idpodet) AS idpodet,SUM(qty) AS qty,qtyindet FROM podet 
+		$query = "SELECT b.*,a.sku,a.nameitem,a.idunit,qty,b.iditem,a.deskripsi FROM (SELECT idpo,iditem,MAX(idpodet) AS idpodet,SUM(qty) AS qty,qtyindet FROM podet 
 				  WHERE idpo = ?
 				  GROUP BY idpo,iditem ) AS b
 				  INNER JOIN tb_item AS a ON b.iditem=a.iditem
@@ -3809,7 +3857,7 @@ class MasterData extends CI_Model
 		$price,
 		$deskripsi,
 		$status,
-		$transaksi_iditem,
+		$transaksi_iditembom,
 		$transaksi_sku,
 		$transaksi_nameitem,
 		$transaksi_deskripsi,
@@ -3833,9 +3881,10 @@ class MasterData extends CI_Model
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $key) {
+						$iditems = $key->iditem;
 						for ($i = 0; $i < count($transaksi_sku); $i++) {
-							$data1      = array($transaksi_iditem[$i], $transaksi_qty[$i], date('Y-m-d H:i:s'));
-							$query1    = "INSERT INTO tb_itemdetail(iditem,qty,madelog)VALUES(?,?,?)";
+							$data1      = array($iditems, $transaksi_iditembom[$i], $transaksi_qty[$i], date('Y-m-d H:i:s'));
+							$query1     = "INSERT INTO tb_itemdetail(iditem,iditembom,qty,madelog)VALUES(?,?,?,?)";
 							$eksekusi1 = $this->db->query($query1, $data1);
 							if ($eksekusi1 == true) {
 								$respon = "Success";
@@ -5395,11 +5444,9 @@ class MasterData extends CI_Model
 		$delivedate,
 		$matauang,
 		$exchange,
-		$vat,
 		$norekening,
 		$subtotal,
-		$disnoms,
-		$distotal,
+		$distrans,
 		$ppn,
 		$grandtotal,
 		$iditem,
@@ -5424,8 +5471,8 @@ class MasterData extends CI_Model
 				$respon = "Code Po telah terdaftar";
 			} else {
 				if ($idpox == "" || $idpox == 0) {
-					$data     = array($codepo, $idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $vat, $norekening, date('Y-m-d H:i:s'), $iduser);
-					$query    = "INSERT INTO po(codepo,idreqpo,codereqpo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,vat,norekening,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
+					$data     = array($codepo, $idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $norekening, $subtotal, $distrans, $ppn, $grandtotal, date('Y-m-d H:i:s'), $iduser);
+					$query    = "INSERT INTO po(codepo,idreqpo,codereqpo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,norekening,subtotal,disctrans,vat,grandtotal,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
 					$eksekusi = $this->db->query($query, $data);
 					if ($eksekusi == true) {
 						$datax = array($codepo);

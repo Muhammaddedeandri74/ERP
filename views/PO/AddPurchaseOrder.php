@@ -106,8 +106,8 @@ if ($data3 != "Not Found") {
 					<div class="row my-3">
 						<div class="col-10">
 							<label for="" class="form-label">No. Rekening Customer </label>
-							<select name="norekening" id="norekenings" class="form-select" required>
-								<option value="">a</option>
+							<select name="norekening" id="norekening" class="form-select" required>
+								<option value="" id="norekening">Pilih</option>
 							</select>
 						</div>
 						<div class="col-2"></div>
@@ -180,7 +180,7 @@ if ($data3 != "Not Found") {
 										<p>Discount Transaksi</p>
 									</div>
 									<div class="col-6">
-										<input type="number" class="form-control" id="disnom" name="disnoms" value="0" oninput="calc()">
+										<input type="number" class="form-control" id="disnom" name="distrans" value="0" oninput="calc()">
 									</div>
 								</div>
 								<div class="row">
@@ -406,8 +406,6 @@ if ($data3 != "Not Found") {
                                             <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailpo(` + hasil[i]["idpo"] + `)">Pilih</a></td>
                                         </tr>`
 					}
-
-
 				}
 				$('#detailx').html(baris)
 			}
@@ -422,7 +420,6 @@ if ($data3 != "Not Found") {
 			data: "filter=" + $('#filters').val() + "&search=" + $('#search').val() + "&statusreqpo=" + $('#statusreqpo').val() + "&datestart=" + $('#datestart').val() + "&finishdate=" + $('#finishdate').val(),
 			dataType: "JSON",
 			success: function(hasil) {
-				// console.log(hasil)
 
 				var baris = ""
 				if (hasil != "Not Found") {
@@ -434,7 +431,7 @@ if ($data3 != "Not Found") {
                                             <td>` + hasil[i]["codereqpo"] + `</td>
                                             <td>` + hasil[i]["datereqpo"] + `</td>
                                             <td>` + hasil[i]["deskripsi"] + `</td>
-											<td> ` + hasil[i]["statusreqpo"] + `</td>
+											<td>` + hasil[i]["statusreqpo"] + `</td>
                                             <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailreqpo(` + hasil[i]["idreqpo"] + `)">Pilih</a></td>
                                         </tr>`
 					}
@@ -462,7 +459,7 @@ if ($data3 != "Not Found") {
 				$('#matauang').val(hasil["idcurr"]);
 				$('#exchange').val(hasil["exchange"]);
 				$('#judulpurchase').val(hasil["deskripsi"]);
-				$('#norekenings').val(hasil["norek"]);
+				$('#norekening').val(hasil["norekening"]);
 				$('#vat').val(hasil["vat"]);
 				$('#action').show();
 				$('#detail').html("")
@@ -502,9 +499,9 @@ if ($data3 != "Not Found") {
 						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
 						$('#transaksi_' + xid + '_discpercent').val(0);
 						$('#transaksi_' + xid + '_disnom').val(hasil["data"][i]["disnom"]);
-						$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disnom"]);
-						$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["qty"] * hasil["data"][i]["price"]);
-						$('#transaksi_' + xid + '_total').val(hasil["data"][i]["qty"] * hasil["data"][i]["price"]);
+						$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["subpo"]);
+						$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["totaldisc"]);
+						$('#transaksi_' + xid + '_total').val(hasil["data"][i]["grandtotal"]);
 
 						document.getElementById('transaksi_' + xid + '_action').disabled = true;
 						document.getElementById('transaksi_' + xid + '_sku').readOnly = true;
@@ -541,7 +538,7 @@ if ($data3 != "Not Found") {
 			data: "idreqpo=" + x,
 			dataType: "JSON",
 			success: function(hasil) {
-				console.log(hasil)
+				// console.log(hasil)
 				$('#codereqpo').val(hasil["codereqpo"]);
 				$('#idreqpo').val(hasil["idreqpo"]);
 				$('#date1').val(hasil["datereqpo"]);
@@ -608,7 +605,6 @@ if ($data3 != "Not Found") {
 		} else {
 
 			$('#idsupp').val(xobj.data('idcust'));
-			// $('#norekening').val(xobj.data('norekening'));
 			var data = <?php echo json_encode($data5) ?>;
 			for (let i = 0; i < data.length; i++) {
 

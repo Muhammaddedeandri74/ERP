@@ -380,4 +380,13 @@ class InventoryController extends CI_Controller
 		$this->load->view("Inventory/requestpo", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
+
+	function stockready()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/stockready", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
 }

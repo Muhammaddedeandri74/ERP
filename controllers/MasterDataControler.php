@@ -785,13 +785,11 @@ class MasterDataControler extends CI_Controller
 		$delivedate              = $this->input->post("delivedate");
 		$matauang                = $this->input->post("matauang");
 		$exchange                = $this->input->post("exchange");
-		$vat                     = $this->input->post("vat");
 		$norekening              = $this->input->post("norekening");
-		$subtotal                = $this->input->post("subtotal");
-		$disnoms                  = $this->input->post("disnom");
-		$distotal                = $this->input->post("distotal");
-		$ppn                     = $this->input->post("ppn");
-		$grandtotal              = $this->input->post("grandtotal");
+		$subtotal                = str_replace(",", "", $this->input->post("subtotal"));
+		$distrans                = str_replace(",", "", $this->input->post("distrans"));
+		$ppn                     = str_replace(",", "", $this->input->post("ppn"));
+		$grandtotal              = str_replace(",", "", $this->input->post("grandtotal"));
 
 		$iditem                  = $this->input->post("iditem");
 		$sku                     = $this->input->post("sku");
@@ -819,13 +817,12 @@ class MasterDataControler extends CI_Controller
 			$delivedate,
 			$matauang,
 			$exchange,
-			$vat,
 			$norekening,
 			$subtotal,
-			$disnoms,
-			$distotal,
+			$distrans,
 			$ppn,
 			$grandtotal,
+
 			$iditem,
 			$sku,
 			$nameitem,
@@ -906,13 +903,13 @@ class MasterDataControler extends CI_Controller
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
-		$transaksi_iditem    = $this->input->post("transaksi_iditem");
+		$transaksi_iditembom    = $this->input->post("transaksi_iditembom");
 		$transaksi_sku       = $this->input->post("transaksi_sku");
 		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
 		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
 		$transaksi_qty       = $this->input->post("transaksi_qty");
 		$userid              = $this->input->post("iduser");
-		$cek                 = $this->MasterData->additem($iditem, $itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $transaksi_iditem, $transaksi_sku, $transaksi_nameitem, $transaksi_deskripsi, $transaksi_qty, $userid);
+		$cek                 = $this->MasterData->additem($iditem, $itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $transaksi_iditembom, $transaksi_sku, $transaksi_nameitem, $transaksi_deskripsi, $transaksi_qty, $userid);
 		echo $cek;
 	}
 

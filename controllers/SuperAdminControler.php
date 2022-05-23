@@ -182,7 +182,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["title"] = "customer";
-		$f["data"] =  $this->MasterData->getcustomer();
+		$f["data"]  =  $this->MasterData->getcustomers();
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Customer", $f);
 		$this->load->view("SuperAdmin/Footer");
