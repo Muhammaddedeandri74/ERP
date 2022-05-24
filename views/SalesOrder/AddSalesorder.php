@@ -275,10 +275,10 @@ if ($data1 != "Not Found") {
 							</div>
 							<div class="row">
 								<div class="col-6">
-									<p>Ongkos Kirim</p>
+									<!-- <p>Ongkos Kirim</p> -->
 								</div>
 								<div class="col-6">
-									<input type="text" name="ongkir" id="ongkir" placeholder="Rp. -" class="form-control" oninput="calc()">
+									<input type="hidden" name="ongkir" value="0" id="ongkir" placeholder="Rp. -" class="form-control" oninput="calc()">
 								</div>
 							</div>
 							<div class="row">
@@ -573,7 +573,7 @@ if ($data2 != "Not Found") {
 	if ($data != 'Not Found') {
 		foreach ($data as $key) {
 	?>
-			<option value="<?php echo $key["sku"]; ?>" price="<?php echo $key["price"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["nameitem"] . ' - Rp. ' . number_format($key['price'], 0, '.', ','); ?></option>
+			<option value="<?php echo $key["sku"]; ?>" price="<?php echo $key["price"]; ?>" data-typeqty="<?php echo $key["jenisqty"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["nameitem"] . ' - Rp. ' . number_format($key['price'], 0, '.', ','); ?></option>
 	<?php }
 	} ?>
 </datalist>
@@ -742,8 +742,10 @@ if ($data2 != "Not Found") {
 						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 						$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+						$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
 						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
 						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyso"]);
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyso"]);
 						$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disnomdet"]);
 						count(xid)
 						calc();
@@ -860,8 +862,10 @@ if ($data2 != "Not Found") {
 					$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 					$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+					$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
 					$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
 					$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
+					$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_discpercent').val(0);
 					$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
@@ -977,12 +981,12 @@ if ($data2 != "Not Found") {
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center;" type="text"  readonly id="transaksi_' + xid + '_deskripsi"  class="form-control "name="transaksi_deskripsi[]" value=""/></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_price[]' + xid + '_harga" readonly></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qtystock" min="0" objtype="_qty" class="form-control  _qty" name="transaksi_qtystock[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')" readonly></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qtystock" min="0" objtype="_qty" class="form-control  _qty" name="transaksi_qtystock[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')" readonly> <input type="hidden" style="text-align:center" id="transaksi_' + xid + '_qtysox" min="0" objtype="_qty" class="form-control  _qty" name="transaksi_qtysox[]' + xid + '_qtysox" autocomplete="off" value="0" onchange="count(' + xid + ')" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_qty" min="0" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_total" objtype="_total" class="form-control  _total" name="transaksi_total[]' + xid + '_total" autocomplete="off" value="0" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discnominal"  class="form-control _discnominal" name="transaksi_discnominal[]' + xid + '_discnominal"  value="0" oninput="disnomx(' + xid + ')"></td>';
 		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discpersen"  class="form-control _discpersen" name="transaksi_discpersen[]' + xid + '_discpersen"  max="100" min="0" oninput="count(' + xid + ')" ></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_grandtotal" objtype="_grandtotal" class="form-control _grandtotal" name="transaksi_grandtotal[]' + xid + '_grandtotal"  autocomplete="off" value="0" readonly></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="number" style="text-align:center" id="transaksi_' + xid + '_grandtotal" objtype="_grandtotal" class="form-control _grandtotal" name="transaksi_grandtotal[]' + xid + '_grandtotal"  autocomplete="off" value="0" readonly> <input type="hidden" style="text-align:center" id="transaksi_' + xid + '_typeqty" objtype="_typeqty" class="form-control _grandtotal" name="transaksi_typeqty[]' + xid + '_typeqty"  autocomplete="off" value="0" readonly></td>';
 		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		$('#line-transaksi').val(xid);
@@ -1143,12 +1147,15 @@ if ($data2 != "Not Found") {
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 			console.log($('#transaksi_' + xid + '_qtystock').val() + " " + $('#transaksi_' + xid + '_qty').val())
-			if (Number($('#transaksi_' + xid + '_qtystock').val()) < Number($('#transaksi_' + xid + '_qty').val())) {
-				pending = Number(pending) + Number(1);
-				console.log("X")
-			} else {
-				console.log("Y")
+			if ($('#transaksi_' + xid + '_typeqty').val() == "stock") {
+				if (Number($('#transaksi_' + xid + '_qtystock').val()) < Number($('#transaksi_' + xid + '_qty').val())) {
+					pending = Number(pending) + Number(1);
+					console.log("X")
+				} else {
+					console.log("Y")
+				}
 			}
+
 
 		});
 		console.log(pending)
@@ -1232,7 +1239,7 @@ if ($data2 != "Not Found") {
 							for (let x = 0; x < dataitem[i]["data"].length; x++) {
 								console.log(dataitem[i]["data"][x]["idwh"] + " " + $('#idwh').val() + "x")
 								if (dataitem[i]["data"][x]["idwh"] == $('#idwh').val()) {
-									$('#transaksi_' + xid + '_qtystock').val(dataitem[i]["data"][x]["balance"])
+									$('#transaksi_' + xid + '_qtystock').val(Number(dataitem[i]["data"][x]["balance"]) + Number($('#transaksi_' + xid + '_qtysox').val()))
 									break;
 								} else {
 									$('#transaksi_' + xid + '_qtystock').val(0)

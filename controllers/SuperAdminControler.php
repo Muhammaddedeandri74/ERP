@@ -140,12 +140,11 @@ class SuperAdminControler extends CI_Controller
 	function additemtype()
 	{
 		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/Header");
+		$f = $this->session->userdata("data");
 		$f["data"] = $this->MasterData->getitemtype();
 		$this->load->view("SuperAdmin/AddItemType", $f);
 		$this->load->view("SuperAdmin/Footer");
-		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "additemtype");
 	}
 

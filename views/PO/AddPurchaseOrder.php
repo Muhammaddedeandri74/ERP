@@ -538,13 +538,11 @@ if ($data3 != "Not Found") {
 			data: "idreqpo=" + x,
 			dataType: "JSON",
 			success: function(hasil) {
-				// console.log(hasil)
 				$('#codereqpo').val(hasil["codereqpo"]);
 				$('#idreqpo').val(hasil["idreqpo"]);
 				$('#date1').val(hasil["datereqpo"]);
 				$('#judulpurchase').val(hasil["deskripsi"]);
 				$('#detail').html("");
-
 
 				for (let i = 0; i <= hasil["data"].length; i++) {
 					add_row_transaksi(i)

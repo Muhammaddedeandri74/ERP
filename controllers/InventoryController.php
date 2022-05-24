@@ -160,9 +160,10 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->model("MasterData");
 		$f["title"]   = "Register Inventory Out";
-		$f["data"]    = $this->MasterData->getitem();
+		$f["data"]    = $this->MasterData->getitemmaterialso();
 		$f["data1"]    = $this->MasterData->getcustomer();
 		$f["codeout"]    = $this->MInventoryOut->getlastoutid();
+		$f["warehouse"]    = $this->MasterData->getwarehouse();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/InventoryOutSales", $f);
 		$this->load->view("SuperAdmin/Footer");

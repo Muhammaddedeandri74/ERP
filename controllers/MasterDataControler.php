@@ -187,9 +187,9 @@ class MasterDataControler extends CI_Controller
 		$userid          = $this->input->post("userid");
 		$codecustomer    = $this->input->post("codecustomer");
 		$email           = $this->input->post("email");
-		$type            = $this->input->post("type");
+		$type            = $this->input->post("typecust");
 		$phonecustomer   = $this->input->post("telepon");
-		$namecustomer    = $this->input->post("namecomm");
+		$namecustomer    = $this->input->post("namecust");
 		$contact         = $this->input->post("contact");
 		$addresscustomer = $this->input->post("alamat");
 		$cek = $this->MasterData->editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $userid);
@@ -338,9 +338,9 @@ class MasterDataControler extends CI_Controller
 	function additemtype()
 	{
 		$userid = $this->input->post("userid");
-		$itemname = $this->input->post("itemname");
-		$codeitem = $this->input->post("codeitem");
-		$cek = $this->MasterData->additemtype($itemname, $codeitem, $userid);
+		$codeitemgroup = $this->input->post("codeitemgroup");
+		$namegroup = $this->input->post("namegroup");
+		$cek = $this->MasterData->additemtype($codeitemgroup, $namegroup, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/additemtype');
 	}
@@ -507,14 +507,13 @@ class MasterDataControler extends CI_Controller
 	function edititemtype()
 	{
 		$id = $this->input->post("id");
-		$codeitem = $this->input->post("codeitem");
+		$codeitemgroup = $this->input->post("codeitemgroup");
+		$nameitemgroup = $this->input->post("namegroup");
 		$userid = $this->input->post("userid");
-		$status = $this->input->post("status");
-		$nameitem = $this->input->post("itemname");
 
-		$cek = $this->MasterData->edititemtype($id, $nameitem, $userid, $status);
+		$cek = $this->MasterData->edititemtype($id, $nameitemgroup);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('MasterDataControler/getdataitemtypebyid?id=' . base64_encode($codeitem));
+		redirect('MasterDataControler/getdataitemtypebyid?id=' . base64_encode($codeitemgroup));
 	}
 
 	function editlocitem()
@@ -594,14 +593,7 @@ class MasterDataControler extends CI_Controller
 		$this->load->view("SuperAdmin/EditCard", $f);
 	}
 
-	function getdatacustomerbyid()
-	{
-		$id = $this->input->get("id");
-		$f  = $this->session->userdata("data");
-		$f["data"] = $this->MasterData->getdatacustomerbyid($id);
-		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/EditCustomer", $f);
-	}
+
 
 	function getdataitembyid()
 	{
@@ -651,6 +643,16 @@ class MasterDataControler extends CI_Controller
 		$f["data2"] = $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/EditUser", $f);
+	}
+
+	function getdatacustomerbyid()
+	{
+		$id = $this->input->get("id");
+		$f  = $this->session->userdata("data");
+		$f["data"] = $this->MasterData->getdatacustomerbyid($id);
+		$this->load->view("SuperAdmin/Header");
+		$this->load->view("SuperAdmin/Footer");
+		$this->load->view("SuperAdmin/EditCustomer", $f);
 	}
 
 	function getdatawarehousebyid()
@@ -908,7 +910,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
 		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
 		$transaksi_qty       = $this->input->post("transaksi_qty");
-		$userid              = $this->input->post("iduser");
+		$userid              = $this->input->post("userid");
 		$cek                 = $this->MasterData->additem($iditem, $itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $transaksi_iditembom, $transaksi_sku, $transaksi_nameitem, $transaksi_deskripsi, $transaksi_qty, $userid);
 		echo $cek;
 	}
@@ -938,10 +940,10 @@ class MasterDataControler extends CI_Controller
 		$email        = $this->input->post("email");
 		$notelp       = $this->input->post("notelp");
 		$alamat       = $this->input->post("alamat");
-		$userid       = $this->input->post("iduser");
 		$namabank     = $this->input->post("namabank");
 		$norekening   = $this->input->post("norekening");
 		$beneficiary  = $this->input->post("beneficiary");
+		$userid       = $this->input->post("userid");
 		$cek          = $this->MasterData->newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary);
 		echo $cek;
 	}

@@ -111,8 +111,8 @@
 										<div class="col">
 											<select name="itemgroup" class="form-control" id="item_group" onchange="location = this.options[this.selectedIndex].value;" required>
 												<option value="">Pilih..</option>
-												<option value="Produk" selected><a href="<?php echo base_url('SuperAdminControler/Produk') ?>">Produk</a></option>
-												<option value="BahanMaterial"><a href="<?php echo base_url('SuperAdminControler/Bahan') ?>">Bahan Baku/Material</a></option>
+												<option value="Produk" selected>Produk</a></option>
+												<option value="BahanMaterial">Bahan Baku/Material</a></option>
 											</select>
 										</div>
 									</div>

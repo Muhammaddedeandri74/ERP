@@ -164,25 +164,25 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-3">
+            <div class="col-3 mt-3">
               <label for="" class="form-label"> &nbsp;&nbsp;&nbsp;No. Purchase Order</label>
-              <p>&nbsp;&nbsp;&nbsp;<?php echo $data[0]["codepo"] ?></p>
+              <p id="codepox"></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Supplier</label>
-              <p><?php echo $data[0]["namecust"] ?></p>
+              <p id="namecustx"></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Tgl. Transaksi</label>
-              <p><?php echo $data[0]["datepo"] ?></p>
+              <p id="datepox"></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Tgl. Pengiriman</label>
-              <p><?php echo $data[0]["delivedate"] ?></p>
+              <p id="delivedatex"></p>
             </div>
             <div class="col-2">
               <label for="" class="form-label">Status</label>
-              <p><?php echo $data[0]["statuspo"] ?></p>
+              <p id="statuspox"></p>
             </div>
             <div class="col-2"></div>
           </div>
@@ -214,7 +214,7 @@
                   <p>Sub Total</p>
                 </div>
                 <div class="col-6">
-                  <p>Rp. -</p>
+                  <p id="subtotalx"></p>
                 </div>
               </div>
               <div class="row">
@@ -222,7 +222,7 @@
                   <p>Diskon Transaksi</p>
                 </div>
                 <div class="col-6">
-                  <p>Rp. -</p>
+                  <p id="distransx">Rp. -</p>
                 </div>
               </div>
               <div class="row">
@@ -230,7 +230,7 @@
                   <p>VAT</p>
                 </div>
                 <div class="col-6">
-                  <p>Rp. -</p>
+                  <p id="vatx">Rp. -</p>
                 </div>
               </div>
               <div class="row">
@@ -238,7 +238,7 @@
                   <p>Grand Total</p>
                 </div>
                 <div class="col-6">
-                  <p>Rp. -</p>
+                  <p id="grandtotalx">Rp. -</p>
                 </div>
               </div>
             </div>
@@ -313,6 +313,18 @@
     var ix = 1;
     for (var i = 0; i < data.length; i++) {
       if (data[i]["idpo"] == x) {
+
+        $('#codepox').html(data[i]["codepo"]);
+        $('#namecustx').html(data[i]["namecust"]);
+        $('#datepox').html(data[i]["datepo"]);
+        $('#delivedatex').html(data[i]["delivedate"]);
+        $('#statuspox').html(data[i]["statuspo"]);
+
+        $('#subtotalx').html(data[i]["subtotal"]);
+        $('#distransx').html(data[i]["disctrans"]);
+        $('#vatx').html(data[i]["vat"]);
+        $('#grandtotalx').html(data[i]["grandtotal"]);
+
         for (var a = 0; a < data[i]["data"].length; a++) {
           baris += '<tr>';
           baris += '<td>' + data[i]["data"][a]["codepo"] + '</td>';

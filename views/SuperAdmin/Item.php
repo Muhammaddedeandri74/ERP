@@ -140,7 +140,7 @@
 											<td><?php echo $key["itemgroup"] ?></td>
 											<td><?php echo $key["sku"] ?></td>
 											<td><?php echo $key["deskripsi"] ?></td>
-											<td><?php echo $key["hargaitem"] ?></td>
+											<td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
 											<td><?php echo $key["jenisqty"] ?></td>
 											<?php if ($key["status"] == 1) : ?>
 												<td>Active</td>

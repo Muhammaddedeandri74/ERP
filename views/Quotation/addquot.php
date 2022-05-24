@@ -655,7 +655,7 @@
             $('#transaksi_' + xid + '_sub').val("");
             document.getElementById('transaksi_' + xid + '_qty').readOnly = true;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = true;
-            document.getElementById('transaksi_' + xid + '_discpercent').readOnly = true;
+
             document.getElementById('transaksi_' + xid + '_disnom').readOnly = true;
         } else {
             $('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
@@ -671,7 +671,7 @@
             $('#transaksi_' + xid + '_sub').val(xobj.data('price'));
             document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
-            document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
+
             document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
         }
         calc();

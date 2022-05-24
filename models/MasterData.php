@@ -1804,18 +1804,14 @@ class MasterData extends CI_Model
 
 	function getitemtype()
 	{
-		$query = "SELECT * FROM common_detail WHERE idgroup = '9'";
+		$query = "SELECT * FROM tb_itemgroup";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["idcomm"] =  $key->idcomm;
-				$f["codecomm"] =  $key->codecomm;
-				$f["namecomm"] =  $key->namecomm;
-				$f["attrib1"] =  $key->attrib1;
-				$f["isactive"] =  $key->isactive;
-
-
+				$f["iditemgroup"] =  $key->iditemgroup;
+				$f["codeitemgroup"] =  $key->codeitemgroup;
+				$f["namegroup"] =  $key->namegroup;
 				array_push($respon, $f);
 			}
 		} else {
@@ -2552,6 +2548,7 @@ class MasterData extends CI_Model
 						$g["iditem"] = $keyx->iditem;
 						$g["nameitem"] = $keyx->nameitem;
 						$g["qtyso"] = $keyx->qtyso;
+						$g["qty"] = $keyx->qtyso - $keyx->qtyout;
 						$g["desc"] = $keyx->deskripsi;
 						$g["data"] = array();
 
@@ -3236,6 +3233,10 @@ class MasterData extends CI_Model
 				$f["codepo"]	    = $key->codepo;
 				$f["datepo"]	    = $key->datepo;
 				$f["datepo"]	    = $key->datepo;
+				$f["subtotal"]	    = $key->subtotal;
+				$f["disctrans"]	    = $key->disctrans;
+				$f["vat"]	        = $key->vat;
+				$f["grandtotal"]	= $key->grandtotal;
 				$f["delivedate"]	= $key->delivedate;
 				$f["namecomm"]      = $key->namecomm;
 				$f["statuspo"]      = $key->statuspo;
@@ -3858,8 +3859,8 @@ class MasterData extends CI_Model
 	function editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data  = array($codecustomer, $email, $type, $phonecustomer, $contact, $namecustomer, $addresscustomer, $userid, date('Y-m-d H:i:s'), $id);
-		$query = "UPDATE common_detail SET codecomm = ? , attrib3 = ? , attrib4 = ?, attrib2 = ?, attrib5 = ?,namecomm = ?,attrib1 = ?,upduser =?,madelog = ? WHERE idcomm = ?";
+		$data  = array($codecustomer, $email, $type, $phonecustomer, $contact, $namecustomer, $addresscustomer,  date('Y-m-d H:i:s'), $userid, $id);
+		$query = "UPDATE tb_customer SET codecust = ? , email = ? , typecust = ?, phonecust = ?, nocontact = ?,namecust = ?,addresscust = ?,madelog =?,madeuser = ? WHERE idcust = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -4018,11 +4019,11 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function additemtype($itemname, $codeitem, $userid)
+	function additemtype($codeitemgroup, $namegroup, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($userid, $codeitem, $itemname, date('Y-m-d H:i:s'));
-		$query = "INSERT INTO common_detail (madeuser,idgroup,codecomm,namecomm,isactive,madelog)VALUES(?,'9',?,?,'1',?)";
+		$data = array($codeitemgroup, $namegroup, date('Y-m-d H:i:s'), $userid);
+		$query = "INSERT INTO tb_itemgroup (codeitemgroup,namegroup,madelog,madeuser)VALUES(?,?,?,?)";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -4284,19 +4285,12 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function edititemtype($id, $namewarehouse, $userid, $status)
+	function edititemtype($id, $nameitemgroup)
 	{
-		$data;
-		$status;
-		$query;
-		if ($status != "") {
-			$status = 1;
-		} else {
-			$status = 0;
-		}
+
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($namewarehouse, $userid, $status, date('Y-m-d H:i:s'), $id);
-		$query = "UPDATE common_detail SET namecomm = ? , upduser = ? , isactive = ?, updlog = ?  WHERE idcomm = ?";
+		$data = array($nameitemgroup, $id);
+		$query = "UPDATE tb_itemgroup SET namegroup = ? WHERE iditemgroup = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -4383,9 +4377,9 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getdatacustomerbyid($idcustomer)
+	function getdatacustomerbyid($id)
 	{
-		$data = array(base64_decode($idcustomer));
+		$data = array(base64_decode($id));
 		$query = "SELECT * FROM tb_customer where idcust = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
@@ -4401,28 +4395,53 @@ class MasterData extends CI_Model
 				$f["addresscust"]   =  $key->addresscust;
 				$f["madelog"]       =  $key->madelog;
 				$f["madeuser"]      =  $key->madeuser;
-				$f["data"] = array();
-				$datax = array($f["idcust"]);
-				$queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
+				// $f["data"] = array();
+				// $datax = array($f["idcust"]);
+				// $queryx = "SELECT * FROM tb_customerdet WHERE idcust = ?";
+				// $eksekusix = $this->db->query($queryx, $datax)->result_object();
+				// if (count($eksekusix) > 0) {
 
-					foreach ($eksekusix as $keyx) {
-						$g["idcustdet"]     =  $keyx->idcustdet;
-						$g["norekening"]    =  $keyx->norekening;
-						$g["namabank"]      =  $keyx->namabank;
-						$g["beneficiary"]   =  $keyx->beneficiary;
+				// 	foreach ($eksekusix as $keyx) {
+				// 		$g["idcustdet"]     =  $keyx->idcustdet;
+				// 		$g["norekening"]    =  $keyx->norekening;
+				// 		$g["namabank"]      =  $keyx->namabank;
+				// 		$g["beneficiary"]   =  $keyx->beneficiary;
 
-						array_push($f["data"], $g);
-					}
-				}
+				// 		array_push($f["data"], $g);
+				// 	}
+				// }
 
-				array_push($respon, $f);
 			}
+			$respon = $f;
 		} else {
 			$respon = "Not Found";
 		}
+		return $respon;
+	}
 
+	function getdatauserbyid($iduser)
+	{
+		$data = array(base64_decode($iduser));
+		$query = "SELECT * FROM tb_user,tb_role WHERE tb_user.iduser = ? AND tb_user.role = tb_role.idrole";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$f["iduser"] = $key->iduser;
+				$f["username"] = $key->username;
+				$f["password"] = $key->password;
+				$f["email"] = $key->email;
+				$f["fullname"] = $key->fullname;
+				$f["address"] = $key->address;
+				$f["phone"] = $key->phone;
+				$f["photo"] = $key->photo;
+				$f["role"] = $key->role;
+				$f["namerole"] = $key->namerole;
+				$f["isactive"] = $key->isactive;
+			}
+			$respon = $f;
+		} else {
+			$respon = "Not Found";
+		}
 		return $respon;
 	}
 
@@ -4501,16 +4520,15 @@ class MasterData extends CI_Model
 	function getdataitemtypebyid($idwarehouse)
 	{
 		$data = array(base64_decode($idwarehouse));
-		$query = "SELECT * FROM common_detail WHERE codecomm = ?";
+		$query = "SELECT * FROM tb_itemgroup WHERE codeitemgroup = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 			foreach ($eksekusi as $key) {
-				$f["idcomm"] = $key->idcomm;
-				$f["codecomm"] = $key->codecomm;
-				$f["namecomm"] = $key->namecomm;
-				$f["isactive"] = $key->isactive;
-				$f["attrib1"] = $key->attrib1;
-				$f["attrib2"] = $key->attrib2;
+				$f["iditemgroup"] = $key->iditemgroup;
+				$f["codeitemgroup"] = $key->codeitemgroup;
+				$f["namegroup"] = $key->namegroup;
+				$f["madelog"] = $key->madelog;
+				$f["madeuser"] = $key->madeuser;
 			}
 			$respon = $f;
 		} else {
@@ -4519,31 +4537,7 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function getdatauserbyid($iduser)
-	{
-		$data = array(base64_decode($iduser));
-		$query = "SELECT * FROM tb_user,tb_role WHERE tb_user.iduser = ? AND tb_user.role = tb_role.idrole";
-		$eksekusi = $this->db->query($query, $data)->result_object();
-		if (count($eksekusi) > 0) {
-			foreach ($eksekusi as $key) {
-				$f["iduser"] = $key->iduser;
-				$f["username"] = $key->username;
-				$f["password"] = $key->password;
-				$f["email"] = $key->email;
-				$f["fullname"] = $key->fullname;
-				$f["address"] = $key->address;
-				$f["phone"] = $key->phone;
-				$f["photo"] = $key->photo;
-				$f["role"] = $key->role;
-				$f["namerole"] = $key->namerole;
-				$f["isactive"] = $key->isactive;
-			}
-			$respon = $f;
-		} else {
-			$respon = "Not Found";
-		}
-		return $respon;
-	}
+
 
 	function getdatawarehousebyid($idwarehouse)
 	{
