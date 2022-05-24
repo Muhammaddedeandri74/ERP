@@ -226,6 +226,17 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+
+
+	function getlistmovewh()
+	{
+		$search     = $this->input->post("search");
+		$datestart  = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek        =  $this->MasterData->getlistmovewh($search, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
 	function getlistpoinvoice()
 	{
 		$search     = $this->input->post("search");
@@ -278,6 +289,13 @@ class InventoryController extends CI_Controller
 		$idin = $this->input->post("idin");
 
 		$cek  = $this->MasterData->detailinvin($idin);
+		echo json_encode($cek);
+	}
+
+	function detailmove()
+	{
+		$idinvout = $this->input->post("idinvout");
+		$cek  = $this->MasterData->detailmove($idinvout);
 		echo json_encode($cek);
 	}
 

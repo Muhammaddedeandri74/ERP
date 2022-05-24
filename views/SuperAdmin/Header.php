@@ -268,7 +268,7 @@
               </a>
               <ul class="dropdown-menu dropdown-submenu" style="border-radius: 10px;">
                 <li>
-                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Registerinvoice') ?>">Register Purchase Adjustment</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Registerinvoice') ?>">Register Purchase Adjustment Advance</a>
                 </li>
                 <li>
                   <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Registeradvance') ?>">Register Advance In</a>

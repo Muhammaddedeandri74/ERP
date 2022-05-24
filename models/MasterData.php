@@ -5134,6 +5134,48 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function detailmove($idinvout)
+	{
+		$data = array($idinvout);
+		$query = "SELECT * FROM invout WHERE idinvout = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+
+			foreach ($eksekusi as $key) {
+				$f["idinvout"] = $key->idinvout;
+				$f["codeinvout"] = $key->codeinvout;
+				$f["dateout"] = $key->dateout;
+				$f["qtyout"] = $key->qtyout;
+				$f["statusout"] = $key->statusout;
+
+				$f["data"] = array();
+				$datax = array($key->codeinvout);
+				$queryx = "SELECT * FROM invoutdet,tb_item WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["sku"] = $keyx->sku;
+						$g["nameitem"] = $keyx->nameitem;
+						$g["price"] = $keyx->price;
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 
 	function getlistinvininvoice()
 	{
@@ -5151,6 +5193,29 @@ class MasterData extends CI_Model
 				$f["namecust"]	    = $key->namecust;
 				$f["statusin"]	    = $key->statusin;
 				$f["qtyin"]	        = $key->qtyin;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getlistmovewh()
+	{
+		$data = array();
+		$query = "SELECT * FROM(SELECT * FROM invout,tb_warehouse WHERE invout.idwh = tb_warehouse.idwarehouse AND typeout='Move Warehouse') AS t ";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idinvout"]	        = $key->idinvout;
+				$f["codeinvout"]  	    = $key->codeinvout;
+				$f["idwh"]	            = $key->idwh;
+				$f["namewarehouse"]	    = $key->namewarehouse;
+				$f["qtyout"]	        = $key->qtyout;
+				$f["statusout"]	        = $key->statusout;
 				array_push($respon, $f);
 			}
 		} else {

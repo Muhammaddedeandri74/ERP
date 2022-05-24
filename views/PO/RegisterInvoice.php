@@ -5,7 +5,7 @@
                 <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Purchase Management </a></li>
                 <li class="breadcrumb-item m-0 bc-active" aria-current="page">Purchase Adjustment</li>
             </ol>
-            <h3 class="text-white">Register Invoice Adjustment</h3>
+            <h3 class="text-white">Register Invoice Adjustment Advance</h3>
         </nav>
     </div>
     <div class="content bg-white mx-4">
@@ -115,11 +115,61 @@
                     </div>
                     <div class="col-4"></div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label for="" class="form-label fs-3">Adjustment</label>
+                        <div class="col">
+                            <label for="">Adjustment Amount</label>
+                            <div class="row">
+                                <div class="col-7">
+                                    <input type="text" class="form-control" name="" id="">
+                                </div>
+                                <div class="col-5">
+                                    <a href="" class="btn btn-primary">AUTO CALCULATE</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-9"></div>
+                </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mb-3">
             <div class="col">
-                <label class="form-label fs-5">Item/Produk</label>
+                <label for="" class="form-label fs-4">Advance</label>
+                <table class="table table-bordered table-striped" id="table-user">
+                    <thead class="text-white text-center" style="background:#1143d8">
+                        <tr>
+                            <td>No. Advance</td>
+                            <td>Tgl. Advance</td>
+                            <td>Mata Uang</td>
+                            <td>Exch. Rate</td>
+                            <td>Advance Amount</td>
+                            <td>Adjustment Total Amount</td>
+                            <td>Balance Amount</td>
+                            <td>Adjustment Amount</td>
+                            <td>No. Voucher</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="" class="form-label fs-4">Invoice</label>
                 <table class="table table-bordered table-striped" id="table-user">
                     <thead class="text-white text-center" style="background:#1143d8">
                         <tr>
@@ -162,7 +212,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <p>Adjustment Amount</p>
+                            <p>Adjustment Total Amount</p>
                         </div>
                         <div class="col-6">
                             <input type="number" class="form-control" id="" name="" value="0" oninput="calc()">
@@ -170,15 +220,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <p>Purchase in Advance</p>
-                        </div>
-                        <div class="col-6">
-                            <input type="text" class="form-control" id="" name="" readonly="">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Balance Total</p>
+                            <p>Balance</p>
                         </div>
                         <div class="col-6">
                             <input type="text" class="form-control" id="" name="" readonly="">
@@ -195,7 +237,85 @@
         </div>
     </div>
 </form>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- <form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms"> -->
+            <div class="modal-header" style="background:#1143d8;color:white;">
+                <h5 class="modal-title" id="exampleModalLabel">List Quotation</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+            </div>
+            <input type="hidden" name="idcust" id="idcust">
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-8">
+                                <label for="" class="form-label">Pencarian</label>
+                                <div class="input-group">
+                                    <select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
+                                        <option value="codequo">No.Quotation</option>
+                                        <option value="namequotation">Nama Quotation</option>
+                                        <option value="namecust">Nama Customer</option>
+                                    </select>
+                                    <input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="" class="form-label">Status</label>
+                                <select class="form-select" id="statusquo" aria-label="Default select example">
+                                    <option value="">Pilih Status Quotation</option>
+                                    <option value="Waiting">Waiting</option>
+                                    <option value="Process">Process</option>
+                                    <option value="Finish">Finish</option>
+                                    <option value="Cancel">Cancel</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="" class="form-label">Mulai Dari</label>
+                                <input type="date" class="form-control" name="" id="datestart" value="<?php echo date('Y-m-01') ?>">
+                            </div>
+                            <div class="col-4">
+                                <label for="" class="form-label">Sampai Dengan</label>
+                                <input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-t') ?>">
+                            </div>
+                            <div class="col-4">
+                                <p></p>
+                                <a href="#" class="btn btn-primary mt-3" onclick="loaddata()">Terapkan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>No. Invoice</td>
+                                    <td>Tgl. Invoice</td>
+                                    <th>Supplier</th>
+                                    <th>Qty Item</th>
+                                    <th>Amount</th>
+                                    <th>Status <i class='bx bx-down-arrow-alt'></i></th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailx">
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
 </script>

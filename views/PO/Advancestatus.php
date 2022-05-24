@@ -99,6 +99,23 @@
                             <td>~</td>
                             <td>~</td>
                         </tr>
+                        <div style="background-color: #E6ECFF;">
+                            <td style="background-color: #E6ECFF;" colspan="6" class="text-end">Total</td>
+                            <td style="background-color: #E6ECFF;">Rp. 500.000,00</td>
+                            <td style="background-color: #E6ECFF;">Rp. 500.000,00</td>
+                            <td style="background-color: #E6ECFF;"></td>
+                        </div>
+                        <tr>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>~</td>
+                        </tr>
                     </tbody>
                     <tfoot>
                         <tr>

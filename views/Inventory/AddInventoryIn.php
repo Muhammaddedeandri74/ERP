@@ -91,13 +91,13 @@ if ($data3 != "Not Found") {
 							<div class="col-8">
 								<div class="mb-3">
 									<label for="" class="form-label">Data Move WH</label>
-									<input type="hidden" class="form-control" id="idmove" name="idmove">
-									<input type="text" id="codemove" name="codemove" class="form-control" readonly>
+									<input type="text" name="codeinvout" id="codeinvout" class="form-control" value="" autocomplete="off" readonly>
+									<input type="hidden" name="idinvout" id="idinvout" class="form-control" value="" autocomplete="off" readonly>
 								</div>
 							</div>
 							<div class="col-4 mb-3">
 								<p></p>
-								<a href="" data-mdb-toggle="modal" data-mdb-target="#modalgudang" class="btn btn-primary mt-3">Cari Data</a>
+								<a href="" data-mdb-toggle="modal" data-mdb-target="#modalgudang" class="btn btn-primary mt-3" onclick="loaddata()">Cari Data</a>
 							</div>
 						</div>
 					</div>
@@ -359,20 +359,12 @@ if ($data3 != "Not Found") {
 									<td style="text-align:center;">No. Outgoing (DO)</td>
 									<td style="text-align:center;">Gudang Pengirim</td>
 									<td style="text-align:center;">Qty Item</td>
-									<td style="text-align:center;">Total Amount</td>
 									<td style="text-align:center;">Status <i class='bx bx-down-arrow-alt'></i></td>
 									<td style="text-align:center;">Action</td>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td><a href="" class=" btn btn-primary">Pilih</a></td>
-								</tr>
+							<tbody id="detailmove">
+
 							</tbody>
 						</table>
 					</div>
@@ -601,6 +593,78 @@ if ($data3 != "Not Found") {
 			$('#idcust').val("");
 		}
 	});
+
+	function loaddata() {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo base_url('InventoryController/getlistmovewh') ?>",
+			data: "filter=" + $('#search').val() + "&datestart=" + $('#datestart').val() + "&finishdate=" + $('#finishdate').val(),
+			dataType: "JSON",
+			success: function(hasil) {
+
+				var baris = ""
+				if (hasil != "Not Found") {
+
+					for (let i = 0; i < hasil.length; i++) {
+
+
+						baris += `  <tr>
+                                            <td>` + hasil[i]["codeinvout"] + `</td>
+                                            <td>` + hasil[i]["namewarehouse"] + `</td>
+                                            <td>` + hasil[i]["qtyout"] + `</td>
+											<td>` + hasil[i]["statusout"] + `</td>
+                                            <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailmove(` + hasil[i]["idinvout"] + `)">Pilih</a></td>
+                                        </tr>`
+					}
+				}
+				$('#detailmove').html(baris)
+			}
+
+		});
+	}
+
+	function detailmove(x) {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo base_url('InventoryController/detailmove') ?>",
+			data: "idinvout=" + x,
+			dataType: "JSON",
+			success: function(hasil) {
+				console.log(hasil)
+				$('#codeinvout').val(hasil["codeinvout"]);
+				$('#idinvout').val(hasil["idinvout"]);
+				$('#detailmovewh').html("");
+
+				for (let i = 0; i <= hasil["data"].length; i++) {
+					// console.log(hasil["data"][i])
+					add_row_transaksi1(i)
+					var xid = Number(i) + Number(1);
+					$('#transaksi1_' + xid + '_iditem1').val(hasil["data"][i]["sku"]);
+					var val = hasil["data"][i]["sku"];
+					var xobj = $('#xitem option').filter(function() {
+						return this.value == val;
+					});
+
+					$('#transaksiksi1_' + xid + '_sku1').val(xobj.data('sku'));
+					$('#transaksi1_' + xid + '_iditem1').val(xobj.data('iditem'));
+					$('#transaksi1_' + xid + '_nameitem1').val(xobj.data('nameitem'));
+					$('#transaksi1_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+					$('#transaksi1_' + xid + '_harga1').val(hasil["data"][i]["harga"]);
+					$('#transaksi1_' + xid + '_qty1').val(hasil["data"][i]["qty"]);
+					$('#transaksi1_' + xid + '_discpercent1').val(0);
+					$('#transaksi1_' + xid + '_discnominal1').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
+					$('#transaksi1_' + xid + '_sub1').val(hasil["data"][i]["total"]);
+					$('#transaksi1_' + xid + '_totaldisc1').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
+					$('#transaksi1_' + xid + '_total1').val(hasil["data"][i]["price"] * hasil["data"][i]["qty"]);
+					$('#transaksi1_' + xid + '_grandtotal1').val(hasil["data"][i]["totalprice"]);
+
+					calc();
+
+				}
+
+			}
+		});
+	}
 
 	function add_row_transaksi(xxid) {
 		var lastid = 0;

@@ -273,11 +273,169 @@ class MInventoryOut extends CI_Model
                 $f["namewarehouse"] = $key->namewarehouse;
                 $f["dateout"] = $key->dateout;
                 $f["statusout"] = $key->statusout;
+                $f["data"] = array();
+
+                $data1 = array($f["codeinvout"]);
+                $query1 = "SELECT * FROM invoutdet , tb_item WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
+                $eksekusi1 = $this->db->query($query1, $data1)->result_object();
+                if (count($eksekusi1) > 0) {
+                    foreach ($eksekusi1 as $key1) {
+                        $g["iditem"] = $key1->iditem;
+                        $g["nameitem"] = $key1->nameitem;
+                        $g["qtyout"] = $key1->qtyout;
+                        $g["expdate"] = $key1->expdate;
+                        $g["sku"] = $key1->sku;
+                        $g["usebom"] = $key1->usebom;
+                        $g["data"] = array();
+                        if ($g["usebom"] == "y") {
+                            $dataxx = array($g["iditem"], $key->idwh);
+                            $queryxx = "SELECT *,tb_itemdetail.qty AS qtyout FROM tb_itemdetail,tb_item, tb_itemqty WHERE tb_itemdetail.iditem = ? AND tb_itemqty.idwh = ? AND tb_itemdetail.iditembom = tb_item.iditem AND tb_item.iditem = tb_itemqty.iditem";
+                            $eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
+                            if (count($eksekusixx) > 0) {
+                                foreach ($eksekusixx as $keyxx) {
+                                    $h["sku"] = $keyxx->sku;
+                                    $h["iditem"] = $keyxx->iditem;
+                                    $h["nameitem"] = $keyxx->nameitem;
+                                    $h["qty"] = $keyxx->qtyout * $g["qtyout"];
+
+                                    array_push($g["data"], $h);
+                                }
+                            }
+                        }
+
+                        array_push($f["data"], $g);
+                    }
+                }
 
                 array_push($respon, $f);
             }
         } else {
             $respon = "Not Found";
+        }
+
+        return $respon;
+    }
+
+
+    function cancelout($codeinvout)
+    {
+        $this->db->trans_begin();
+        $data = array($codeinvout);
+        $query = "SELECT * FROM (SELECT invout.*,tb_warehouse.namewarehouse, tb_salesorder.codeso FROM invout LEFT JOIN tb_salesorder ON invout.idso = tb_salesorder.idso LEFT JOIN tb_warehouse ON invout.idwh = tb_warehouse.idwarehouse) AS t WHERE t.codeinvout =? ";
+        $eksekusi = $this->db->query($query, $data)->result_object();
+        if (count($eksekusi) > 0) {
+
+            foreach ($eksekusi as $key) {
+                $f["idinvout"] = $key->idinvout;
+                $f["codeinvout"] = $key->codeinvout;
+                if ($key->codeso == null) {
+                    $f["codeso"] = "-";
+                } else {
+                    $f["codeso"] = $key->codeso;
+                }
+                if ($key->nodo == null) {
+                    $f["nodo"] = "-";
+                } else {
+                    $f["nodo"] = $key->nodo;
+                }
+
+                $f["typeout"] = $key->typeout;
+                $f["query"] = $this->db->last_query();
+                $f["namewarehouse"] = $key->namewarehouse;
+                $f["dateout"] = $key->dateout;
+                $f["statusout"] = $key->statusout;
+                $f["data"] = array();
+
+                if ($f["statusout"] != "Waiting") {
+                    $respon = "Status Sudah Berubah, Tidak Dapat di cancel";
+                } else {
+                    $data1 = array($codeinvout);
+                    $query1 = "UPDATE invout SET statusout = 'Cancel' WHERE codeinvout = ?";
+                    $eksekusi1 = $this->db->query($query1, $data1);
+                    if ($eksekusi1 == true) {
+                        $respon = "Success";
+                    } else {
+                        $respon = "Gagal Update Status Out";
+                        break;
+                    }
+                }
+
+                $data1 = array($f["codeinvout"]);
+                $query1 = "SELECT * FROM invoutdet , tb_item WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
+                $eksekusi1 = $this->db->query($query1, $data1)->result_object();
+                if (count($eksekusi1) > 0) {
+                    foreach ($eksekusi1 as $key1) {
+                        $g["iditem"] = $key1->iditem;
+                        $g["nameitem"] = $key1->nameitem;
+                        $g["qtyout"] = $key1->qtyout;
+                        $g["expdate"] = $key1->expdate;
+                        $g["sku"] = $key1->sku;
+                        $g["usebom"] = $key1->usebom;
+                        $g["data"] = array();
+
+                        if ($respon == "Success") {
+
+                            $data2 = array($g["qtyout"], $g["qtyout"], $g["iditem"], $key->idwh);
+                            $query2 = "UPDATE tb_itemqty SET outqty = outqty - ? , endqty = endqty + ? WHERE iditem = ? AND idwh = ?";
+                            $eksekusi2 = $this->db->query($query2, $data2);
+                            if ($eksekusi2 == true) {
+                                $data3 = array($g["qtyout"], $g["qtyout"], $g["iditem"], $key->idwh, $g["expdate"]);
+                                $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty - ? , endqty = endqty + ? WHERE iditem = ? AND idwh = ? AND expdate = ?";
+                                $eksekusi3 = $this->db->query($query3, $data3);
+                                if ($eksekusi3 == true) {
+                                    $respon = "Success";
+                                } else {
+                                    $respon = "Gagal Update Qty Exp";
+                                    break;
+                                }
+                            } else {
+                                $respon = "Gagal Update Qty";
+                                break;
+                            }
+                        }
+
+
+                        if ($g["usebom"] == "y") {
+                            $dataxx = array($g["iditem"], $key->idwh);
+                            $queryxx = "SELECT *,tb_itemdetail.qty AS qtyout FROM tb_itemdetail,tb_item, tb_itemqty WHERE tb_itemdetail.iditem = ? AND tb_itemqty.idwh = ? AND tb_itemdetail.iditembom = tb_item.iditem AND tb_item.iditem = tb_itemqty.iditem";
+                            $eksekusixx = $this->db->query($queryxx, $dataxx)->result_object();
+                            if (count($eksekusixx) > 0) {
+                                foreach ($eksekusixx as $keyxx) {
+                                    $h["sku"] = $keyxx->sku;
+                                    $h["iditem"] = $keyxx->iditem;
+                                    $h["nameitem"] = $keyxx->nameitem;
+                                    $h["qty"] = $keyxx->qtyout * $g["qtyout"];
+
+                                    if ($respon == "Success") {
+
+                                        $data2 = array($h["qty"], $h["qty"], $h["iditem"], $key->idwh);
+                                        $query2 = "UPDATE tb_itemqty SET outqty = outqty - ? , endqty = endqty + ? WHERE iditem = ? AND idwh = ?";
+                                        $eksekusi2 = $this->db->query($query2, $data2);
+                                        if ($eksekusi2 == true) {
+                                            $respon = "Success";
+                                        } else {
+                                            $respon = "Gagal Update Qty";
+                                            break;
+                                        }
+                                    }
+
+                                    array_push($g["data"], $h);
+                                }
+                            }
+                        }
+
+                        array_push($f["data"], $g);
+                    }
+                }
+            }
+        } else {
+            $respon = "Not Found";
+        }
+
+        if ($respon == "Success") {
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
         }
 
         return $respon;

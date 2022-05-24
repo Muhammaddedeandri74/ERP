@@ -88,4 +88,12 @@ class InventoryOutControler extends CI_Controller
         $cek = $this->MInventoryOut->dataout($idwh, $tipeout, $date1, $date2, $status, $filter, $search);
         echo json_encode($cek);
     }
+
+    function cancelout()
+    {
+        $codeinvout = $this->input->post("codeinvout");
+
+        $cek = $this->MInventoryOut->cancelout($codeinvout);
+        echo json_encode($cek);
+    }
 }
