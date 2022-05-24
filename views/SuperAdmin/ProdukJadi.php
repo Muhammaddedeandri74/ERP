@@ -53,24 +53,6 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="mb-3">Jenis Qty</label>
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <input type="radio" name="jenisqty" id="" value="stock" class="form-check-input" onchange=X"()">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Stock
-                                                </label>
-                                            </div>
-                                            <div class="col-4">
-                                                <input type="radio" class="form-check-input" name="jenisqty" value="non stock">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Non Stock
-                                                </label>
-                                            </div>
-
-                                            <div class="col-6"></div>
-                                        </div>
-                                        <br>
                                         <label class="mb-3">Jenis Item</label>
                                         <div class="row">
                                             <div class="col-3">
@@ -250,7 +232,6 @@
             tabel += '<td class="p-0" style="border:none;width: 7%"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
             tabel += '<td class="p-0" style="border:none;width: 10%"><input style="text-align:center" type="text" readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
             tabel += '<td class="p-0" style="border:none;width: 16%"><input type="text" readonly id="transaksi_' + xid + '_deskripsi" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]" /></td>';
-            // tabel += '<td class="p-0" style="border:none;width: 5%"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_unit"  class="form-control _unit" name="transaksi_unit[]" placeholder="Search" list="xunit"  value=""/></td>';
             tabel += '<td class="p-0" style="border:none;width: 4%"><input type="text" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control _qty" name="transaksi_qty[]" / autocomplete="off"></td>';
             tabel += '<td class="p-0" style="border:none;width: 3%;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
             tabel += '</tr>';

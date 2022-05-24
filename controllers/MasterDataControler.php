@@ -899,7 +899,6 @@ class MasterDataControler extends CI_Controller
 		$iditem              = $this->input->post("iditem");
 		$itemgroup           = $this->input->post("itemgroup");
 		$nameitem            = $this->input->post("nameitem");
-		$jenisqty            = $this->input->post("jenisqty");
 		$jenisitem           = $this->input->post("jenisitem");
 		$sku                 = $this->input->post("sku");
 		$price               = $this->input->post("price");
@@ -911,7 +910,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
 		$transaksi_qty       = $this->input->post("transaksi_qty");
 		$userid              = $this->input->post("userid");
-		$cek                 = $this->MasterData->additem($iditem, $itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $transaksi_iditembom, $transaksi_sku, $transaksi_nameitem, $transaksi_deskripsi, $transaksi_qty, $userid);
+		$cek                 = $this->MasterData->additem($iditem, $itemgroup, $nameitem, $jenisitem, $sku, $price, $deskripsi, $status, $transaksi_iditembom, $transaksi_sku, $transaksi_nameitem, $transaksi_deskripsi, $transaksi_qty, $userid);
 		echo $cek;
 	}
 
@@ -919,14 +918,13 @@ class MasterDataControler extends CI_Controller
 	{
 		$itemgroup           = $this->input->post("itemgroup");
 		$nameitem            = $this->input->post("nameitem");
-		$jenisqty            = $this->input->post("jenisqty");
 		$jenisitem           = $this->input->post("jenisitem");
 		$sku                 = $this->input->post("sku");
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
 		$userid              = $this->input->post("iduser");
-		$cek                 = $this->MasterData->additemproduk($itemgroup, $nameitem, $jenisqty, $jenisitem, $sku, $price, $deskripsi, $status, $userid);
+		$cek                 = $this->MasterData->additemproduk($itemgroup, $nameitem, $jenisitem, $sku, $price, $deskripsi, $status, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/Produk');
 	}

@@ -39,7 +39,6 @@
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">Nama Perusahaan (Wajib)</label>
-							<!-- <input type="hidden" name="idcomp" value="<?php echo $data["idcomp"] ?>"> -->
 							<input type="text" class="form-control" id="namecomp" name="namecomp" value="<?= set_value('namecomp') ?>" placeholder="Masukan Nama Perusahaan" autocomplete="off" required>
 						</div>
 						<div class="col-2"></div>
@@ -78,7 +77,6 @@
 						<div class="col-10">
 							<label for="" class="form-label">Alamat (Wajib)</label>
 							<textarea name="alamat" id="alamat" cols="6" rows="5" class="form-control" value="<?= set_value('alamat') ?>" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" required></textarea>
-							<!-- <input type="email" name="email" id="email" class="form-control" placeholder="Masukan Email Pengguna" autocomplete="off" required> -->
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -122,7 +120,7 @@
 						<div class="col-2"></div>
 					</div>
 				</div>
-				<button type="button" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:15px;" onclick="addorder()">Simpan</button>
+				<button type="button" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:15px;" id="addorder" onclick="addorder()">Simpan</button>
 			</div>
 		</form>
 	</div>
@@ -158,28 +156,6 @@
 		}
 	}
 
-	$(document).on('change', '_nameitem', function() {
-		var xid = $(this).attr('id').replace("transaksi_", "").replace("_nameitem", "");
-		var val = $(this).val();
-		var xobj = $('#xitem option').filter(function() {
-			return this.value == val;
-
-		});
-
-		if ((val == "") || (xobj.val() == undefined)) {
-			$('#transaksi_' + xid + '_nameitem').val("");
-			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_spec').val("");
-			$('#transaksi_' + xid + '_qty').val("");
-		} else {
-			$('#transaksi_' + xid + '_nameitem').val("");
-			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_spec').val("");
-			$('#transaksi_' + xid + '_qty').val("");
-		}
-		calc();
-	});
-
 	function addorder() {
 		var cx = $('#form').serialize();
 		$.post("<?php echo base_url('SuperAdminControler/addcompany') ?>", cx,
@@ -191,6 +167,50 @@
 					alert('Input Data Gagal. ' + data);
 				}
 			});
+	}
+
+	$('form button').on("click", function(e) {
+		if ($(this).attr('id') == "addorder") {
+			var xask = '';
+			if ($("#idcomp").val() == "") {
+				xask = "Simpan Transaksi?";
+			} else {
+				xask = "Simpan Transaksi?";
+			}
+			if (confirm(xask)) {
+				if (validasi()) {
+					addorder();
+				}
+			}
+		}
+		e.preventDefault();
+	});
+
+	function validasi() {
+		var xval = 0;
+		var sts = 1;
+
+		xval = $("#namecomp").val();
+		if ($("#namecomp").val() == '') {
+			alert('Nama Perusahaan Wajib Diisi');
+			sts = 0;
+			return false;
+		}
+
+
+		xval = $("#nocontact").val();
+		if ($("#nocontact").val() == '') {
+			alert('Nocontact Wajib Diisi');
+			sts = 0;
+			return false;
+		}
+
+
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function del_row_transaksi(xid) {

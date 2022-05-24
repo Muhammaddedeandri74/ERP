@@ -47,27 +47,6 @@
 					</div>
 					<div class="row mb-3">
 						<div class="col-10">
-							<label class="form-label mb-3">Jenis Qty</label>
-							<div class="row">
-								<div class="col-3">
-									<input type="radio" name="jenisqty" id="" value="stock" class="form-check-input" onchange=X"()">
-									<label class="form-check-label" for="flexRadioDefault1">
-										Stock
-									</label>
-								</div>
-								<div class="col-4">
-									<input type="radio" class="form-check-input" name="jenisqty" value="non stock">
-									<label class="form-check-label" for="flexRadioDefault1">
-										Non Stock
-									</label>
-								</div>
-								<div class="col-6"></div>
-							</div>
-						</div>
-						<div class="col-2"></div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-10">
 							<label class="form-label mb-3">Jenis Item</label>
 							<div class="row">
 								<div class="col-3">

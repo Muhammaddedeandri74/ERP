@@ -217,6 +217,24 @@ class InventoryController extends CI_Controller
 		$this->load->view("xfooter");
 	}
 
+	function getlistinvinincoice()
+	{
+		$search     = $this->input->post("search");
+		$datestart  = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek        =  $this->MasterData->getlistinvininvoice($search, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function getlistpoinvoice()
+	{
+		$search     = $this->input->post("search");
+		$datestart  = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek        =  $this->MasterData->getlistpoinvoice($search, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
 	function getlistpo()
 	{
 		$filter     = $this->input->post("filter");
@@ -255,6 +273,14 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+	function detailinvin()
+	{
+		$idin = $this->input->post("idin");
+
+		$cek  = $this->MasterData->detailinvin($idin);
+		echo json_encode($cek);
+	}
+
 	function PoStatus()
 	{
 		$codepo         = $this->input->post('codepo');
@@ -263,8 +289,6 @@ class InventoryController extends CI_Controller
 		$date1          = $this->input->post('date1');
 		$date2          = $this->input->post('date2');
 		$status         = $this->input->post('status');
-
-		print_r($filter);
 
 		if (!isset($codepo)) {
 			$codepo = '';
@@ -330,6 +354,9 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getsupplier();
+		$f["data1"] = $this->MasterData->getcurrency();
+		$f["data2"] = $this->MasterData->getlistinvininvoice();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Invoice/Purchaseinvoice", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -388,6 +415,51 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/stockready", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function RegisterInvoice()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/RegisterInvoice", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Poadjuststatus()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Poadjuststatus", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Registeradvance()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Registeradvance", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Advancestatus()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Advancestatus", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Returnadvance()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Returnadvance", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }

@@ -268,22 +268,22 @@
               </a>
               <ul class="dropdown-menu dropdown-submenu" style="border-radius: 10px;">
                 <li>
-                  <a class="dropdown-item m-2" href="#">Register Purchase Adjustment</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Registerinvoice') ?>">Register Purchase Adjustment</a>
                 </li>
                 <li>
-                  <a class="dropdown-item m-2" href="#">Register Advance In Purchase</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Registeradvance') ?>">Register Advance In</a>
                 </li>
                 <li>
                   <a class="dropdown-item m-2" href="#">Register Return Advance</a>
                 </li>
                 <li>
-                  <a class="dropdown-item m-2" href="#">Purchase Adjustment Report</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Poadjuststatus') ?>">Purchase Adjustment Status</a>
                 </li>
                 <li>
-                  <a class="dropdown-item m-2" href="#">Advance In Purchase Report</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Advancestatus') ?>">Advance In Status</a>
                 </li>
                 <li>
-                  <a class="dropdown-item m-2" href="#">Return Advance Report</a>
+                  <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Returnadvance') ?>">Return Advance In Supplier</a>
                 </li>
               </ul>
             </li>

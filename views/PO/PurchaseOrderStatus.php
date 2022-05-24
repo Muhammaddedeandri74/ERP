@@ -48,7 +48,6 @@
             <div class="col-4">
               <label for="" class="form-label">Tipe Periode</label>
               <select name="filterx" class="form-select" aria-label="Default select example">
-                <option value="">Pilih</option>
                 <option value="datepo">Tanggal Po</option>
                 <option value="delivedate">Tanggal Delivery</option>
               </select>
@@ -64,22 +63,26 @@
           </div>
           <div class="row">
             <div class="col-4 mb-3">
+              <label for="" class="form-label">Tipe Item</label>
+              <select name="status" id="" class="form-select">
+                <option value="Waiting">Bahan Baku</option>
+                <option value="Process">Setengah Jadi</option>
+              </select>
+            </div>
+            <div class="col-4 mb-3">
               <label for="" class="form-label">Status Purchase Order</label>
               <select name="status" id="" class="form-select">
-                <option value="">Pilih</option>
                 <option value="Waiting">Waiting</option>
                 <option value="Process">Process</option>
                 <option value="Finish">Finish</option>
                 <option value="Cancel">Cancel</option>
               </select>
             </div>
-
             <div class="col-4">
               <div class="row mt-4">
                 <div class="col">
                   <a href="<?php echo base_url('InventoryController/PoStatus') ?>" class="btn btn-danger mt-2">Reset</a>
                   <button name="submit" name="submit" class="btn btn-primary mt-2">Pencarian</button>
-
                 </div>
               </div>
             </div>
@@ -164,8 +167,8 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-3 mt-3">
-              <label for="" class="form-label"> &nbsp;&nbsp;&nbsp;No. Purchase Order</label>
+            <div class="col-3" style="margin-left: 1vw">
+              <label for="" class="form-label">No. Purchase Order</label>
               <p id="codepox"></p>
             </div>
             <div class="col-2">
@@ -202,7 +205,6 @@
                 </tr>
               </thead>
               <tbody id="xdetails">
-
               </tbody>
             </table>
           </div>
@@ -231,6 +233,22 @@
                 </div>
                 <div class="col-6">
                   <p id="vatx">Rp. -</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 text-end">
+                  <p>Total</p>
+                </div>
+                <div class="col-6">
+                  <p>Rp. -</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 text-end">
+                  <p>Amount Total</p>
+                </div>
+                <div class="col-6">
+                  <p>Rp. -</p>
                 </div>
               </div>
               <div class="row">
