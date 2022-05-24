@@ -357,6 +357,7 @@ class InventoryController extends CI_Controller
 		$f["data"]  = $this->MasterData->getsupplier();
 		$f["data1"] = $this->MasterData->getcurrency();
 		$f["data2"] = $this->MasterData->getlistinvininvoice();
+		$f["data3"] = $this->MasterData->getitemmaterialpo();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Invoice/Purchaseinvoice", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -375,6 +376,7 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
+		$f["data1"]   = $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/outstatus", $f);
 		$this->load->view("SuperAdmin/Footer");

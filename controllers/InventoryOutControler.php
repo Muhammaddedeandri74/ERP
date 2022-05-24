@@ -75,4 +75,17 @@ class InventoryOutControler extends CI_Controller
         $cek = $this->MInventoryOut->outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate);
         echo $cek;
     }
+
+    function dataout()
+    {
+        $idwh = $this->input->post("idwh");
+        $tipeout = $this->input->post("tipeout");
+        $date1 = $this->input->post("date1");
+        $date2 = $this->input->post("date2");
+        $status = $this->input->post("status");
+        $filter = $this->input->post("filter");
+        $search = $this->input->post("search");
+        $cek = $this->MInventoryOut->dataout($idwh, $tipeout, $date1, $date2, $status, $filter, $search);
+        echo json_encode($cek);
+    }
 }

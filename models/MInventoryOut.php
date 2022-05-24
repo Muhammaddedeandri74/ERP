@@ -100,7 +100,7 @@ class MInventoryOut extends CI_Model
     function outmovewh($namewarehouse, $namewarehouse2, $noinvout, $dateoutmovewh, $iditem, $qtyout, $expdate)
     {
         $this->db->trans_begin();
-        $data = array($noinvout, "Move Warehouse", $namewarehouse, $namewarehouse2, $dateoutmovewh, "Process", array_sum($qtyout));
+        $data = array($noinvout, "Move Warehouse", $namewarehouse, $namewarehouse2, $dateoutmovewh, "Waiting", array_sum($qtyout));
         $query = "INSERT INTO invout (codeinvout, typeout,idwh,idwh2,dateout,statusout,qtyout)VALUES(?,?,?,?,?,?,?)";
         $eksekusi = $this->db->query($query, $data);
         if ($eksekusi == true) {
@@ -150,7 +150,7 @@ class MInventoryOut extends CI_Model
     function outret($idwhret, $idsupp, $noinvout, $dateret, $iditem, $qtyout, $expdate)
     {
         $this->db->trans_begin();
-        $data = array($noinvout, "Return", $idwhret, $idsupp, $dateret, "Process", array_sum($qtyout));
+        $data = array($noinvout, "Return", $idwhret, $idsupp, $dateret, "Finish", array_sum($qtyout));
         $query = "INSERT INTO invout (codeinvout, typeout,idwh,idsupp,dateout,statusout,qtyout)VALUES(?,?,?,?,?,?,?)";
         $eksekusi = $this->db->query($query, $data);
         if ($eksekusi == true) {
@@ -199,7 +199,7 @@ class MInventoryOut extends CI_Model
     function outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate)
     {
         $this->db->trans_begin();
-        $data = array($noinvout, "Out Warehouse", $idwhout, $dateoutwh, "Process", array_sum($qtyout));
+        $data = array($noinvout, "Out Warehouse", $idwhout, $dateoutwh, "Finish", array_sum($qtyout));
         $query = "INSERT INTO invout (codeinvout, typeout,idwh,dateout,statusout,qtyout)VALUES(?,?,?,?,?,?)";
         $eksekusi = $this->db->query($query, $data);
         if ($eksekusi == true) {
@@ -240,6 +240,44 @@ class MInventoryOut extends CI_Model
             $this->db->trans_commit();
         } else {
             $this->db->trans_rollback();
+        }
+
+        return $respon;
+    }
+
+
+    function dataout($idwh, $tipeout, $date1, $date2, $status, $filter, $search)
+    {
+        $data = array($idwh, "%" . $tipeout . "%", $date1, $date2, "%" . $status . "%", "%" . $search . "%");
+        $query = "SELECT * FROM (SELECT invout.*,tb_warehouse.namewarehouse, tb_salesorder.codeso FROM invout LEFT JOIN tb_salesorder ON invout.idso = tb_salesorder.idso LEFT JOIN tb_warehouse ON invout.idwh = tb_warehouse.idwarehouse) AS t WHERE t.idwh =? AND t.typeout LIKE ?
+        AND t.dateout BETWEEN ? AND ? AND t.statusout LIKE ? AND t." . $filter . " LIKE ?";
+        $eksekusi = $this->db->query($query, $data)->result_object();
+        if (count($eksekusi) > 0) {
+            $respon = array();
+            foreach ($eksekusi as $key) {
+                $f["idinvout"] = $key->idinvout;
+                $f["codeinvout"] = $key->codeinvout;
+                if ($key->codeso == null) {
+                    $f["codeso"] = "-";
+                } else {
+                    $f["codeso"] = $key->codeso;
+                }
+                if ($key->nodo == null) {
+                    $f["nodo"] = "-";
+                } else {
+                    $f["nodo"] = $key->nodo;
+                }
+
+                $f["typeout"] = $key->typeout;
+                $f["query"] = $this->db->last_query();
+                $f["namewarehouse"] = $key->namewarehouse;
+                $f["dateout"] = $key->dateout;
+                $f["statusout"] = $key->statusout;
+
+                array_push($respon, $f);
+            }
+        } else {
+            $respon = "Not Found";
         }
 
         return $respon;

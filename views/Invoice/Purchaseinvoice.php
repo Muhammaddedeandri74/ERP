@@ -337,6 +337,16 @@
         <?php }
         } ?>
     </datalist>
+
+    <datalist id="xitem">
+        <?php
+        if ($data3 != 'Not Found') {
+            foreach ($data3 as $key) {
+        ?>
+                <option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"];  ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
+        <?php }
+        } ?>
+    </datalist>
 </form>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -402,6 +412,12 @@
         });
     }
 
+    function del_row_transaksi(xid) {
+        $('#transaksi-' + xid + '').remove();
+        reorder();
+        calc();
+    }
+
     function detailinvin(x) {
         $.ajax({
             type: "POST",
@@ -426,7 +442,7 @@
                     $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
                     $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
                     $('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
-                    $('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+                    $('#transaksi_' + xid + '_harga').val(hasil["data"][i]["harga"]);
                     $('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
                     $('#transaksi_' + xid + '_discpercent').val(0);
                     $('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
@@ -475,6 +491,119 @@
             var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
             $('#transaksi-tr-' + xxid + '').html(xdt);
         }
+    }
+
+    $(document).on('input', '.sku', function() {
+        var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+        var val = $(this).val();
+        var xobj = $('#xitem option').filter(function() {
+            return this.value == val;
+        });
+        if ((val == "") || (xobj.val() == undefined)) {
+
+            $('#transaksi_' + xid + '_iditem').val("");
+            $('#transaksi_' + xid + '_nameitem').val("");
+            $('#transaksi_' + xid + '_deskripsi').val("");
+            $('#transaksi_' + xid + '_harga').val("");
+            $('#transaksi_' + xid + '_qty').val("");
+            $('#transaksi_' + xid + '_discpercent').val("");
+            $('#transaksi_' + xid + '_disnom').val("");
+            $('#transaksi_' + xid + '_totaldisc').val("");
+            $('#transaksi_' + xid + '_total').val("");
+            $('#transaksi_' + xid + '_sub').val("");
+
+            document.getElementById('transaksi_' + xid + '_qty').readOnly = true;
+            document.getElementById('transaksi_' + xid + '_harga').readOnly = true;
+            document.getElementById('transaksi_' + xid + '_discpercent').readOnly = true;
+            document.getElementById('transaksi_' + xid + '_disnom').readOnly = true;
+        } else {
+            $('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+            $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+            $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+            $('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+            $('#transaksi_' + xid + '_harga').val(xobj.data('price'));
+            $('#transaksi_' + xid + '_qty').val(1);
+            $('#transaksi_' + xid + '_discpercent').val(0);
+            $('#transaksi_' + xid + '_disnom').val(0);
+            $('#transaksi_' + xid + '_totaldisc').val(0);
+            $('#transaksi_' + xid + '_total').val(xobj.data('price'));
+            $('#transaksi_' + xid + '_sub').val(xobj.data('price'));
+
+            document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
+            document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
+            document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
+            document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
+        }
+        calc();
+    });
+
+    function validasi() {
+        var xval = 0;
+        var sts = 1;
+
+        xval = $("#namesupp").val();
+        if ($("#namesupp").val() == '') {
+            alert('Input Supplier');
+            sts = 0;
+            return false;
+        }
+
+        if (sts == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function cal(x) {
+        console.log($('#transaksi_' + x + '_qty').val() + " a " + $('#transaksi_' + x + '_harga').val() + " b " +
+            $('#transaksi_' + x + '_disnom').val() + " c " + $('#transaksi_' + x + '_disnom').val() + " d ")
+        $('#transaksi_' + x + '_sub').val($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_harga').val())
+        $('#transaksi_' + x + '_totaldisc').val($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_disnom').val())
+        $('#transaksi_' + x + '_total').val($('#transaksi_' + x + '_sub').val() - $('#transaksi_' + x + '_totaldisc').val())
+        calc();
+    }
+
+    function discx(xid) {
+
+        console.log($('#transaksi_' + xid + '_discpercent').val() + " " + xid)
+        $('#transaksi_' + xid + '_disnom').val($('#transaksi_' + xid + '_harga').val() * $('#transaksi_' + xid + '_discpercent').val() / 100);
+        cal(xid)
+    }
+
+    function discxx(xid) {
+        $('#transaksi_' + xid + '_discpercent').val(0)
+        cal(xid)
+    }
+
+    function calc() {
+        var xttl = 0;
+        var dpp = 0;
+        var xid = 0;
+        $('input[objtype=sku]').each(function(i, obj) {
+            xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+            if ($('#transaksi_' + xid + '_iditem').val() != '') {
+                xttl += parseFloat($('#transaksi_' + xid + '_total').val().replaceAll(',', ''));
+
+            }
+
+        });
+
+
+
+        if ($("#check").is(":checked") == true) {
+            vat = (xttl - $('#disnom').val()) * 11 / 100;
+        } else {
+            vat = 0;
+        }
+        disctotal = (xttl - $('#disnom').val());
+        grandtot = Number((xttl - $('#disnom').val())) + Number(vat)
+
+        $("#ppn").val(formatnum(vat))
+        $("#subtotal").val(formatnum(xttl))
+        $("#distotal").val(formatnum(disctotal))
+        $("#grandtotal").val(formatnum(grandtot))
+
     }
 
     $(document).on('input', '#namesupp', function() {

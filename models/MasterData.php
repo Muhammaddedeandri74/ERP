@@ -5110,6 +5110,8 @@ class MasterData extends CI_Model
 					foreach ($eksekusix as $keyx) {
 						$g["sku"] = $keyx->sku;
 						$g["iditem"] = $keyx->iditem;
+						$g["sku"] = $keyx->sku;
+						$g["nameitem"] = $keyx->nameitem;
 						$g["qtypodet"] = $keyx->qtypodet;
 						$g["qtyindet"] = $keyx->qtyindet;
 						$g["harga"] = $keyx->harga;

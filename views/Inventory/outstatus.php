@@ -22,19 +22,21 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="" class="form-label">Gudang</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Open this select menu</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select class="form-select" id="idwh" aria-label="Default select example">
+
+                                        <?php if ($data1 != "Not Found") {
+                                            foreach ($data1 as $key) { ?>
+                                                <option value=<?php echo $key["idwarehouse"] ?>><?php echo $key["namewarehouse"] ?></option>
+                                                <?php }
+                                        } ?>>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="col-5">
                             <label for="" class="form-label">Tipe Outgoing</label>
-                            <select name="tipeingoing" id="tipeingoing" class="form-select" onchange="ubah(this.value)">
-                                <option value="all" selected>Semua</option>
+                            <select name="tipeingoing" id="tipeout" class="form-select" onchange="ubah(this.value)">
+                                <option value="" selected>Semua</option>
                                 <option value="sales">Sales</option>
                                 <option value="mvwh">Move Warehouse</option>
                                 <option value="ret">Return</option>
@@ -43,21 +45,21 @@
                         </div>
                         <div class="col-2"></div>
                     </div>
-                    <div class="row mb-3">
+                    <!-- <div class="row mb-3">
                         <div class="col-10">
                             <label for="" class="form-label">Supplier</label>
                             <input type="text" name="customer" class="form-control" style="font-size:1rem;" placeholder="PT. Merdeka">
                         </div>
                         <div class="col-2"></div>
-                    </div>
+                    </div> -->
                     <div class="row mb-3">
                         <div class="col-5">
                             <label for="" class="form-label">Mulai Dari</label>
-                            <input type="date" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control">
+                            <input type="date" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control" value="<?php echo date('Y-m') . '-01' ?>">
                         </div>
                         <div class="col-5">
                             <label for="" class="form-label">Sampai Dengan</label>
-                            <input type="date" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control">
+                            <input type="date" name="tanggalmasuk" id="date2" style="cursor: pointer;" class="form-control" value="<?php echo date('Y-m-t') ?>">
                         </div>
                         <div class="col-2"></div>
                     </div>
@@ -68,12 +70,12 @@
                         <div class="row mb-3">
                             <div class="col-5">
                                 <label for="" class="form-label">Status</label>
-                                <select name="namewarehouse" id="" class="form-select" required>
+                                <select name="namewarehouse" id="status" class="form-select" required>
                                     <option value="">Semua</option>
-                                    <option value="">Waiting</option>
-                                    <option value="">Process</option>
-                                    <option value="">Finish</option>
-                                    <option value="">Cancle</option>
+                                    <option value="Waiting">Waiting</option>
+                                    <option value="Process">Process</option>
+                                    <option value="Finish">Finish</option>
+                                    <option value="Cancel">Cancel</option>
                                 </select>
                             </div>
                             <div class="col-7"></div>
@@ -81,8 +83,19 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-10">
-                            <label for="" class="form-label">Item</label>
-                            <input type="text" class="form-control" placeholder="Pilih Item yang di cari" readonly>
+                            <label for="" class="form-label">Pencarian</label>
+                            <div class="input-group">
+                                <div class="col-4">
+                                    <select name="filter" id="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
+                                        <option value="codeinvout">No.Transaksi</option>
+                                        <option value="codeso">No. Sales Order</option>
+                                        <option value="nodo">No. Delivery Order</option>
+                                    </select>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-2"></div>
                     </div>
@@ -92,7 +105,7 @@
                             <a href="" class="btn">RESET</a>
                         </div>
                         <div class="col-3" style="margin-left: 0.6vw;">
-                            <a href="" class="btn btn-primary">PENCARIAN</a>
+                            <a href="#" class="btn btn-primary" onclick="loaddata()">PENCARIAN</a>
                         </div>
                         <div class="col-2"></div>
                     </div>
@@ -118,7 +131,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <label for="" class="form-label fs-4">Item/Produk</label>
+            <label for="" class="form-label fs-4">List Outgoing</label>
             <input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
             <div id="sale">
                 <table class="table m-0">
@@ -128,13 +141,13 @@
                             <th>Tipe Outgoing</th>
                             <th>No. Sales Order</th>
                             <th>Tgl. Transaksi</th>
-                            <th>Customer</th>
+                            <th>Gudang</th>
                             <th>No. Delivery Order</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-center">
+                    <tbody class="text-center" id="bodylist">
                         <tr>
                             <td>~</td>
                             <td>~</td>
@@ -158,7 +171,7 @@
                     </tbody>
                 </table>
             </div>
-            <div id="mvh" style="display: none;">
+            <!-- <div id="mvh" style="display: none;">
                 <table class="table m-0">
                     <thead class="border-0 text-center bg-primary" style="color: white">
                         <tr>
@@ -187,8 +200,8 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div id="out" style="display: none;">
+            </div> -->
+            <!-- <div id="out" style="display: none;">
                 <table class="table m-0">
                     <thead class="border-0 text-center bg-primary" style="color: white">
                         <tr>
@@ -217,8 +230,8 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div id="retr" style="display: none;">
+            </div> -->
+            <!-- <div id="retr" style="display: none;">
                 <table class="table m-0">
                     <thead class="border-0 text-center bg-primary" style="color: white">
                         <tr>
@@ -247,7 +260,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -362,100 +375,47 @@
         </div>
     </div>
 </div>
+
 <script>
     function ubah(x) {
-        if (x == "sales") {
-            $('#sale').show();
-            $('#sales').show();
-            $('#salesx').show();
-            $('#salesxy').show();
-            $('#mvh').hide();
-            $('#mvwh').hide();
-            $('#mvwhx').hide();
-            $('#mvwhxy').hide();
-            $('#ret').hide();
-            $('#retr').hide();
-            $('#retx').hide();
-            $('#retxy').hide();
-            $('#out').hide();
-            $('#outg').hide();
-            $('#outgx').hide();
-            $('#outgxy').hide();
-            $('#all').hide();
-        } else if (x == "mvwh") {
-            $('#sale').hide();
-            $('#sales').hide();
-            $('#salesx').hide();
-            $('#salesxy').hide();
-            $('#mvh').show();
-            $('#mvwh').show();
-            $('#mvwhx').show();
-            $('#mvwhxy').show();
-            $('#ret').hide();
-            $('#retr').hide();
-            $('#retx').hide();
-            $('#retxy').hide();
-            $('#out').hide();
-            $('#outg').hide();
-            $('#outgx').hide();
-            $('#outgxy').hide();
-            $('#all').hide();
-        } else if (x == "ret") {
-            $('#sale').hide();
-            $('#sales').hide();
-            $('#salesx').hide();
-            $('#salesxy').hide();
-            $('#mvh').hide();
-            $('#mvwh').hide();
-            $('#mvwhx').hide();
-            $('#mvwhxy').hide();
-            $('#ret').show();
-            $('#retr').show();
-            $('#retx').show();
-            $('#retxy').show();
-            $('#out').hide();
-            $('#outg').hide();
-            $('#outgx').hide();
-            $('#outgxy').hide();
-            $('#all').hide();
-        } else if (x == "outg") {
-            $('#sale').hide();
-            $('#sales').hide();
-            $('#salesx').hide();
-            $('#salesxy').hide();
-            $('#mvh').hide();
-            $('#mvwh').hide();
-            $('#mvwhx').hide();
-            $('#mvwhxy').hide();
-            $('#ret').hide();
-            $('#retr').hide();
-            $('#retx').hide();
-            $('#retxy').hide();
-            $('#out').show();
-            $('#outg').show();
-            $('#outgx').show();
-            $('#outgxy').show();
-            $('#all').hide();
-        } else if (x == "all") {
-            $('#sale').hide();
-            $('#sales').hide();
-            $('#salesx').hide();
-            $('#salesxy').hide();
-            $('#mvh').hide();
-            $('#mvwh').hide();
-            $('#mvwhx').hide();
-            $('#mvwhxy').hide();
-            $('#ret').hide();
-            $('#retr').hide();
-            $('#retx').hide();
-            $('#retxy').hide();
-            $('#out').show();
-            $('#outg').show();
-            $('#outgx').show();
-            $('#outgxy').show();
-            $('#all').show();
-        }
+
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+<script>
+    loaddata();
+
+    function loaddata() {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('InventoryOutControler/dataout') ?>",
+            data: "idwh=" + $('#idwh').val() + "&tipeout=" + $('#tipeout').val() + "&date1=" + $('#date1').val() + "&date2=" + $('#date2').val() + "&status=" + $('#status').val() + "&filter=" + $('#filter').val() + "&search=" + $('#search').val(),
+            dataType: "JSON",
+            success: function(hasil) {
+                console.log(hasil)
+                var baris = ""
+                if (hasil != "Not Found") {
+
+                    for (let i = 0; i < hasil.length; i++) {
+                        baris += ` <tr>
+                            <td>` + hasil[i]["codeinvout"] + `</td>
+                            <td>` + hasil[i]["typeout"] + `</td>
+                            <td>` + hasil[i]["codeso"] + `</td>
+                            <td>` + hasil[i]["dateout"] + `</td>
+                            <td>` + hasil[i]["namewarehouse"] + `</td>
+                            <td>` + hasil[i]["nodo"] + `</td>
+                            <td>` + hasil[i]["statusout"] + `</td>
+                            <td data-mdb-toggle="modal" data-mdb-target="#modal1" > <button class="btn btn-primary" onclick="detailout(` + hasil[i]["codeinvout"] + `)">Detail</button></td>
+                        </tr>`
+
+                    }
+
+
+                }
+                $('#bodylist').html(baris)
+            }
+        });
+    }
+</script>
