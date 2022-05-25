@@ -205,12 +205,13 @@ class MasterDataControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$itemgroup  = $this->input->post("itemgroup");
 		$nameitem   = $this->input->post("nameitem");
-		$unitsatuan = $this->input->post("unit");
 		$sku        = $this->input->post("sku");
+		$unitsatuan = $this->input->post("unit");
+		$minstock        = $this->input->post("minstock");
 		$hargaitem  = $this->input->post("hargaitem");
 		$deskripsi  = $this->input->post("deskripsi");
 		$userid     = $this->input->post("iduser");
-		$cek        = $this->MasterData->additembom($itemgroup, $nameitem, $unitsatuan, $sku, $hargaitem, $deskripsi, $userid);
+		$cek        = $this->MasterData->additembom($itemgroup, $nameitem, $sku, $unitsatuan, $minstock, $hargaitem, $deskripsi, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/BahanMaterial');
 	}
@@ -223,7 +224,7 @@ class MasterDataControler extends CI_Controller
 		$tipeingoing           = $this->input->post("typein");
 		$idpo                  = $this->input->post("idpo");
 		$namesupp              = $this->input->post("namecust");
-		$namewarehouse         = $this->input->post("namewarehouse");
+		$namewarehouse         = $this->input->post("idwh1");
 		$datein                = $this->input->post("datein");
 		$currency              = $this->input->post("currency");
 		$transaksi_iditem       = $this->input->post("transaksi_iditem");
@@ -236,9 +237,10 @@ class MasterDataControler extends CI_Controller
 		$transaksi_balance     = $this->input->post("transaksi_balance");
 		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
 
-		$idmove                 = $this->input->post("idmove");
+		$idmove                 = $this->input->post("idinvout");
 		$codemove               = $this->input->post("codemove");
-		$namewarehouse1         = $this->input->post("namewarehouse1");
+		$idwh                   = $this->input->post("idwh");
+		$idwh2                  = $this->input->post("idwh2");
 		$datein1                = $this->input->post("datein1");
 		$currency1              = $this->input->post("currency1");
 		$transaksi_iditem1      = $this->input->post("transaksi_iditem1");
@@ -246,6 +248,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_nameitem1    = $this->input->post("transaksi_nameitem1");
 		$transaksi_deskripsi1   = $this->input->post("transaksi_deskripsi1");
 		$transaksi_harga1       = $this->input->post("transaksi_harga1");
+		$transaksi_qtyout1       = $this->input->post("transaksi_qtyout1");
 		$transaksi_qtyin1       = $this->input->post("transaksi_qtyin1");
 		$transaksi_balance1     = $this->input->post("transaksi_balance1");
 		$transaksi_expiredate1  = $this->input->post("transaksi_expiredate1");
@@ -285,10 +288,12 @@ class MasterDataControler extends CI_Controller
 		} elseif ($tipeingoing == "warehouse") {
 			$cek                   = $this->MasterData->newinvinmovewh(
 				$codein,
+				$codemove,
 				$tipeingoing,
 				$idmove,
 				$namesupp,
-				$namewarehouse1,
+				$idwh,
+				$idwh2,
 				$datein1,
 				$currency1,
 				$transaksi_iditem1,
@@ -296,6 +301,7 @@ class MasterDataControler extends CI_Controller
 				$transaksi_nameitem1,
 				$transaksi_deskripsi1,
 				$transaksi_harga1,
+				$transaksi_qtyout1,
 				$transaksi_qtyin1,
 				$transaksi_expiredate1,
 				$userid
@@ -918,13 +924,14 @@ class MasterDataControler extends CI_Controller
 	{
 		$itemgroup           = $this->input->post("itemgroup");
 		$nameitem            = $this->input->post("nameitem");
-		$jenisitem           = $this->input->post("jenisitem");
 		$sku                 = $this->input->post("sku");
+		$jenisitem           = $this->input->post("jenisitem");
+		$stokmin             = $this->input->post("stokmin");
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
 		$userid              = $this->input->post("iduser");
-		$cek                 = $this->MasterData->additemproduk($itemgroup, $nameitem, $jenisitem, $sku, $price, $deskripsi, $status, $userid);
+		$cek                 = $this->MasterData->additemproduk($itemgroup, $nameitem, $sku, $jenisitem, $stokmin, $price, $deskripsi, $status, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/Produk');
 	}

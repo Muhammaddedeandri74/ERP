@@ -132,6 +132,34 @@ if ($data != "Not Found") {
 </datalist>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+    var iditem = <?php echo json_encode($iditem)  ?>;
+    console.log(iditem)
+    if (iditem != "") {
+        for (let i = 0; i < iditem.length; i++) {
+            add_row_transaksi(i)
+            var xid = Number(i) + Number(1);
+            $('#transaksi_' + xid + '_sku').val(iditem[i]);
+            var val = iditem[i];
+            var xobj = $('#xitem option').filter(function() {
+                return this.value == val;
+            });
+            $('#transaksi_' + xid + '_sku').val(iditem[i]);
+            $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+            $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+            $('#transaksi_' + xid + '_harga').val(xobj.data('price'));
+            $('#transaksi_' + xid + '_qty').val(1);
+            $('#transaksi_' + xid + '_total').val(xobj.data('price'));
+
+            document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
+            document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
+            calc();
+            console.log(iditem[i])
+        }
+
+    } else {
+        add_row_transaksi(0)
+    }
+
     $(function() {
         $("#check").click(function() {
             if ($(this).is(":checked")) {
@@ -199,7 +227,7 @@ if ($data != "Not Found") {
     }
 
 
-    add_row_transaksi(0)
+
 
     function calc() {
         var xcnt = 0;
@@ -347,9 +375,9 @@ if ($data != "Not Found") {
         }
         grandtot = xttl;
 
-        $("#ppn").val(formatnum(vat))
-        $("#subtotal").val(formatnum(xttl))
-        $("#grandtotal").val(formatnum(grandtot))
+        $("#ppn").val(vat)
+        $("#subtotal").val(xttl)
+        $("#grandtotal").val(grandtot)
 
     }
 

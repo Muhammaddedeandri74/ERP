@@ -10,7 +10,7 @@ class MInventoryOut extends CI_Model
         if (count($eksekusi) > 0) {
             foreach ($eksekusi as $key) {
 
-                $respon =  "OUT-TRS-" . str_replace("OUT-TRS-", "", $key->codeinvout)  + 1;
+                $respon =  "OUT-TRS-" . str_replace("OUT-TRS-", "", $key->codeinvout)  + 2;
             }
         } else {
             $respon = "OUT-TRS-1";

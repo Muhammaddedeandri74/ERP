@@ -18,6 +18,7 @@ class InventoryController extends CI_Controller
 		}
 		$this->load->model("MasterData");
 		$this->load->model("MInventoryOut");
+		$this->load->model("MStockInventory");
 	}
 
 	function newinvin()
@@ -348,7 +349,7 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->model("MasterData");
 		$f["title"]   = "Inventory InOut Report";
-		$f["data"]    = $this->MasterData->getlistinvindet();
+		// $f["data"]    = $this->MasterData->getlistinvindet();
 		$f["data1"]   = $this->MasterData->getwarehouse();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/InOutReport", $f);
@@ -424,6 +425,10 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$f["data"]  = $this->MasterData->getrequestpo();
 		$f["data1"] = $this->MasterData->getitemmaterialpo();
+		$f["iditem"] = $this->input->post("iditemx");
+		if (!isset($f["iditem"])) {
+			$f["iditem"] = "";
+		}
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/requestpo", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -433,6 +438,8 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getitemtype();
+		$f["data1"]   = $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Inventory/stockready", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -480,6 +487,38 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Po/Returnadvance", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function outreport()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/outreport", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Safestock()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getitemtype();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Safestock", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Expiredreport()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$f["data"]  = $this->MasterData->getitemtype();
+		$f["data1"]   = $this->MasterData->getwarehouse();
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Po/Expiredreport", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }

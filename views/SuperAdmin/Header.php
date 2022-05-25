@@ -363,17 +363,17 @@
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/outstatus') ?>">Outgoing Status</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="#">Outgoing List</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/outreport') ?>">Outgoing Report</a>
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li class=" nav-item dropdown">
           <a class="dropdown-item  w-100" href="#">
             <div class="row mt-2">
               <div class="col-2">
                 <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png') ?>" alt="">
               </div>
-              <div class="col-6 ms-3">
+              <div class="col-6 ms-4">
                 <h6>Transaction Book</6>
                   <p>Data transaksi In/Out</p>
               </div>
@@ -390,10 +390,10 @@
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Stockready') ?>">Stock Ready</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="#">Safety Stock Report</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Safestock') ?>">Safety Stock Report</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="#">Expired Report</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Expiredreport') ?>">Expired Report</a>
             </li>
           </ul>
         </li>

@@ -91,7 +91,7 @@ if ($data3 != "Not Found") {
 							<div class="col-8">
 								<div class="mb-3">
 									<label for="" class="form-label">Data Move WH</label>
-									<input type="text" name="codeinvout" id="codeinvout" class="form-control" value="" autocomplete="off" readonly>
+									<input type="text" name="codemove" id="codeinvout" class="form-control" value="" autocomplete="off" readonly>
 									<input type="hidden" name="idinvout" id="idinvout" class="form-control" value="" autocomplete="off" readonly>
 								</div>
 							</div>
@@ -110,7 +110,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse" id="" class="form-select" required>
+								<select name="idwh" id="" class="form-select" required>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -142,7 +142,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Pengirim</label>
-								<select name="namewarehouse1" id="" class="form-select" aria-label="Disabled select example">
+								<select name="idwh" id="" class="form-select" aria-label="Disabled select example">
 									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
@@ -153,7 +153,7 @@ if ($data3 != "Not Found") {
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse1" id="" class="form-select" aria-label="Disabled select example">
+								<select name="idwh2" id="" class="form-select" aria-label="Disabled select example">
 									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
@@ -261,8 +261,9 @@ if ($data3 != "Not Found") {
 					<tr>
 						<th>SKU</th>
 						<th>Nama Item</th>
-						<th>Unit</th>
+						<th>Deskripsi</th>
 						<th>Harga</th>
+						<th>Qty Out</th>
 						<th>Qty In</th>
 						<th>Expire Date</th>
 						<th>Action</th>
@@ -283,9 +284,9 @@ if ($data3 != "Not Found") {
 					<tr>
 						<th>SKU</th>
 						<th>Nama Item</th>
-						<th>Unit</th=>
-						<th>Qty In</th=>
-						<th>Expire Date</th=>
+						<th>Unit</th>
+						<th>Qty </th>
+						<th>Expire Date</th>
 						<th>Action</th=>
 					</tr>
 				</thead>
@@ -359,6 +360,7 @@ if ($data3 != "Not Found") {
 									<td style="text-align:center;">No. Outgoing (DO)</td>
 									<td style="text-align:center;">Gudang Pengirim</td>
 									<td style="text-align:center;">Qty Item</td>
+									<td style="text-align:center;">Qty In</td>
 									<td style="text-align:center;">Status <i class='bx bx-down-arrow-alt'></i></td>
 									<td style="text-align:center;">Action</td>
 								</tr>
@@ -612,6 +614,7 @@ if ($data3 != "Not Found") {
                                             <td>` + hasil[i]["codeinvout"] + `</td>
                                             <td>` + hasil[i]["namewarehouse"] + `</td>
                                             <td>` + hasil[i]["qtyout"] + `</td>
+                                            <td>` + hasil[i]["qtyin"] + `</td>
 											<td>` + hasil[i]["statusout"] + `</td>
                                             <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailmove(` + hasil[i]["idinvout"] + `)">Pilih</a></td>
                                         </tr>`
@@ -636,7 +639,6 @@ if ($data3 != "Not Found") {
 				$('#detailmovewh').html("");
 
 				for (let i = 0; i <= hasil["data"].length; i++) {
-					// console.log(hasil["data"][i])
 					add_row_transaksi1(i)
 					var xid = Number(i) + Number(1);
 					$('#transaksi1_' + xid + '_iditem1').val(hasil["data"][i]["sku"]);
@@ -645,18 +647,12 @@ if ($data3 != "Not Found") {
 						return this.value == val;
 					});
 
-					$('#transaksiksi1_' + xid + '_sku1').val(xobj.data('sku'));
+					$('#transaksi1_' + xid + '_sku1').val(xobj.data('sku'));
 					$('#transaksi1_' + xid + '_iditem1').val(xobj.data('iditem'));
 					$('#transaksi1_' + xid + '_nameitem1').val(xobj.data('nameitem'));
-					$('#transaksi1_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
-					$('#transaksi1_' + xid + '_harga1').val(hasil["data"][i]["harga"]);
-					$('#transaksi1_' + xid + '_qty1').val(hasil["data"][i]["qty"]);
-					$('#transaksi1_' + xid + '_discpercent1').val(0);
-					$('#transaksi1_' + xid + '_discnominal1').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
-					$('#transaksi1_' + xid + '_sub1').val(hasil["data"][i]["total"]);
-					$('#transaksi1_' + xid + '_totaldisc1').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
-					$('#transaksi1_' + xid + '_total1').val(hasil["data"][i]["price"] * hasil["data"][i]["qty"]);
-					$('#transaksi1_' + xid + '_grandtotal1').val(hasil["data"][i]["totalprice"]);
+					$('#transaksi1_' + xid + '_deskripsi1').val(xobj.data('deskripsi'));
+					$('#transaksi1_' + xid + '_harga1').val(hasil["data"][i]["price"]);
+					$('#transaksi1_' + xid + '_qtyout1').val(hasil["data"][i]["qtyout"]);
 
 					calc();
 
@@ -704,12 +700,13 @@ if ($data3 != "Not Found") {
 		lastid++;
 		var tabel = '';
 		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi1-' + xid + '"><input type="hidden" id="transaksi1_' + xid + '_iditem1"  class="form-control  iditem1" name="transaksi_iditem1[]" / ></td>';
-		tabel += '<td style="border:none;"><input style="width:100%" type="text" class="form-control  sku" objtype="sku" id="transaksi1_' + xid + '_sku1" name="transaksi_sku1[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
+		tabel += '<td style="border:none;"><input style="width:100%" type="text" readonly class="form-control  sku" objtype="sku" id="transaksi1_' + xid + '_sku1" name="transaksi_sku1[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text"  readonly id="transaksi1_' + xid + '_nameitem1"  class="form-control _nameitem" name="transaksi_nameitem1[]" value=""/></td>';
-		tabel += '<td style="border:none;"><input style="width:100%" type="text" id="transaksi1_' + xid + '_deskripsi1" autocomplete="off" class="form-control  _deskripsi1" name="transaksi_unit1[]' + xid + '_deskripsi"></td>';
-		tabel += '<td style="border:none;"><input style="width:100%" type="number" id="transaksi1_' + xid + '_harga1" autocomplete="off" class="form-control  _harga" name="transaksi_harga1[]' + xid + '_harga"></td>';
+		tabel += '<td style="border:none;"><input style="width:100%" type="text" readonly id="transaksi1_' + xid + '_deskripsi1" autocomplete="off" class="form-control  _deskripsi1" name="transaksi_unit1[]' + xid + '_deskripsi"></td>';
+		tabel += '<td style="border:none;"><input style="width:100%" type="number" readonly id="transaksi1_' + xid + '_harga1" autocomplete="off" class="form-control  _harga" name="transaksi_harga1[]' + xid + '_harga"></td>';
+		tabel += '<td style="border:none;"><input style="width:100%" type="number" readonly id="transaksi1_' + xid + '_qtyout1" class="form-control  _qtyout1" value="0" name="transaksi_qtyout1[]" onchange="count1(' + xid + ')"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="number" id="transaksi1_' + xid + '_qtyin1" class="form-control  _qtyin1" value="0" name="transaksi_qtyin1[]" onchange="count1(' + xid + ')"></td>';
-		tabel += '<td style="border:none;"><input style="width:100%" autocomplete="off" type="date" id="transaksi1_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate1[]"></td>';
+		tabel += '<td style="border:none;"><input style="width:100%" autocomplete="off" type="date" id="transaksi1_' + xid + '_expiredate1" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate1[]"></td>';
 		tabel += '<td style="border:none;" id="transaksi1-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi1(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		$('#line-transaksi').val(xid);

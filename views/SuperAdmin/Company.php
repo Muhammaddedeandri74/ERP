@@ -100,7 +100,7 @@
 					</table>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row mb-3">
 				<label for="" class="form-label fs-3">Remark Invoice & Quotation</label>
 				<div class="col-6">
 					<div class="row">
@@ -120,7 +120,9 @@
 						<div class="col-2"></div>
 					</div>
 				</div>
-				<button type="button" class="btn btn-primary" style="float: right; margin-top: 30px; padding-left:24px;padding-right:24px;font-size:15px;" id="addorder" onclick="addorder()">Simpan</button>
+			</div>
+			<div class="text-end">
+				<button type="button" class="btn btn-primary px-5" id="addorder" onclick="addorder()">Simpan</button>
 			</div>
 		</form>
 	</div>

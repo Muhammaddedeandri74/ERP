@@ -47,6 +47,15 @@
 					</div>
 					<div class="row mb-3">
 						<div class="col-10">
+							<label for="" class="form-label">SKU Item</label>
+							<div class="col">
+								<input name="sku" type="text" id="sku" class="form-control" autocomplete="off" required>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-10">
 							<label class="form-label mb-3">Jenis Item</label>
 							<div class="row">
 								<div class="col-3">
@@ -74,9 +83,9 @@
 				<div class="col-4">
 					<div class="row mb-3">
 						<div class="col-10">
-							<label for="" class="form-label">SKU Item</label>
+							<label for="" class="form-label">Stock Minimum</label>
 							<div class="col">
-								<input name="sku" type="text" id="sku" class="form-control" autocomplete="off" required>
+								<input name="stokmin" type="text" id="stokmin" class="form-control" autocomplete="off" required>
 							</div>
 						</div>
 						<div class="col-2"></div>

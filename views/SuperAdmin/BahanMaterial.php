@@ -69,6 +69,13 @@
 									</div>
 
 									<div class="mb-3">
+										<p class="m-0">SKU</p>
+										<div class="col">
+											<input name="sku" type="text" id="sku" class="form-control" autocomplete="off" required>
+										</div>
+									</div>
+
+									<div class="mb-3">
 										<label class="mb-3">Unit Satuan</label>
 										<div class="row">
 											<div class="col-8">
@@ -96,9 +103,9 @@
 								</div>
 								<div class="col-3">
 									<div class="mb-3">
-										<p class="m-0">SKU Item</p>
+										<p class="m-0">Stock Minimum</p>
 										<div class="col">
-											<input name="sku" type="text" id="sku" class="form-control" autocomplete="off" required>
+											<input name="minstock" type="number" id="minstock" class="form-control" autocomplete="off" required>
 										</div>
 									</div>
 									<div class="mb-3">
