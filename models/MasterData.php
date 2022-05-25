@@ -5160,7 +5160,7 @@ class MasterData extends CI_Model
 	function detailmove($idinvout)
 	{
 		$data = array($idinvout);
-		$query = "SELECT * FROM invout WHERE idinvout = ?";
+		$query = "SELECT * FROM invout,tb_warehouse WHERE idinvout =? AND invout.idwh = tb_warehouse.idwarehouse";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 
@@ -5169,10 +5169,11 @@ class MasterData extends CI_Model
 				$f["codeinvout"] = $key->codeinvout;
 				$f["dateout"] = $key->dateout;
 				$f["statusout"] = $key->statusout;
+				$f["namewarehouse"]   = $key->namewarehouse;
 
 				$f["data"] = array();
 				$datax = array($key->codeinvout);
-				$queryx = "SELECT * FROM invoutdet,tb_item WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
+				$queryx = "SELECT * FROM invoutdet,tb_item,tb_warehouse WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
@@ -6147,7 +6148,7 @@ class MasterData extends CI_Model
 		} else {
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing,  $namesupp, $namewarehouse2, $datein2, $currency2, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idsupp,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
+			$query    = "INSERT INTO invin (codein,typein,idcust,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);

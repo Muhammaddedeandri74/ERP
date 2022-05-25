@@ -96,24 +96,6 @@
 							</div>
 							<div class="col-2"></div>
 						</div>
-						<!-- <div class="row mb-3">
-							<div class="col-5">
-								<label for="" class="form-label">Mata Uang</label>
-								<select name="currency" id="currency" class="form-select" required>
-									<option value="">Pilih</option>
-									<?php if ($currency != "Not Found") {
-										foreach ($currency as $key) { ?>
-											<option value=<?php echo $key["idcomm"] ?>><?php echo $key["namecomm"] ?></option>
-									<?php }
-									} ?>
-								</select>
-							</div>
-							<div class="col-5">
-								<label for="" class="form-label">Exchange Rate</label>
-								<input type="text" class="form-control">
-							</div>
-							<div class="col-2"></div>
-						</div> -->
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">No. Delivery Order</label>
@@ -1135,7 +1117,7 @@
 				}
 			}
 
-			if ($('#transaksi_' + xid + '_expdate').val() == "") {
+			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
 				alert('EXP DATE KOSONG');
 				sts = 0;
 				return false;
@@ -1197,7 +1179,7 @@
 					return false;
 				}
 			}
-			if ($('#transaksi_' + xid + '_expdate').val() == "") {
+			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
 				alert('EXP DATE KOSONG');
 				sts = 0;
 				return false;
@@ -1253,7 +1235,7 @@
 					return false;
 				}
 			}
-			if ($('#transaksi_' + xid + '_expdate').val() == "") {
+			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
 				alert('EXP DATE KOSONG');
 				sts = 0;
 				return false;
@@ -1304,7 +1286,7 @@
 					return false;
 				}
 			}
-			if ($('#transaksi_' + xid + '_expdate').val() == "") {
+			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
 				alert('EXP DATE KOSONG');
 				sts = 0;
 				return false;

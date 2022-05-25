@@ -23,21 +23,24 @@ class InventoryOutControler extends CI_Controller
     function AddInventoryout()
     {
         $iditem = $this->input->post('transaksi_iditem');
+        $nameitem = $this->input->post('transaksi_nameitem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
+        $typeqty = $this->input->post('transaksi_typeqty[]1_typeqty');
         $noinvout = $this->MInventoryOut->getlastoutid();
         $idso = $this->input->post('idso');
         $idwhsales = $this->input->post('idwhsales');
         $dateoutsales = $this->input->post('dateoutsales');
         $nodeliv = $this->input->post('nodeliv');
 
-        $cek = $this->MInventoryOut->outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate);
+        $cek = $this->MInventoryOut->outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty);
         echo $cek;
     }
 
     function AddInventoryoutmovewh()
     {
         $iditem = $this->input->post('transaksi_iditem');
+        $nameitem = $this->input->post('transaksi_nameitem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
         $noinvout = $this->MInventoryOut->getlastoutid();
@@ -45,13 +48,14 @@ class InventoryOutControler extends CI_Controller
         $namewarehouse2 = $this->input->post('namewarehouse2');
         $dateoutmovewh = $this->input->post('dateoutmovewh');
 
-        $cek = $this->MInventoryOut->outmovewh($namewarehouse, $namewarehouse2, $noinvout, $dateoutmovewh, $iditem, $qtyout, $expdate);
+        $cek = $this->MInventoryOut->outmovewh($namewarehouse, $namewarehouse2, $noinvout, $dateoutmovewh, $iditem, $qtyout, $expdate, $nameitem);
         echo $cek;
     }
 
     function AddInventoryoutret()
     {
         $iditem = $this->input->post('transaksi_iditem');
+        $nameitem = $this->input->post('transaksi_nameitem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
         $noinvout = $this->MInventoryOut->getlastoutid();
@@ -59,20 +63,21 @@ class InventoryOutControler extends CI_Controller
         $idsupp = $this->input->post('idsupp');
         $dateret = $this->input->post('dateret');
 
-        $cek = $this->MInventoryOut->outret($idwhret, $idsupp, $noinvout, $dateret, $iditem, $qtyout, $expdate);
+        $cek = $this->MInventoryOut->outret($idwhret, $idsupp, $noinvout, $dateret, $iditem, $qtyout, $expdate, $nameitem);
         echo $cek;
     }
 
     function AddInventoryoutgoing()
     {
         $iditem = $this->input->post('transaksi_iditem');
+        $nameitem = $this->input->post('transaksi_nameitem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
         $noinvout = $this->MInventoryOut->getlastoutid();
         $idwhout = $this->input->post('idwhout');
         $dateoutwh = $this->input->post('dateoutwh');
 
-        $cek = $this->MInventoryOut->outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate);
+        $cek = $this->MInventoryOut->outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate, $nameitem);
         echo $cek;
     }
 

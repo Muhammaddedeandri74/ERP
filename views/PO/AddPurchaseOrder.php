@@ -477,6 +477,7 @@ if ($data3 != "Not Found") {
 					if ((val == "") || (xobj.val() == undefined)) {
 
 						$('#transaksi_' + xid + '_iditem').val("");
+						$('#transaksi_' + xid + '_sku').val("");
 						$('#transaksi_' + xid + '_nameitem').val("");
 						$('#transaksi_' + xid + '_harga').val("");
 						$('#transaksi_' + xid + '_qty').val("");
@@ -492,7 +493,7 @@ if ($data3 != "Not Found") {
 						document.getElementById('transaksi_' + xid + '_disnom').enable = true;
 					} else {
 						cal();
-						$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+						$('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
 						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
@@ -553,7 +554,7 @@ if ($data3 != "Not Found") {
 						return this.value == val;
 					});
 
-					$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+					$('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
 					$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 					$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));

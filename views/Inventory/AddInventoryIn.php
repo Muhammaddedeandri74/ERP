@@ -144,7 +144,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Pengirim</label>
-								<select name="idwh" id="" class="form-select" aria-label="Disabled select example">
+								<select name="idwh" id="idwh" class="form-select" aria-label="Disabled select example">
 									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
@@ -152,10 +152,11 @@ if ($data3 != "Not Found") {
 										<?php endforeach ?>
 									<?php endif ?>
 								</select>
+								<!-- <input type="text" name="idwh" id="idwhx" class="form-control"> -->
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="idwh2" id="" class="form-select" aria-label="Disabled select example">
+								<select name="idwh2" id="idwh2" class="form-select" aria-label="Disabled select example">
 									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
@@ -188,7 +189,8 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse2" id="" class="form-select" aria-label="Disabled select example" disabled>
+								<select name="namewarehouse2" id="namewarehouse2" class="form-select" aria-label="Disabled select example">
+									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -197,8 +199,8 @@ if ($data3 != "Not Found") {
 								</select>
 							</div>
 							<div class="col-5">
-								<label for="" class="form-label">Tanggal Masuk1</label>
-								<input type="date" name="datein2" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+								<label for="" class="form-label">Tanggal Masuk</label>
+								<input type="date" name="datein2" id="datein2" id="" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -252,12 +254,12 @@ if ($data3 != "Not Found") {
 				</tbody>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()" style="font-size:13px;">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorderx()" style="font-size:13px;">Buat Transaksi</button>
 			</div>
 		</div>
 		<div class="row" id="movewhtable" style="display: none;">
 			<label for="" class="form-label fs-5 mt-3">Item/Produk</label>
-			<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
+			<input type="hidden" id="line-transaksi1" name="line-transaksi" value="0" />
 			<table class="table table-bordered table-striped list-akses">
 				<thead class="text-white text-center" style="background:#1143d8;">
 					<tr>
@@ -275,7 +277,7 @@ if ($data3 != "Not Found") {
 				</tbody>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorderx()">Buat Transaksi</button>
 			</div>
 		</div>
 		<div class="row" id="returntable" style="display: none;">
@@ -286,7 +288,7 @@ if ($data3 != "Not Found") {
 					<tr>
 						<th>SKU</th>
 						<th>Nama Item</th>
-						<th>Unit</th>
+						<th>Deskripsi</th>
 						<th>Qty </th>
 						<th>Expire Date</th>
 						<th>Action</th=>
@@ -296,7 +298,7 @@ if ($data3 != "Not Found") {
 				</tbody>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorderx()">Buat Transaksi</button>
 			</div>
 		</div>
 		<div class="row" id="initialtable" style="display: none;">
@@ -320,7 +322,7 @@ if ($data3 != "Not Found") {
 				</tbody>
 			</table>
 			<div class="mr-4" style="text-align:right;">
-				<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Buat Transaksi</button>
+				<button type="button" class="btn btn-primary" id="addorder" onclick="addorderx()">Buat Transaksi</button>
 			</div>
 		</div>
 	</div>
@@ -641,6 +643,7 @@ if ($data3 != "Not Found") {
 				console.log(hasil)
 				$('#codeinvout').val(hasil["codeinvout"]);
 				$('#idinvout').val(hasil["idinvout"]);
+				$('#idwhx').val(hasil["namewarehouse"]);
 				$('#detailmovewh').html("");
 
 				for (let i = 0; i <= hasil["data"].length; i++) {
@@ -675,7 +678,7 @@ if ($data3 != "Not Found") {
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi1-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control  iditem" name="transaksi_iditem[]" / ></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control _nameitem" name="transaksi_nameitem[]" value=""/></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text" id="transaksi_' + xid + '_deskripsi" autocomplete="off" objtype="_deskripsi" class="form-control  _deskripsi" name="transaksi_deskripsi[]' + xid + '_deskripsi"></td>';
@@ -683,7 +686,7 @@ if ($data3 != "Not Found") {
 		tabel += '<td style="border:none;"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count(' + xid + ')" value="0"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" value="0" name="transaksi_qtyin[]" onchange="count(' + xid + ')"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text" readonly id="transaksi_' + xid + '_balance" class="form-control _balance" value="0" name="transaksi_balance[]"  onchange="count(' + xid + ')"></td>';
-		tabel += '<td style="border:none;"><input  autocomplete="off" type="date" readonly id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
+		tabel += '<td style="border:none;"><input  autocomplete="off" type="date" id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
 		tabel += '<td style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		$('#line-transaksi').val(xid);
@@ -714,7 +717,7 @@ if ($data3 != "Not Found") {
 		tabel += '<td style="border:none;"><input style="width:100%" autocomplete="off" type="date" id="transaksi1_' + xid + '_expiredate1" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate1[]"></td>';
 		tabel += '<td style="border:none;" id="transaksi1-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi1(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		$('#line-transaksi').val(xid);
+		$('#line-transaksi1').val(xid);
 		$('#detailmovewh').append(tabel);
 		$('#transaksi1_' + xid + '_nourut1').val(lastid);
 		if (parseInt(xxid) != 0) {
@@ -866,71 +869,283 @@ if ($data3 != "Not Found") {
 		});
 	}
 
-	function addorder() {
-		var cx = $('#form').serialize();
-		$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
-			function(data) {
-				if (data == 'Success') {
-					alert('Input Data Berhasil');
-					cancelorder();
-				} else {
-					alert('Input Data Gagal. ' + data);
+	// function addorder() {
+	// 	var cx = $('#form').serialize();
+	// 	$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
+	// 		function(data) {
+	// 			if (data == 'Success') {
+	// 				alert('Input Data Berhasil');
+	// 				cancelorder();
+	// 			} else {
+	// 				alert('Input Data Gagal. ' + data);
+	// 			}
+	// 		});
+	// }
+
+	function addorderx() {
+		var xask = '';
+		console.log($("#idin").val())
+		if ($("#idin").val() == "") {
+			xask = "Simpan Transaksi?";
+		} else {
+			xask = "Ubah Transaksi?";
+		}
+		if (confirm(xask)) {
+
+			if ($('#myDIV').val() == "supplier") {
+				if (validasisales()) {
+					var cx = $('#form').serialize();
+					$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
+						function(data) {
+							if (data == 'Success') {
+								alert('Input Data Berhasil');
+								cancelorder();
+							} else {
+								alert('Input Data Gagal. ' + data);
+							}
+						});
 				}
-			});
+			} else if ($('#myDIV').val() == "warehouse") {
+				if (validasimovewh()) {
+					var cx = $('#form').serialize();
+					$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
+						function(data) {
+							if (data == 'Success') {
+								alert('Input Data Berhasil');
+								cancelorder();
+							} else {
+								alert('Input Data Gagal. ' + data);
+							}
+						});
+				}
+			} else if ($('#myDIV').val() == "return") {
+				if (validasiret()) {
+					var cx = $('#form').serialize();
+					$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
+						function(data) {
+							if (data == 'Success') {
+								alert('Input Data Berhasil');
+								cancelorder();
+							} else {
+								alert('Input Data Gagal. ' + data);
+							}
+						});
+				}
+			} else if ($('#myDIV').val() == "initialstock") {
+				if (validasiout()) {
+					var cx = $('#form').serialize();
+					$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
+						function(data) {
+							if (data == 'Success') {
+								alert('Input Data Berhasil');
+								cancelorder();
+							} else {
+								alert('Input Data Gagal. ' + data);
+							}
+						});
+				}
+			}
+
+		}
 	}
 
 	$('form button').on("click", function(e) {
-		if ($(this).attr('id') == 'cancelorder') {
-			if (confirm("Batalkan Transaksi?")) {
-				cancelorder();
-			}
-		} else if ($(this).attr('id') == 'addorder') {
-			var xask = '';
-			if ($("#idin").val() == '') {
-				xask = "Simpan Transaksi?";
-			} else {
-				xask = "Ubah Transaksi?";
-			}
+		if ($(this).attr('id') == "cancel") {
+			var xask = 'Cancel InventoryIn ?';
+
 			if (confirm(xask)) {
 				if (validasi()) {
-					addorder();
+					cancelorderx();
 				}
-			}
-		} else if ($(this).attr('id') == 'delorder') {
-			if (confirm("Delete Transaksi?")) {
-				delorder();
 			}
 		}
 		e.preventDefault();
 	});
 
-	function validasi() {
+	function validasisales() {
+
 		var xval = 0;
 		var sts = 1;
-		xval = $("#qtyin").val();
-		if (xval == '0') {
-			alert('Masukan Qty In');
-			sts = 0;
-			return false;
-		}
+		var pending = 0;
 
 
-		$('input[objtype=expiredate]').each(function(i, obj) {
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 
-			xid = $(this).attr('id').replace("transaksi_", "").replace("_expiredate", "");
-			if ($('#transaksi_' + xid + '_iditem').val() != '') {
-				if ($("#datein").val() >= $(this).val()) {
-					alert('Tanggal Expired Dibawah Atau Sama Dengan Tanggal Transaksi');
-					sts = 0;
-					return false;
-				}
+			if (Number($('#transaksi_' + xid + '_qtypo').val()) < Number($('#transaksi_' + xid + '_qtyin').val())) {
+				alert('Qty Out Lebih Besar Dari Stock');
+				sts = 0;
+				return false;
 			}
+
+			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
+				alert('EXP DATE KOSONG');
+				sts = 0;
+				return false;
+			}
+
 		});
+
+
 		if (sts == 1) {
 			return true;
 		} else {
 			return false;
 		}
+
+
+		//return 'ok';
+	}
+
+	function validasimovewh() {
+
+		var xval = 0;
+		var sts = 1;
+		var pending = 0;
+
+		xval = $("#codeinvout").val();
+		if (xval == "") {
+			alert('Pilih Data Move WH');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#idwh").val();
+		if (xval == "") {
+			alert('Pilih Gudang Pengirim');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#idwh1").val();
+		if (xval == "") {
+			alert('Pilih Gudang Penerima');
+			sts = 0;
+			return false;
+		}
+
+		if ($("#idwh").val() == $("#idwh2").val()) {
+			alert("Gudang Pengirim dan penerima tidak boleh sama");
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#datein1").val();
+		if (xval == "") {
+			alert('Masukan Tanggal Masuk');
+			sts = 0;
+			return false;
+		}
+
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+
+			if (Number($('#transaksi1_' + xid + '_qtyout1').val()) < Number($('#transaksi1_' + xid + '_qtyin1').val())) {
+				alert('Qty IN Lebih Besar Dari Stock');
+				sts = 0;
+				return false;
+			}
+		});
+
+
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
+
+
+		//return 'ok';
+	}
+
+	function validasiret() {
+
+		var xval = 0;
+		var sts = 1;
+		var pending = 0;
+
+		xval = $("#namewarehouse2").val();
+		if (xval == "") {
+			alert('Pilih Gudang Penerima');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#datein2").val();
+		if (xval == "") {
+			alert('Masukan Tanggal Masuk');
+			sts = 0;
+			return false;
+		}
+
+		$('input[objtype=sku2]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi2_", "").replace("_sku2", "");
+			if ($('#transaksi2_' + xid + '_qtyin2').val() == "") {
+				alert('Masukan QTY Terlebih Dahulu');
+				sts = 0;
+				return false;
+			}
+		});
+
+
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
+
+
+		//return 'ok';
+	}
+
+	function validasiout() {
+
+		var xval = 0;
+		var sts = 1;
+		var pending = 0;
+
+		xval = $("#idwhout").val();
+		if (xval == "") {
+			alert('Pilih Gudang Asal');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#dateoutwh").val();
+		if (xval == "") {
+			alert('Masukan Tanggal Keluar');
+			sts = 0;
+			return false;
+		}
+
+
+
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+
+			if ($('#transaksi_' + xid + '_typeqty').val() == "stock") {
+				if (Number($('#transaksi_' + xid + '_qtystock').val()) < Number($('#transaksi_' + xid + '_qty').val())) {
+					alert('Qty Out Lebih Besar Dari Stock');
+					sts = 0;
+					return false;
+				}
+			}
+			if ($('#transaksi_' + xid + '_expdate').val() == "") {
+				alert('EXP DATE KOSONG');
+				sts = 0;
+				return false;
+			}
+
+		});
+
+
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
+
+
 		//return 'ok';
 	}
 

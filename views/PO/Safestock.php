@@ -5,7 +5,7 @@
                 <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Inventory Management </a></li>
                 <li class="breadcrumb-item m-0 bc-active" aria-current="page">Transaction Book</li>
             </ol>
-            <h3 class="text-white">Stock Ready</h3>
+            <h3 class="text-white">Safe Stock</h3>
         </nav>
     </div>
     <div class="content bg-white  mx-4">
@@ -98,7 +98,7 @@
                 <table class="table table-bordered table-striped " id="table-user">
                     <thead>
                         <tr>
-                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                            <td></td>
                             <td>Nama Item</td>
                             <td>Spesifikasi</td>
                             <td>Item Type</td>
@@ -159,7 +159,7 @@
     function loaddata() {
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('InventoryStockControler/getitemstock') ?>",
+            url: "<?php echo base_url('InventoryStockControler/getitemstocksafe') ?>",
             data: "idwh=" + $('#idwh').val() + "&itemtype=" + $('#itemtype').val() + "&filter=" + $('#filter').val() + "&search=" + $('#search').val(),
             dataType: "JSON",
             success: function(hasil) {

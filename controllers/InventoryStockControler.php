@@ -29,4 +29,14 @@ class InventoryStockControler extends CI_Controller
         $cek = $this->MStockInventory->getitemstock($idwh, $itemtype, $filter, $search);
         echo json_encode($cek);
     }
+
+    function getitemstocksafe()
+    {
+        $idwh = $this->input->post("idwh");
+        $itemtype = $this->input->post("itemtype");
+        $filter = $this->input->post("filter");
+        $search = $this->input->post("search");
+        $cek = $this->MStockInventory->getitemstocksafe($idwh, $itemtype, $filter, $search);
+        echo json_encode($cek);
+    }
 }

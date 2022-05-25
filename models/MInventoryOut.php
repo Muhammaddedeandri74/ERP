@@ -19,7 +19,7 @@ class MInventoryOut extends CI_Model
         return $respon;
     }
 
-    function outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem)
+    function outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty)
     {
         $this->db->trans_begin();
         $data = array($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout));
@@ -31,55 +31,89 @@ class MInventoryOut extends CI_Model
                 $query1 = "INSERT INTO invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
                 $eksekusi1 = $this->db->query($query1, $data1);
                 if ($eksekusi1 == true) {
-                    $data2 = array($qtyout[$i], $qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $qtyout[$i]);
-                    $query2 = "UPDATE tb_itemqty SET endqty = endqty - ? , qtyso = qtyso - ?, outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND endqty - ? >= 0";
-                    $eksekusi2 = $this->db->query($query2, $data2);
-                    if ($this->db->affected_rows()) {
-                        $data3 = array($qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $expdate[$i], $qtyout[$i]);
-                        $query3 = "UPDATE tb_itemqtyexp SET endqty = endqty - ? ,  outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND expdate = ? AND endqty - ? >= 0";
-                        $eksekusi3 = $this->db->query($query3, $data3);
+                    if ($typeqty[$i] != "non stock") {
+                        $data2 = array($qtyout[$i], $qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $qtyout[$i]);
+                        $query2 = "UPDATE tb_itemqty SET endqty = endqty - ? , qtyso = qtyso - ?, outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND endqty - ? >= 0";
+                        $eksekusi2 = $this->db->query($query2, $data2);
                         if ($this->db->affected_rows()) {
-                            $data4 = array($qtyout[$i], $iditem[$i], $idso);
-                            $query4 = "UPDATE tb_salesorderdetail SET qtyout = qtyout + ? WHERE iditem = ? AND idso = ? ";
-                            $eksekusi4 = $this->db->query($query4, $data4);
-                            if ($eksekusi4 == true) {
-                                $data5 = array($idso);
-                                $query5 = "UPDATE tb_salesorder set statusorder = 'Process' WHERE idso = ?";
-                                $eksekusi5 = $this->db->query($query5, $data5);
-                                if ($eksekusi5 == true) {
-                                    $data6 = array($iditem[$i], $idwhsales);
-                                    $query6 = "SELECT * FROM tb_itemdetail,tb_item, tb_itemqty WHERE tb_itemdetail.iditem = ? AND tb_itemqty.idwh = ? AND tb_itemdetail.iditembom = tb_item.iditem AND tb_item.iditem = tb_itemqty.iditem";
-                                    $eksekusi6 = $this->db->query($query6, $data6)->result_object();
-                                    if (count($eksekusi6) > 0) {
-                                        foreach ($eksekusi6 as $key6) {
-                                            $data7 = array($qtyout[$i] * $key6->qty, $qtyout[$i] * $key6->qty, $key6->iditembom, $idwhsales);
-                                            $query7 = "UPDATE tb_itemqty SET endqty = endqty - ? , outqty = outqty + ? WHERE iditem = ? AND idwh = ?";
-                                            $eksekusi7 = $this->db->query($query7, $data7);
-                                            if ($eksekusi7 == true) {
-                                                $respon = "Success";
-                                            } else {
-                                                $respon = "Failed On qty item BOM Pada id salesorder = " . $key6->iditembom;
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        $respon = "Success";
-                                    }
-                                } else {
-                                    $respon = "Failed On Sales Status Pada id salesorder = " . $idso;
-                                    break;
-                                }
+                            $data3 = array($qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $expdate[$i], $qtyout[$i]);
+                            $query3 = "UPDATE tb_itemqtyexp SET endqty = endqty - ? ,  outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND expdate = ? AND endqty - ? >= 0";
+                            $eksekusi3 = $this->db->query($query3, $data3);
+                            if ($this->db->affected_rows()) {
+                                $respon = "Sucess";
                             } else {
-                                $respon = "Failed On Detail Qty Sales Detail Pada id item = " . $iditem[$i];
+                                $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
                                 break;
                             }
                         } else {
-                            $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
+                            $respon = "Stock Item " . $nameitem[$i] . " Kurang";
                             break;
                         }
                     } else {
-                        $respon = "Stock Item " . $nameitem[$i] . " Kurang";
-                        break;
+                        $data6 = array($iditem[$i], $idwhsales);
+                        $query6 = "SELECT * FROM tb_itemdetail,tb_item, tb_itemqty WHERE tb_itemdetail.iditem = ? AND tb_itemqty.idwh = ? AND tb_itemdetail.iditembom = tb_item.iditem AND tb_item.iditem = tb_itemqty.iditem";
+                        $eksekusi6 = $this->db->query($query6, $data6)->result_object();
+                        if (count($eksekusi6) > 0) {
+                            foreach ($eksekusi6 as $key6) {
+                                $datax = array($key6->iditembom, $idwhsales, $qtyout[$i] * $key6->qty);
+                                $queryx = "SELECT * FROM tb_itemqtyexp where iditem = ? AND idwh = ? AND endqty - ? >=0 ORDER BY expdate ASC LIMIT 1";
+                                $eksekusix = $this->db->query($queryx, $datax)->result_object();
+                                if (count($eksekusix) > 0) {
+                                    foreach ($eksekusix as $keyx) {
+                                        $data7 = array($qtyout[$i] * $key6->qty, $qtyout[$i] * $key6->qty, $key6->iditembom, $idwhsales, $qtyout[$i] * $key6->qty);
+                                        $query7 = "UPDATE tb_itemqty SET endqty = endqty - ? , outqty = outqty + ? WHERE iditem = ? AND idwh = ? AND endqty - ? >= 0";
+                                        $eksekusi7 = $this->db->query($query7, $data7);
+                                        if ($this->db->affected_rows()) {
+                                            $data8 = array($noinvout, $key6->iditembom, $qtyout[$i] * $key6->qty, $keyx->expdate);
+                                            $query8 = "INSERT INTO invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
+                                            $eksekusi8 = $this->db->query($query8, $data8);
+                                            if ($eksekusi8 == true) {
+                                                $data9 = array($qtyout[$i] * $key6->qty, $qtyout[$i] * $key6->qty, $key6->iditembom, $idwhsales, $qtyout[$i] * $key6->qty, $keyx->expdate);
+                                                $query9 = "UPDATE tb_itemqtyexp SET endqty = endqty - ? , outqty = outqty + ? WHERE iditem = ? AND idwh = ? AND endqty - ? >= 0 AND expdate = ?";
+                                                $eksekusi9 = $this->db->query($query9, $data9);
+                                                if ($this->db->affected_rows()) {
+                                                    $respon = "Success";
+                                                } else {
+                                                    $respon = "Stock Expired Item " . $keyx->nameitem . " Kurang";
+                                                    break;
+                                                }
+                                            } else {
+                                                $respon = "Failed On Insert Item BOM invoutdet ";
+                                                break;
+                                            }
+                                        } else {
+                                            $respon = "Stock  Item " . $keyx->nameitem . " Kurang";
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    $respon = "Failed For Get Exp Date BOM";
+                                }
+                            }
+                        } else {
+                            $respon = "Failed For Get Item BOM";
+                            break;
+                        }
+                    }
+
+
+                    if ($respon == "Success") {
+                        $data4 = array($qtyout[$i], $iditem[$i], $idso);
+                        $query4 = "UPDATE tb_salesorderdetail SET qtyout = qtyout + ? WHERE iditem = ? AND idso = ? ";
+                        $eksekusi4 = $this->db->query($query4, $data4);
+                        if ($eksekusi4 == true) {
+                            $data5 = array($noinvout, $idso);
+                            $query5 = "UPDATE tb_salesorder set statusorder = 'Process', noinvout = ? WHERE idso = ?";
+                            $eksekusi5 = $this->db->query($query5, $data5);
+                            if ($eksekusi5 == true) {
+                            } else {
+                                $respon = "Failed On Sales Status Pada id salesorder = " . $idso;
+                                break;
+                            }
+                        } else {
+                            $respon = "Failed On Detail Qty Sales Detail Pada id item = " . $iditem[$i];
+                            break;
+                        }
                     }
                 } else {
                     $respon = "Failed On DetailOut Pada id item = " . $iditem[$i];
