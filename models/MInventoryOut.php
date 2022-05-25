@@ -5,12 +5,12 @@ class MInventoryOut extends CI_Model
 {
     function getlastoutid()
     {
-        $query = "SELECT * FROM invout ORDER BY codeinvout DESC LIMIT 1";
+        $query = "SELECT * FROM invout ORDER BY idinvout DESC LIMIT 1";
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
             foreach ($eksekusi as $key) {
 
-                $respon =  "OUT-TRS-" . str_replace("OUT-TRS-", "", $key->codeinvout)  + 2;
+                $respon =  "OUT-TRS-" . str_replace("OUT-TRS-", "", $key->codeinvout)  + 1;
             }
         } else {
             $respon = "OUT-TRS-1";
@@ -19,7 +19,7 @@ class MInventoryOut extends CI_Model
         return $respon;
     }
 
-    function outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate)
+    function outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem)
     {
         $this->db->trans_begin();
         $data = array($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout));
@@ -31,14 +31,14 @@ class MInventoryOut extends CI_Model
                 $query1 = "INSERT INTO invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
                 $eksekusi1 = $this->db->query($query1, $data1);
                 if ($eksekusi1 == true) {
-                    $data2 = array($qtyout[$i], $qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i]);
-                    $query2 = "UPDATE tb_itemqty SET endqty = endqty - ? , qtyso = qtyso - ?, outqty = outqty + ? WHERE idwh = ? AND iditem = ?";
+                    $data2 = array($qtyout[$i], $qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $qtyout[$i]);
+                    $query2 = "UPDATE tb_itemqty SET endqty = endqty - ? , qtyso = qtyso - ?, outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND endqty - ? >= 0";
                     $eksekusi2 = $this->db->query($query2, $data2);
-                    if ($eksekusi2 == true) {
-                        $data3 = array($qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $expdate[$i]);
-                        $query3 = "UPDATE tb_itemqtyexp SET endqty = endqty - ? ,  outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND expdate = ?";
+                    if ($this->db->affected_rows()) {
+                        $data3 = array($qtyout[$i], $qtyout[$i], $idwhsales, $iditem[$i], $expdate[$i], $qtyout[$i]);
+                        $query3 = "UPDATE tb_itemqtyexp SET endqty = endqty - ? ,  outqty = outqty + ? WHERE idwh = ? AND iditem = ? AND expdate = ? AND endqty - ? >= 0";
                         $eksekusi3 = $this->db->query($query3, $data3);
-                        if ($eksekusi3 == true) {
+                        if ($this->db->affected_rows()) {
                             $data4 = array($qtyout[$i], $iditem[$i], $idso);
                             $query4 = "UPDATE tb_salesorderdetail SET qtyout = qtyout + ? WHERE iditem = ? AND idso = ? ";
                             $eksekusi4 = $this->db->query($query4, $data4);
@@ -62,6 +62,8 @@ class MInventoryOut extends CI_Model
                                                 break;
                                             }
                                         }
+                                    } else {
+                                        $respon = "Success";
                                     }
                                 } else {
                                     $respon = "Failed On Sales Status Pada id salesorder = " . $idso;
@@ -72,11 +74,11 @@ class MInventoryOut extends CI_Model
                                 break;
                             }
                         } else {
-                            $respon = "Failed On Detail Qty EXP Pada id item = " . $iditem[$i];
+                            $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
                             break;
                         }
                     } else {
-                        $respon = "Failed On Detail Qty Pada id item = " . $iditem[$i];
+                        $respon = "Stock Item " . $nameitem[$i] . " Kurang";
                         break;
                     }
                 } else {
@@ -97,7 +99,7 @@ class MInventoryOut extends CI_Model
         return $respon;
     }
 
-    function outmovewh($namewarehouse, $namewarehouse2, $noinvout, $dateoutmovewh, $iditem, $qtyout, $expdate)
+    function outmovewh($namewarehouse, $namewarehouse2, $noinvout, $dateoutmovewh, $iditem, $qtyout, $expdate, $nameitem)
     {
         $this->db->trans_begin();
         $data = array($noinvout, "Move Warehouse", $namewarehouse, $namewarehouse2, $dateoutmovewh, "Waiting", array_sum($qtyout));
@@ -111,21 +113,21 @@ class MInventoryOut extends CI_Model
                 $query1 = "INSERT invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
                 $eksekusi1 = $this->db->query($query1, $data1);
                 if ($eksekusi1 == true) {
-                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $namewarehouse);
-                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ?";
+                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $namewarehouse, $qtyout[$i]);
+                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ? AND endqty - ? >= 0";
                     $eksekusi2 = $this->db->query($query2, $data2);
-                    if ($eksekusi2 == true) {
-                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $namewarehouse);
-                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ?";
+                    if ($this->db->affected_rows()) {
+                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $namewarehouse, $qtyout[$i]);
+                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ? AND endqty - ? >= 0";
                         $eksekusi3 = $this->db->query($query3, $data3);
-                        if ($eksekusi3 == true) {
+                        if ($this->db->affected_rows()) {
                             $respon = "Success";
                         } else {
-                            $respon = "Gagal Update Item Qty EXP ";
+                            $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
                             break;
                         }
                     } else {
-                        $respon = "Gagal Update Item Qty ";
+                        $respon = "Stock Item " . $nameitem[$i] . " Kurang";
                         break;
                     }
                 } else {
@@ -147,7 +149,7 @@ class MInventoryOut extends CI_Model
     }
 
 
-    function outret($idwhret, $idsupp, $noinvout, $dateret, $iditem, $qtyout, $expdate)
+    function outret($idwhret, $idsupp, $noinvout, $dateret, $iditem, $qtyout, $expdate, $nameitem)
     {
         $this->db->trans_begin();
         $data = array($noinvout, "Return", $idwhret, $idsupp, $dateret, "Finish", array_sum($qtyout));
@@ -161,21 +163,21 @@ class MInventoryOut extends CI_Model
                 $query1 = "INSERT invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
                 $eksekusi1 = $this->db->query($query1, $data1);
                 if ($eksekusi1 == true) {
-                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $idwhret);
-                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ?";
+                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $idwhret, $qtyout[$i]);
+                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ? AND endqty - ? >= 0";
                     $eksekusi2 = $this->db->query($query2, $data2);
-                    if ($eksekusi2 == true) {
-                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $idwhret);
-                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ?";
+                    if ($this->db->affected_rows()) {
+                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $idwhret, $qtyout[$i]);
+                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ? AND endqty - ? >= 0";
                         $eksekusi3 = $this->db->query($query3, $data3);
-                        if ($eksekusi3 == true) {
+                        if ($this->db->affected_rows()) {
                             $respon = "Success";
                         } else {
-                            $respon = "Gagal Update Item Qty EXP ";
+                            $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
                             break;
                         }
                     } else {
-                        $respon = "Gagal Update Item Qty ";
+                        $respon = "Stock Item " . $nameitem[$i] . " Kurang";
                         break;
                     }
                 } else {
@@ -196,7 +198,7 @@ class MInventoryOut extends CI_Model
         return $respon;
     }
 
-    function outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate)
+    function outwh($idwhout, $noinvout, $dateoutwh, $iditem, $qtyout, $expdate, $nameitem)
     {
         $this->db->trans_begin();
         $data = array($noinvout, "Out Warehouse", $idwhout, $dateoutwh, "Finish", array_sum($qtyout));
@@ -210,21 +212,21 @@ class MInventoryOut extends CI_Model
                 $query1 = "INSERT invoutdet (codeinvout,iditem,qtyout,expdate)VALUES(?,?,?,?)";
                 $eksekusi1 = $this->db->query($query1, $data1);
                 if ($eksekusi1 == true) {
-                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $idwhout);
-                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ?";
+                    $data2 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $idwhout, $qtyout[$i]);
+                    $query2 = "UPDATE tb_itemqty SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND idwh = ? AND endqty - ? >= 0";
                     $eksekusi2 = $this->db->query($query2, $data2);
-                    if ($eksekusi2 == true) {
-                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $idwhout);
-                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ?";
+                    if ($this->db->affected_rows()) {
+                        $data3 = array($qtyout[$i], $qtyout[$i], $iditem[$i], $expdate[$i], $idwhout, $qtyout[$i]);
+                        $query3 = "UPDATE tb_itemqtyexp SET outqty = outqty + ?, endqty = endqty - ? WHERE iditem = ? AND expdate = ? AND idwh = ? AND endqty - ? >= 0";
                         $eksekusi3 = $this->db->query($query3, $data3);
-                        if ($eksekusi3 == true) {
+                        if ($this->db->affected_rows()) {
                             $respon = "Success";
                         } else {
-                            $respon = "Gagal Update Item Qty EXP ";
+                            $respon = "Stock Expired Item " . $nameitem[$i] . " Kurang";
                             break;
                         }
                     } else {
-                        $respon = "Gagal Update Item Qty ";
+                        $respon = "Stock Item " . $nameitem[$i] . " Kurang";
                         break;
                     }
                 } else {

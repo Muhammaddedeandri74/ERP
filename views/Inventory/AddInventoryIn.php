@@ -55,9 +55,9 @@ if ($data3 != "Not Found") {
 						<div class="col-4"></div>
 					</div>
 					<div class="row mb-3">
-						<div class="col-8">
+						<div class="col-8" id="namecust">
 							<label for="" class="form-label">Supplier</label>
-							<select name="namecust" id="namecust" class="form-select">
+							<!-- <select name="namecust" id="namecust1" class="form-select">
 								<option value="">Pilih Supplier</option>
 								<?php if ($data4 != "Not Found") : ?>
 									<?php foreach ($data4 as $key) : ?>
@@ -65,7 +65,9 @@ if ($data3 != "Not Found") {
 									<?php endforeach ?>
 								<?php endif ?>
 
-							</select>
+							</select> -->
+							<input type="text" id="namecust1" class="form-control" objectype="supp" list="xcust" name="namecust" autocomplete="off" required>
+							<input type="hidden" id="idcust" name="idcust">
 						</div>
 						<div class=" col-4 mb-3">
 						</div>
@@ -110,7 +112,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="idwh" id="" class="form-select" required>
+								<select name="idwh1" id="" class="form-select" required>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
 											<option value="<?php echo $key["idwarehouse"] ?>"><?php echo $key["namewarehouse"] ?></option>
@@ -457,6 +459,7 @@ if ($data3 != "Not Found") {
 	function ubah(x) {
 		if (x == "supplier") {
 			$('#supplier').show();
+			$('#namecust').show();
 			$('#supplierx').show();
 			$('#warehouse').hide();
 			$('#warehousex').hide();
@@ -468,6 +471,7 @@ if ($data3 != "Not Found") {
 			$('#initialtable').hide();
 		} else if (x == "warehouse") {
 			$('#supplier').hide();
+			$('#namecust').hide();
 			$('#supplierx').hide();
 			$('#warehouse').show();
 			$('#warehousex').show();
@@ -479,6 +483,7 @@ if ($data3 != "Not Found") {
 			$('#initialtable').hide();
 		} else if (x == "return") {
 			$('#supplier').hide();
+			$('#namecust').show();
 			$('#supplierx').hide();
 			$('#warehouse').hide();
 			$('#warehousex').hide();
@@ -653,7 +658,7 @@ if ($data3 != "Not Found") {
 					$('#transaksi1_' + xid + '_deskripsi1').val(xobj.data('deskripsi'));
 					$('#transaksi1_' + xid + '_harga1').val(hasil["data"][i]["price"]);
 					$('#transaksi1_' + xid + '_qtyout1').val(hasil["data"][i]["qtyout"]);
-
+					$('#transaksi1_' + xid + '_expiredate1').val(hasil["data"][i]["expdate"]);
 					calc();
 
 				}
@@ -678,7 +683,7 @@ if ($data3 != "Not Found") {
 		tabel += '<td style="border:none;"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_qtypo" class="form-control  _qtypo" value="0" name="transaksi_qtypo[]" onchange="count(' + xid + ')" value="0"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="number" id="transaksi_' + xid + '_qtyin" class="form-control  _qtyin" value="0" name="transaksi_qtyin[]" onchange="count(' + xid + ')"></td>';
 		tabel += '<td style="border:none;"><input style="width:100%" type="text" readonly id="transaksi_' + xid + '_balance" class="form-control _balance" value="0" name="transaksi_balance[]"  onchange="count(' + xid + ')"></td>';
-		tabel += '<td style="border:none;"><input  autocomplete="off" type="date" id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
+		tabel += '<td style="border:none;"><input  autocomplete="off" type="date" readonly id="transaksi_' + xid + '_expiredate" objtype="expiredate"  class="form-control _expiredate" name="transaksi_expiredate[]"></td>';
 		tabel += '<td style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		$('#line-transaksi').val(xid);
@@ -831,7 +836,8 @@ if ($data3 != "Not Found") {
 				$("#idpo").val(data.headertrans['idpo']);
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
-				$("#namecust").val(data.headertrans['namecust']);
+				$("#idcust").val(data.headertrans['idcust']);
+				$("#namecust1").val(data.headertrans['namecust']);
 
 				var xiddet = 0;
 				var xlost = 0;
@@ -904,13 +910,6 @@ if ($data3 != "Not Found") {
 		xval = $("#qtyin").val();
 		if (xval == '0') {
 			alert('Masukan Qty In');
-			sts = 0;
-			return false;
-		}
-
-		xval = $("#namecust").val();
-		if ($("#namecust").val() == '') {
-			alert('Input Supplier');
 			sts = 0;
 			return false;
 		}

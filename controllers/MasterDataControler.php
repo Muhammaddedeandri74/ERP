@@ -264,7 +264,6 @@ class MasterDataControler extends CI_Controller
 		$transaksi_expiredate2  = $this->input->post("transaksi_expiredate2");
 
 		if ($tipeingoing == "supplier") {
-
 			$cek                   = $this->MasterData->newinvin(
 				$codein,
 				$tipeingoing,

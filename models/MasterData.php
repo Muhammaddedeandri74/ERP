@@ -3364,10 +3364,12 @@ class MasterData extends CI_Model
 	{
 		$data = array($idtrans);
 		$query = "SELECT b.*,a.sku,a.nameitem,a.idunit,qty,b.iditem,a.deskripsi FROM (SELECT idpo,iditem,MAX(idpodet) AS idpodet,SUM(qty) AS qty,qtyindet FROM podet 
-				  WHERE idpo = ?
-				  GROUP BY idpo,iditem ) AS b
-				  INNER JOIN tb_item AS a ON b.iditem=a.iditem
-				  ORDER BY idpodet";
+					WHERE idpo = ?
+					GROUP BY idpo,iditem ) AS b
+					INNER JOIN tb_item AS a ON b.iditem=a.iditem
+					-- INNER JOIN po AS c ON b.idpo=c.idpo
+					-- INNER JOIN tb_customer AS d ON c.idcust=d.idcust
+					ORDER BY idpodet";
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
@@ -3393,6 +3395,26 @@ class MasterData extends CI_Model
 					foreach ($eksekusix as $keyx) {
 						$f["price"] = $keyx->price;
 						$f["subpo"] = $keyx->subpo;
+					}
+				}
+
+				$datax = array($f["idpo"]);
+				$queryx = "SELECT * FROM po WHERE idpo = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idpo"] = $keyx->idpo;
+						$f["idcust"] = $keyx->idcust;
+					}
+				}
+
+				$datax = array($f["idcust"]);
+				$queryx = "SELECT * FROM tb_customer WHERE idcust = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idcust"] = $keyx->idcust;
+						$f["namecust"] = $keyx->namecust;
 					}
 				}
 
@@ -5160,6 +5182,7 @@ class MasterData extends CI_Model
 						$g["nameitem"] = $keyx->nameitem;
 						$g["price"]    = $keyx->price;
 						$g["qtyout"]   = $keyx->qtyout - $keyx->qtyin;
+						$g["expdate"]   = $keyx->expdate;
 						array_push($f["data"], $g);
 					}
 				} else {

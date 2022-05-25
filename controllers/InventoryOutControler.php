@@ -25,7 +25,7 @@ class InventoryOutControler extends CI_Controller
         $iditem = $this->input->post('transaksi_iditem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
-        $noinvout = $this->input->post('notransaksi');
+        $noinvout = $this->MInventoryOut->getlastoutid();
         $idso = $this->input->post('idso');
         $idwhsales = $this->input->post('idwhsales');
         $dateoutsales = $this->input->post('dateoutsales');
@@ -40,7 +40,7 @@ class InventoryOutControler extends CI_Controller
         $iditem = $this->input->post('transaksi_iditem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
-        $noinvout = $this->input->post('notransaksi');
+        $noinvout = $this->MInventoryOut->getlastoutid();
         $namewarehouse = $this->input->post('namewarehouse1');
         $namewarehouse2 = $this->input->post('namewarehouse2');
         $dateoutmovewh = $this->input->post('dateoutmovewh');
@@ -54,7 +54,7 @@ class InventoryOutControler extends CI_Controller
         $iditem = $this->input->post('transaksi_iditem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
-        $noinvout = $this->input->post('notransaksi');
+        $noinvout = $this->MInventoryOut->getlastoutid();
         $idwhret = $this->input->post('idwhret');
         $idsupp = $this->input->post('idsupp');
         $dateret = $this->input->post('dateret');
@@ -68,7 +68,7 @@ class InventoryOutControler extends CI_Controller
         $iditem = $this->input->post('transaksi_iditem');
         $expdate = $this->input->post('transaksi_expdate');
         $qtyout = $this->input->post('transaksi_qty[]1_qty');
-        $noinvout = $this->input->post('notransaksi');
+        $noinvout = $this->MInventoryOut->getlastoutid();
         $idwhout = $this->input->post('idwhout');
         $dateoutwh = $this->input->post('dateoutwh');
 
