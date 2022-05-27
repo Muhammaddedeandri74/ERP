@@ -260,11 +260,11 @@ class InventoryController extends CI_Controller
 
 	function getlistreqpo()
 	{
-		$filter     = $this->input->post("filter");
-		$search     = $this->input->post("search");
-		$statuspo   = $this->input->post("statuspo");
-		$datestart  = $this->input->post("datestart");
-		$finishdate = $this->input->post("finishdate");
+		$filter     = $this->input->post("filters");
+		$search     = $this->input->post("searchs");
+		$statuspo   = $this->input->post("statusreqpos");
+		$datestart  = $this->input->post("datestarts");
+		$finishdate = $this->input->post("finishdates");
 		$cek        =  $this->MasterData->getlistreqpodetail($filter, $search, $statuspo, $datestart, $finishdate);
 		echo json_encode($cek);
 	}

@@ -302,15 +302,15 @@ if ($data3 != "Not Found") {
 								<div class="col-8">
 									<label for="" class="form-label">Pencarian</label>
 									<div class="input-group">
-										<select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filters">
+										<select name="filters" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filters">
 											<option value="codereqpo">No.Request Po</option>
 										</select>
-										<input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+										<input type="text" id="searchs" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
 									</div>
 								</div>
 								<div class="col-4">
 									<label for="" class="form-label">Status</label>
-									<select class="form-select" id="statusreqpo" aria-label="Default select example">
+									<select class="form-select" id="statusreqpos" aria-label="Default select example">
 										<option value="">Pilih Status Quotation</option>
 										<option value="Waiting">Waiting</option>
 										<option value="Process">Process</option>
@@ -325,11 +325,11 @@ if ($data3 != "Not Found") {
 							<div class="row">
 								<div class="col-4">
 									<label for="" class="form-label">Mulai Dari</label>
-									<input type="date" class="form-control" name="" id="datestart" value="<?php echo date('Y-m-01') ?>">
+									<input type="date" class="form-control" name="" id="datestarts" value="<?php echo date('Y-m-01') ?>">
 								</div>
 								<div class="col-4">
 									<label for="" class="form-label">Sampai Dengan</label>
-									<input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-t') ?>">
+									<input type="date" class="form-control" name="" id="finishdates" value="<?php echo date('Y-m-t') ?>">
 								</div>
 								<div class="col-4">
 									<p></p>
@@ -417,10 +417,10 @@ if ($data3 != "Not Found") {
 		$.ajax({
 			type: "POST",
 			url: "<?php echo base_url('InventoryController/getlistreqpo') ?>",
-			data: "filter=" + $('#filters').val() + "&search=" + $('#search').val() + "&statusreqpo=" + $('#statusreqpo').val() + "&datestart=" + $('#datestart').val() + "&finishdate=" + $('#finishdate').val(),
+			data: "filters=" + $('#filters').val() + "&searchs=" + $('#searchs').val() + "&statusreqpos=" + $('#statusreqpos').val() + "&datestarts=" + $('#datestarts').val() + "&finishdates=" + $('#finishdates').val(),
 			dataType: "JSON",
 			success: function(hasil) {
-
+				console.log(hasil);
 				var baris = ""
 				if (hasil != "Not Found") {
 
