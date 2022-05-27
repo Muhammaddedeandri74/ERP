@@ -213,28 +213,28 @@ if ($data != "Not Found") {
 
 		add_row_transaksi(0);
 
-		function add_row_transaksi(xxid) {
-			var lastid = 0;
-			if (parseInt(xxid) != 0) {
-				lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());
-			}
-			var xid = (parseInt(xxid) + 1);
-			lastid++;
-			var tabel = '';
-			tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
-			tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="transaksi_bank[]" value=""/></td>';
-			tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="transaksi_norekening[]" value=""></td>';
-			tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="transaksi_beneficiary[]" /></td>';
-			tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
-			tabel += '</tr>';
-			//return tabel;
-			$('#line-transaksi').val(xid);
-			$('#detailx').append(tabel);
-			$('#transaksi_' + xid + '_nourut').val(lastid);
-			if (parseInt(xxid) != 0) {
-				var olddata = $('#transaksi-tr-' + xxid + '').html();
-				var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
-				$('#transaksi-tr-' + xxid + '').html(xdt);
-			}
+
+		var lastid = 0;
+		if (parseInt(xxid) != 0) {
+			lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());
+		}
+		var xid = (parseInt(xxid) + 1);
+		lastid++;
+		var tabel = '';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="transaksi_bank[]" value=""/></td>';
+		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="transaksi_norekening[]" value=""></td>';
+		tabel += '<td class="p-0" style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="transaksi_beneficiary[]" /></td>';
+		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
+		tabel += '</tr>';
+		//return tabel;
+		$('#line-transaksi').val(xid);
+		$('#detailx').append(tabel);
+		$('#transaksi_' + xid + '_nourut').val(lastid);
+		if (parseInt(xxid) != 0) {
+			var olddata = $('#transaksi-tr-' + xxid + '').html();
+			var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
+			$('#transaksi-tr-' + xxid + '').html(xdt);
+		}
 		}
 	</script>

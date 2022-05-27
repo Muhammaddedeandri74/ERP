@@ -5862,7 +5862,7 @@ class MasterData extends CI_Model
 
 						$queryin    = "UPDATE invin set qtyin = " . $qtyin . ",qtypo = " . $qtypo . " WHERE idin = '" . $idin . "'";
 						$eksekusiin = $this->db->query($queryin);
-						if ($eksekusixx == true) {
+						if ($eksekusiin == true) {
 							$respon = "Success";
 						} else {
 							$respon = "Failed on Qtyin";

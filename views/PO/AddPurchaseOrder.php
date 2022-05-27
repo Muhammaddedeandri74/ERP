@@ -425,8 +425,6 @@ if ($data3 != "Not Found") {
 				if (hasil != "Not Found") {
 
 					for (let i = 0; i < hasil.length; i++) {
-
-
 						baris += `  <tr>
                                             <td>` + hasil[i]["codereqpo"] + `</td>
                                             <td>` + hasil[i]["datereqpo"] + `</td>

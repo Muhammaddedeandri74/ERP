@@ -968,6 +968,12 @@ if ($data3 != "Not Found") {
 		var sts = 1;
 		var pending = 0;
 
+		xval = $("#namecust1").val();
+		if (xval == "") {
+			alert('Pilih Data Supplier');
+			sts = 0;
+			return false;
+		}
 
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
@@ -977,6 +983,20 @@ if ($data3 != "Not Found") {
 				sts = 0;
 				return false;
 			}
+
+			if ($('#transaksi_' + xid + '_sku').val() == "") {
+				alert('Masukan Item terlebih dahulu');
+				sts = 0;
+				return false;
+			}
+
+			if ($('#transaksi_' + xid + '_qtyin').val() == 0) {
+				alert('Kolom Qty Tidak Boleh Kosong');
+				sts = 0;
+				return false;
+			}
+
+
 
 		});
 

@@ -455,8 +455,8 @@ class SuperAdminControler extends CI_Controller
 		$f["title"] = "company";
 		$f["data"] = $this->MasterData->getcompany();
 		$this->load->view("SuperAdmin/Header");
+		$this->load->view("SuperAdmin/Footer");
 		$this->load->view("SuperAdmin/Company", $f);
-		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "company profile");
 	}
 
