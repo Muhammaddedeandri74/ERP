@@ -198,12 +198,22 @@ if ($data != "Not Found") {
         var xval = 0;
         var sts = 1;
 
-        xval = $("#qty").val();
-        if ((xval == '0')) {
-            alert('Input Produk');
-            sts = 0;
-            return false;
-        }
+        $('input[objtype=sku]').each(function(i, obj) {
+            xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+
+            if ($('#transaksi_' + xid + '_sku').val() == "") {
+                alert('Masukan Item Terlebih Dahulu');
+                sts = 0;
+                return false;
+            }
+
+            if ($('#transaksi_' + xid + '_qtyin').val() == 0) {
+                alert('Masukan QTY Terlebih Dahulu');
+                sts = 0;
+                return false;
+            }
+        });
+
 
 
         if (sts == 1) {

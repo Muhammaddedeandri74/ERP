@@ -5050,6 +5050,7 @@ class MasterData extends CI_Model
 				$f["qtypo"]   = $key->qtypo;
 				$f["datepo"]   = $key->datepo;
 				$f["namecust"]   = $key->namecust;
+				$f["statuspo"]   = $key->statuspo;
 
 				$data1 = array($key->idpo);
 				$query1 = "SELECT * FROM podet where idpo = ?";
@@ -5119,7 +5120,6 @@ class MasterData extends CI_Model
 		$query = "SELECT * FROM invin WHERE idin = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
-
 			foreach ($eksekusi as $key) {
 				$f["idin"] = $key->idin;
 				$f["codein"] = $key->codein;
@@ -5201,6 +5201,63 @@ class MasterData extends CI_Model
 		}
 
 		return $respon;
+	}
+
+	function detailpox($idpo)
+	{ {
+			$data = array($idpo);
+			$query = "SELECT * FROM po,tb_customer where po.idcust = tb_customer.idcust  AND po.idpo = ?";
+			$eksekusi = $this->db->query($query, $data)->result_object();
+			if (count($eksekusi) > 0) {
+
+				foreach ($eksekusi as $key) {
+					$f["idpo"] = $key->idpo;
+					$f["codepo"] = $key->codepo;
+					$f["idcust"] = $key->idcust;
+					$f["idcurr"] = $key->idcurr;
+					$f["namecust"] = $key->namecust;
+					$f["datepo"] = $key->datepo;
+					$f["delivedate"] = $key->delivedate;
+					$f["exchange"] = $key->exchange;
+					$f["vat"] = $key->vat;
+					$f["qtypo"] = $key->qtypo;
+					$f["qtyin"] = $key->qtyin;
+					$f["norekening"] = $key->norekening;
+					$f["deskripsi"] = $key->deskripsi;
+					$f["statuspo"] = $key->statuspo;
+					$f["data"] = array();
+					$datax = array($key->idpo);
+					$queryx = "SELECT * FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
+					$eksekusix = $this->db->query($queryx, $datax)->result_object();
+					if (count($eksekusix) > 0) {
+						foreach ($eksekusix as $keyx) {
+							$g["sku"] = $keyx->sku;
+							$g["iditem"] = $keyx->iditem;
+							$g["idpo"] = $keyx->idpo;
+							$g["qty"] = $keyx->qty;
+							$g["disnom"] = $keyx->disnom;
+							$g["disper"] = $keyx->disper;
+							$g["subpo"] = $keyx->subpo;
+							$g["price"] = $keyx->price;
+							$g["totaldisc"] = $keyx->totaldisc;
+							$g["grandtotal"] = $keyx->grandtotal;
+
+							array_push($f["data"], $g);
+						}
+					} else {
+						$respon = "Detail Error";
+						break;
+					}
+
+
+					$respon = $f;
+				}
+			} else {
+				$respon = "Not Found";
+			}
+
+			return $respon;
+		}
 	}
 
 

@@ -300,6 +300,13 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+	function detailpox()
+	{
+		$idpo = $this->input->post("idpo");
+		$cek  = $this->MasterData->detailpox($idpo);
+		echo json_encode($cek);
+	}
+
 	function PoStatus()
 	{
 		$codepo         = $this->input->post('codepo');

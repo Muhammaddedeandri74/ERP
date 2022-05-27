@@ -786,12 +786,30 @@ if ($data3 != "Not Found") {
 			return false;
 		}
 
-		xval = $("#exchange").val();
-		if ($("#exchange").val() == '') {
-			alert('Input Exchange Rate');
+		xval = $("#norekening").val();
+		if ($("#norekening").val() == '') {
+			alert('Pilih Nomor Rekening');
 			sts = 0;
 			return false;
 		}
+
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+
+			if ($('#transaksi_' + xid + '_sku').val() == "") {
+				alert('Masukan Item Terlebih Dahulu');
+				sts = 0;
+				return false;
+			}
+
+			if ($('#transaksi_' + xid + '_qtyin').val() == 0) {
+				alert('Masukan QTY Terlebih Dahulu');
+				sts = 0;
+				return false;
+			}
+		});
+
+
 
 		if (sts == 1) {
 			return true;

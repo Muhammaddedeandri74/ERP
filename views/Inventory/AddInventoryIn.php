@@ -64,7 +64,6 @@ if ($data3 != "Not Found") {
 										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
 									<?php endforeach ?>
 								<?php endif ?>
-
 							</select> -->
 							<input type="text" id="namecust1" class="form-control" objectype="supp" list="xcust" name="namecust" autocomplete="off" required>
 							<input type="hidden" id="idcust" name="idcust">
@@ -389,24 +388,43 @@ if ($data3 != "Not Found") {
 				</div>
 				<div class="modal-body">
 					<div class="row mb-4">
-						<div class="col-5">
-							<label for="" class="form-label">Pencarian</label>
-							<input type="text" class="form-control" placeholder="Cari berdasarkan customer">
+						<div class="col-6">
+							<div class="row">
+								<div class="col-8">
+									<label for="" class="form-label">Pencarian</label>
+									<div class="input-group">
+										<select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
+											<option value="codepo">No.Purchase Order</option>
+										</select>
+										<input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+									</div>
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Status</label>
+									<select class="form-select" id="statuspo" aria-label="Default select example">
+										<option value="">Pilih Status Po</option>
+										<option value="Waiting">Waiting</option>
+										<option value="Process">Process</option>
+										<option value="Finish">Finish</option>
+										<option value="Cancel">Cancel</option>
+									</select>
+								</div>
+							</div>
 						</div>
 						<div class="col-1"></div>
-						<div class="col-6">
+						<div class="col-5">
 							<div class="row">
 								<div class="col-4">
 									<label for="" class="form-label">Mulai Dari</label>
-									<input type="date" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+									<input type="date" class="form-control" name="" id="datestart" value="<?php echo date('Y-m-01') ?>">
 								</div>
 								<div class="col-4">
 									<label for="" class="form-label">Sampai Dengan</label>
-									<input type="date" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>" style="cursor: pointer;" class="form-control" onfocus=" (this.type='date' )" onblur="(this.type='text')">
+									<input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-t') ?>">
 								</div>
 								<div class="col-4">
 									<p></p>
-									<a href="" class="btn btn-primary mt-3">Terapkan</a>
+									<a href="#" class="btn btn-primary mt-3" onclick="loaddatax()">Terapkan</a>
 								</div>
 							</div>
 						</div>
@@ -437,7 +455,7 @@ if ($data3 != "Not Found") {
 											<td><?php echo $key["delivedate"] ?></td>
 											<td><?php echo $key["qtypo"] ?></td>
 											<td><?php echo $key["qtyin"] ?></td>
-											<td><?php echo $key["grandtotal"] ?></td>
+											<td><?php echo number_format($key["grandtotal"], 0, '.', ',') ?></td>
 											<td><?php echo $key["statuspo"] ?></td>
 											<td><a data-mdb-dismiss="modal" class="btn btn-primary" onclick="poselect('<?php echo $key['codepo'] ?>','<?php echo $key['idpo'] ?>','<?php echo $key['datepo'] ?>')">Pilih</a></td>
 										</tr>
@@ -978,23 +996,23 @@ if ($data3 != "Not Found") {
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 
-			if (Number($('#transaksi_' + xid + '_qtypo').val()) < Number($('#transaksi_' + xid + '_qtyin').val())) {
-				alert('Qty Out Lebih Besar Dari Stock');
-				sts = 0;
-				return false;
-			}
+			// if (Number($('#transaksi_' + xid + '_qtypo').val()) < Number($('#transaksi_' + xid + '_qtyin').val())) {
+			// 	alert('Qty Out Lebih Besar Dari Stock');
+			// 	sts = 0;
+			// 	return false;
+			// }
 
-			if ($('#transaksi_' + xid + '_sku').val() == "") {
-				alert('Masukan Item terlebih dahulu');
-				sts = 0;
-				return false;
-			}
+			// if ($('#transaksi_' + xid + '_sku').val() == "") {
+			// 	alert('Masukan Item terlebih dahulu');
+			// 	sts = 0;
+			// 	return false;
+			// }
 
-			if ($('#transaksi_' + xid + '_qtyin').val() == 0) {
-				alert('Kolom Qty Tidak Boleh Kosong');
-				sts = 0;
-				return false;
-			}
+			// if ($('#transaksi_' + xid + '_qtyin').val() == 0) {
+			// 	alert('Kolom Qty Tidak Boleh Kosong');
+			// 	sts = 0;
+			// 	return false;
+			// }
 
 
 
