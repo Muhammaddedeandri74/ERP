@@ -705,7 +705,8 @@
 					for (let i = 0; i < hasil.length; i++) {
 
 						if (hasil[i]["statusorder"] == "Waiting" || hasil[i]["statusorder"] == "Process") {
-							baris += `  <tr>
+							if (hasil[i]["qtyso"] > hasil[i]["qtyout"]) {
+								baris += `  <tr>
                                     
                                     <td>` + hasil[i]["codeso"] + `</td>
                                     <td>` + hasil[i]["dateso"] + `</td>
@@ -722,6 +723,8 @@
                               
 									<td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="cekdetail(` + hasil[i]["idso"] + `)">Pilih</a></td>
                                 </tr>`
+							}
+
 						}
 
 					}

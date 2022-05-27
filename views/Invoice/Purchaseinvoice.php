@@ -418,6 +418,47 @@
         calc();
     }
 
+    function detailpo(x) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('InventoryController/detailpo') ?>",
+            data: "idin=" + x,
+            dataType: "JSON",
+            success: function(hasil) {
+                $('#codepo').val(hasil["codepo"]);
+                $('#idpo').val(hasil["idpo"]);
+                $('#detailinvoice').html("");
+
+                for (let i = 0; i <= hasil["data"].length; i++) {
+                    add_row_transaksi(i)
+                    var xid = Number(i) + Number(1);
+                    $('#transaksi_' + xid + '_iditem').val(hasil["data"][i]["sku"]);
+                    var val = hasil["data"][i]["sku"];
+                    var xobj = $('#xitem option').filter(function() {
+                        return this.value == val;
+                    });
+
+                    $('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
+                    $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+                    $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+                    $('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+                    $('#transaksi_' + xid + '_harga').val(hasil["data"][i]["harga"]);
+                    $('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyindet"]);
+                    $('#transaksi_' + xid + '_discpercent').val(0);
+                    $('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
+                    $('#transaksi_' + xid + '_sub').val(hasil["data"][i]["total"]);
+                    $('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
+                    $('#transaksi_' + xid + '_total').val(hasil["data"][i]["price"] * hasil["data"][i]["qty"]);
+                    $('#transaksi_' + xid + '_grandtotal').val(hasil["data"][i]["totalprice"]);
+
+                    calc();
+
+                }
+
+            }
+        });
+    }
+
     function detailinvin(x) {
         $.ajax({
             type: "POST",
@@ -438,12 +479,12 @@
                         return this.value == val;
                     });
 
-                    $('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+                    $('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
                     $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
                     $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
                     $('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
                     $('#transaksi_' + xid + '_harga').val(hasil["data"][i]["harga"]);
-                    $('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
+                    $('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyindet"]);
                     $('#transaksi_' + xid + '_discpercent').val(0);
                     $('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
                     $('#transaksi_' + xid + '_sub').val(hasil["data"][i]["total"]);

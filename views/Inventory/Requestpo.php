@@ -375,9 +375,9 @@ if ($data != "Not Found") {
         }
         grandtot = xttl;
 
-        $("#ppn").val(vat)
-        $("#subtotal").val(xttl)
-        $("#grandtotal").val(grandtot)
+        $("#ppn").val(formatnum(vat))
+        $("#subtotal").val(formatnum(xttl))
+        $("#grandtotal").val(formatnum(grandtot))
 
     }
 

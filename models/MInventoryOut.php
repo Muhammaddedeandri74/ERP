@@ -102,8 +102,8 @@ class MInventoryOut extends CI_Model
                         $query4 = "UPDATE tb_salesorderdetail SET qtyout = qtyout + ? WHERE iditem = ? AND idso = ? ";
                         $eksekusi4 = $this->db->query($query4, $data4);
                         if ($eksekusi4 == true) {
-                            $data5 = array($noinvout, $idso);
-                            $query5 = "UPDATE tb_salesorder set statusorder = 'Process', noinvout = ? WHERE idso = ?";
+                            $data5 = array($noinvout, array_sum($qtyout), $idso);
+                            $query5 = "UPDATE tb_salesorder set statusorder = 'Process', noinvout = ?, qtyout= qtyout + ? WHERE idso = ?";
                             $eksekusi5 = $this->db->query($query5, $data5);
                             if ($eksekusi5 == true) {
                             } else {

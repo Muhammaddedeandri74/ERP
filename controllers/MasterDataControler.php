@@ -223,7 +223,7 @@ class MasterDataControler extends CI_Controller
 		$codein                = $this->input->post("codein");
 		$tipeingoing           = $this->input->post("typein");
 		$idpo                  = $this->input->post("idpo");
-		$namesupp              = $this->input->post("namecust");
+		$namesupp              = $this->input->post("idcust");
 		$namewarehouse         = $this->input->post("idwh1");
 		$datein                = $this->input->post("datein");
 		$currency              = $this->input->post("currency");
@@ -850,6 +850,8 @@ class MasterDataControler extends CI_Controller
 		$codereqpo               = $this->input->post("codereqpo");
 		$date                    = $this->input->post("date");
 		$desc                    = $this->input->post("desc");
+		$subtotal                = str_replace(",", "", $this->input->post("subtotal"));
+		$grandtotal              = str_replace(",", "", $this->input->post("grandtotal"));
 		$iditem                  = $this->input->post("iditem");
 		$sku                     = $this->input->post("sku");
 		$nameitem                = $this->input->post("nameitem");
@@ -858,10 +860,13 @@ class MasterDataControler extends CI_Controller
 		$total                   = $this->input->post("total");
 		$iduser                  = $this->input->post("userid");
 
+
 		$cek                     = $this->MasterData->addporeq(
 			$codereqpo,
 			$date,
 			$desc,
+			$subtotal,
+			$grandtotal,
 			$iditem,
 			$sku,
 			$nameitem,

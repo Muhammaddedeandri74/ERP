@@ -2460,6 +2460,8 @@ class MasterData extends CI_Model
 				$f["grandtotalso"] = $key->grandtotalso;
 				$f["subtotal"] = $key->totaldisc;
 				$f["vat"] = $key->vat;
+				$f["qtyso"] = $key->qtyso;
+				$f["qtyout"] = $key->qtyout;
 				$f["statusorder"] = $key->statusorder;
 
 				$datax = array($f["idso"]);
@@ -5280,6 +5282,8 @@ class MasterData extends CI_Model
 		$codereqpo,
 		$date,
 		$desc,
+		$subtotal,
+		$grandtotal,
 		$iditem,
 		$sku,
 		$nameitem,
@@ -5296,8 +5300,9 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "Code Request Po telah terdaftar";
 		} else {
-			$data     = array($codereqpo, $date, $desc, date('Y-m-d H:i:s'), $iduser);
-			$query    = "INSERT INTO tb_requestpo(codereqpo,datereqpo,deskripsi,statusreqpo,madelog,madeuser)VALUES(?,?,?,'Waiting',?,?)";
+			$this->db->trans_begin();
+			$data     = array($codereqpo, $date, $desc, $subtotal, $grandtotal, date('Y-m-d H:i:s'), $iduser);
+			$query    = "INSERT INTO tb_requestpo(codereqpo,datereqpo,deskripsi,subtotal,grandtotal,statusreqpo,madelog,madeuser)VALUES(?,?,?,?,?,'Waiting',?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax = array($codereqpo);
@@ -5306,15 +5311,17 @@ class MasterData extends CI_Model
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $key) {
 						$idreqpo = $key->idreqpo;
-
 						for ($i = 0; $i < count($iditem); $i++) {
-							$dataxx     = array($idreqpo, $iditem[$i], $harga[$i], $qty[$i], $total[$i]);
-							$queryxx    = "INSERT INTO tb_requestpodet (idreqpo,iditem,price,qty,total)VALUES(?,?,?,?,?)";
-							$eksekusixx = $this->db->query($queryxx, $dataxx);
-							if ($eksekusixx == true) {
-								$respon = "Success";
-							} else {
-								$respon = "Failed on Detail";
+							if ($iditem[$i] != "") {
+								$dataxx     = array($idreqpo, $iditem[$i], $harga[$i], $qty[$i], $total[$i]);
+								$queryxx    = "INSERT INTO tb_requestpodet (idreqpo,iditem,price,qty,total)VALUES(?,?,?,?,?)";
+								$eksekusixx = $this->db->query($queryxx, $dataxx);
+								if ($eksekusixx == true) {
+									$respon = "Success";
+								} else {
+									$respon = "Failed on Detail";
+									break;
+								}
 							}
 						}
 					}
@@ -5323,6 +5330,11 @@ class MasterData extends CI_Model
 				}
 			} else {
 				$respon = "Failed on Detail";
+			}
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
 			}
 			return $respon;
 		}
@@ -5474,8 +5486,8 @@ class MasterData extends CI_Model
 
 
 				if ($idsox == "" || $idsox == 0) {
-					$data      = array($idwh, $codeso, $idquo, $tipeorder, $idcust, $dateso, $delivdate, $nopesanan, $nocontact, $delivaddr, $paymentmethod, $norekening, $subtotal, $disnom, $disper, $totaldisc, $vat, $ongkir, $grandtotaldetail, $statusso, date('Y-m-d H:i:s'), $iduser);
-					$query     = "INSERT INTO tb_salesorder (idwh,codeso,idquo,tipeorder,idcust,dateso,delivdate,nopesanan,nocontact,delivaddr,typepayment,norekening,subtotal,disnomdet,disperdet,totaldisc,vat,ongkir,grandtotalso,returnso,statusorder,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'0',?,?,?)";
+					$data      = array($idwh, $codeso, $idquo, $tipeorder, $idcust, $dateso, $delivdate, $nopesanan, $nocontact, $delivaddr, $paymentmethod, $norekening, $subtotal, $disnom, $disper, $totaldisc, $vat, $ongkir, $grandtotaldetail, $statusso, date('Y-m-d H:i:s'), $iduser, array_sum($transaksi_qty));
+					$query     = "INSERT INTO tb_salesorder (idwh,codeso,idquo,tipeorder,idcust,dateso,delivdate,nopesanan,nocontact,delivaddr,typepayment,norekening,subtotal,disnomdet,disperdet,totaldisc,vat,ongkir,grandtotalso,returnso,statusorder,madelog,madeuser,qtyso)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'0',?,?,?,?)";
 					$eksekusi  = $this->db->query($query, $data);
 					if ($eksekusi == true) {
 						$datax     = array($codeso);
@@ -5807,7 +5819,7 @@ class MasterData extends CI_Model
 			}
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,'Waiting',?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);
@@ -6148,7 +6160,7 @@ class MasterData extends CI_Model
 		} else {
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing,  $namesupp, $namewarehouse2, $datein2, $currency2, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idcust,idwh,datein,idcurr,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?)";
+			$query    = "INSERT INTO invin (codein,typein,idcust,idwh,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,'Waiting',?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);

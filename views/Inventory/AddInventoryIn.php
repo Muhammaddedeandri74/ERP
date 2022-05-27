@@ -978,12 +978,6 @@ if ($data3 != "Not Found") {
 				return false;
 			}
 
-			if ($('#transaksi_' + xid + '_expiredate').val() == "") {
-				alert('EXP DATE KOSONG');
-				sts = 0;
-				return false;
-			}
-
 		});
 
 
@@ -1129,11 +1123,6 @@ if ($data3 != "Not Found") {
 					sts = 0;
 					return false;
 				}
-			}
-			if ($('#transaksi_' + xid + '_expdate').val() == "") {
-				alert('EXP DATE KOSONG');
-				sts = 0;
-				return false;
 			}
 
 		});
