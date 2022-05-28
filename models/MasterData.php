@@ -1811,7 +1811,8 @@ class MasterData extends CI_Model
 			foreach ($eksekusi as $key) {
 				$f["iditemgroup"] =  $key->iditemgroup;
 				$f["codeitemgroup"] =  $key->codeitemgroup;
-				$f["namegroup"] =  $key->namegroup;
+				$f["itemtype"] =  $key->itemtype;
+				$f["itemgroup"] =  $key->itemgroup;
 				array_push($respon, $f);
 			}
 		} else {
@@ -3228,6 +3229,7 @@ class MasterData extends CI_Model
 		}
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
+		echo ($this->db->last_query());
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
@@ -3459,7 +3461,6 @@ class MasterData extends CI_Model
 			AND invin.idpo = po.idpo AND invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idsupp = tb_supplier.idsupp";
 		$eksekusi = $this->db->query($query)->result_object();
-		// echo ($this->db->last_query());
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
@@ -4046,11 +4047,11 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function additemtype($codeitemgroup, $namegroup, $userid)
+	function additemtype($codeitemgroup, $itemtype, $itemgroup, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($codeitemgroup, $namegroup, date('Y-m-d H:i:s'), $userid);
-		$query = "INSERT INTO tb_itemgroup (codeitemgroup,namegroup,madelog,madeuser)VALUES(?,?,?,?)";
+		$data = array($codeitemgroup, $itemtype, $itemgroup, date('Y-m-d H:i:s'), $userid);
+		$query = "INSERT INTO tb_itemgroup (codeitemgroup,itemtype,itemgroup,madelog,madeuser)VALUES(?,?,?,?,?)";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -4312,12 +4313,12 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function edititemtype($id, $nameitemgroup)
+	function edititemtype($id, $itemtype, $itemgroup)
 	{
 
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($nameitemgroup, $id);
-		$query = "UPDATE tb_itemgroup SET namegroup = ? WHERE iditemgroup = ?";
+		$data = array($itemtype, $itemgroup, $id);
+		$query = "UPDATE tb_itemgroup SET itemtype = ?, itemgroup = ? WHERE iditemgroup = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -4553,7 +4554,8 @@ class MasterData extends CI_Model
 			foreach ($eksekusi as $key) {
 				$f["iditemgroup"] = $key->iditemgroup;
 				$f["codeitemgroup"] = $key->codeitemgroup;
-				$f["namegroup"] = $key->namegroup;
+				$f["itemtype"] = $key->itemtype;
+				$f["itemgroup"] = $key->itemgroup;
 				$f["madelog"] = $key->madelog;
 				$f["madeuser"] = $key->madeuser;
 			}
@@ -4735,10 +4737,11 @@ class MasterData extends CI_Model
 		$query1 = "SELECT * FROM tb_company WHERE namecomp = ?";
 		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
 		if (count($eksekusi1) > 0) {
-			$respon = "namecomp telah terdaftar";
+			$respon = "Code Request Po telah terdaftar";
 		} else {
+			$this->db->trans_begin();
 			$data     = array($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_company (namecomp,email,nokantor,nohandphone,alamat,remarkinvoice,remarkquotation,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$query    = "INSERT INTO tb_company(namecomp,email,nokantor,nohandphone,alamat,remarkinvoice,remarkquotation,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax = array($namecomp);
@@ -4747,24 +4750,31 @@ class MasterData extends CI_Model
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $key) {
 						$idcomp = $key->idcomp;
-						for ($i = 0; $i < count($idcomp); $i++) {
-							$data1      = array($idcomp, $bank[$i], $norekening[$i], $beneficiary[$i]);
-							$query1     = "INSERT INTO tb_companydet(idcomp,bank,norekening,beneficiary)VALUES(?,?,?,?)";
-							$eksekusi1 = $this->db->query($query1, $data1);
-							if ($eksekusi1 == true) {
-								$respon = "Success";
-							} else {
-								$respon = "Failed on Detail";
+						for ($i = 0; $i < count($bank); $i++) {
+							if ($bank[$i] != "") {
+								$dataxx     = array($idcomp, $bank[$i], $norekening[$i], $beneficiary[$i]);
+								$queryxx    = "INSERT INTO tb_companydet (idcomp,bank,norekening,beneficiary)VALUES(?,?,?,?)";
+								$eksekusixx = $this->db->query($queryxx, $dataxx);
+								if ($eksekusixx == true) {
+									$respon = "Success";
+								} else {
+									$respon = "Failed on Detail";
+									break;
+								}
 							}
 						}
 					}
 				} else {
-					$respon = "Maaf Salah Data";
+					$respon = "Failed on Detail";
 				}
 			} else {
 				$respon = "Failed on Detail";
 			}
-
+			if ($respon == "Success") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
+			}
 			return $respon;
 		}
 	}
@@ -5876,7 +5886,7 @@ class MasterData extends CI_Model
 			}
 			$this->db->trans_begin();
 			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,'Waiting',?,?)";
+			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,'Finish',?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);
@@ -5885,6 +5895,7 @@ class MasterData extends CI_Model
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $key) {
 						$idin  = $key->idin;
+						$price = 0;
 						$qtyin = 0;
 						$qtypo = 0;
 						for ($i = 0; $i < count($transaksi_iditem); $i++) {
@@ -5897,6 +5908,7 @@ class MasterData extends CI_Model
 								$eksekusixx = $this->db->query($queryxx, $dataxx);
 								if ($eksekusixx == true) {
 									$respon    = "Success";
+									$price    += $transaksi_harga[$i];
 									$qtyin    += $transaksi_qtyin[$i];
 									$qtypo    += $transaksi_qtypo[$i];
 									$listqtyin = $transaksi_qtyin[$i];
@@ -5915,6 +5927,15 @@ class MasterData extends CI_Model
 									break;
 								}
 							}
+						}
+
+						$queryin    = "UPDATE invin set total = " . $price . " WHERE idin = '" . $idin . "'";
+						$eksekusiin = $this->db->query($queryin);
+						if ($eksekusiin == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
 						}
 
 						$queryin    = "UPDATE invin set qtyin = " . $qtyin . ",qtypo = " . $qtypo . " WHERE idin = '" . $idin . "'";
@@ -6055,7 +6076,7 @@ class MasterData extends CI_Model
 			$respon = "Code Invin telah terdaftar";
 		} else {
 			$this->db->trans_begin();
-			$data     = array($codein, $codemove, $tipeingoing,  $namesupp, $idwh, $idwh2, $datein1, $currency1, date('Y-m-d H:i:s'), $userid);
+			$data     = array($codein, $codemove, $tipeingoing,  $namesupp, $idwh2, $idwh,  $datein1, $currency1, date('Y-m-d H:i:s'), $userid);
 			$query    = "INSERT INTO invin (codein,codeinvout,typein,idcust,idwh,idwh2,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,'Waiting',?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {

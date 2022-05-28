@@ -31,7 +31,40 @@
 						<div class="col-1"></div>
 						<div class="col-10">
 							<label for="" class="form-label">Nama Item Type</label>
-							<input type="text" name="namegroup" class="form-control" value="<?php echo $data['namegroup'] ?>" required>
+							<input type="text" name="itemtype" class="form-control" value="<?php echo $data['itemtype'] ?>" required>
+						</div>
+						<div class="col-1"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-1"></div>
+						<div class="col-10">
+							<label for="" class="form-label">Item Group</label>
+							<div class="row mb-3">
+								<div class="col-4">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="itemgroup" value="nonbom" id="flexRadioDefault1" checked>
+										<label class="form-check-label" for="flexRadioDefault1">
+											Produk
+										</label>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="itemgroup" value="usebom" id="flexRadioDefault2">
+										<label class="form-check-label" for="flexRadioDefault2">
+											Produk Jadi
+										</label>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="itemgroup" value="bom" id="flexRadioDefault3">
+										<label class="form-check-label" for="flexRadioDefault3">
+											Bahan Material
+										</label>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="col-1"></div>
 					</div>
@@ -50,6 +83,7 @@
 					<tr>
 						<th>No</th>
 						<th>Item Type</th>
+						<th>Item Group</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -59,7 +93,8 @@
 						<?php foreach ($data1 as $key) : ?>
 							<tr>
 								<td><?php echo $no++; ?></td>
-								<td><?php echo $key["namegroup"] ?></td>
+								<td><?php echo $key["itemtype"] ?></td>
+								<td><?php echo $key["itemgroup"] ?></td>
 								<td><a href="<?php echo base_url('MasterDataControler/getdataitemtypebyid?id=' . base64_encode($key['codeitemgroup'])) ?>" class="btn btn-primary">Edit</a></td>
 							</tr>
 						<?php endforeach ?>

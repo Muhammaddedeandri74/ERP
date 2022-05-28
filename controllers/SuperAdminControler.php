@@ -470,9 +470,9 @@ class SuperAdminControler extends CI_Controller
 		$nohandphone    = $this->input->post("nohandphone");
 		$alamat         = $this->input->post("alamat");
 		$userid          = $this->input->post("userid");
-		$bank           = $this->input->post("transaksi_bank");
-		$norekening     = $this->input->post("transaksi_norekening");
-		$beneficiary    = $this->input->post("transaksi_beneficiary");
+		$bank           = $this->input->post("bank");
+		$norekening     = $this->input->post("norekening");
+		$beneficiary    = $this->input->post("beneficiary");
 		$remarkinvoice  = $this->input->post("remarkinvoice");
 		$remarkquotation = $this->input->post("remarkquotation");
 

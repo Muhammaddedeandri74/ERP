@@ -72,6 +72,7 @@
             <div class="col-4 mb-3">
               <label for="" class="form-label">Status Purchase Order</label>
               <select name="status" id="" class="form-select">
+                <option value="">Pilih</option>
                 <option value="Waiting">Waiting</option>
                 <option value="Process">Process</option>
                 <option value="Finish">Finish</option>

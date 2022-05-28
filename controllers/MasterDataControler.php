@@ -344,8 +344,9 @@ class MasterDataControler extends CI_Controller
 	{
 		$userid = $this->input->post("userid");
 		$codeitemgroup = $this->input->post("codeitemgroup");
-		$namegroup = $this->input->post("namegroup");
-		$cek = $this->MasterData->additemtype($codeitemgroup, $namegroup, $userid);
+		$itemtype = $this->input->post("itemtype");
+		$itemgroup = $this->input->post("itemgroup");
+		$cek = $this->MasterData->additemtype($codeitemgroup, $itemtype, $itemgroup, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/additemtype');
 	}
@@ -513,10 +514,11 @@ class MasterDataControler extends CI_Controller
 	{
 		$id = $this->input->post("id");
 		$codeitemgroup = $this->input->post("codeitemgroup");
-		$nameitemgroup = $this->input->post("namegroup");
+		$itemtype = $this->input->post("itemtype");
+		$itemgroup = $this->input->post("itemgroup");
 		$userid = $this->input->post("userid");
 
-		$cek = $this->MasterData->edititemtype($id, $nameitemgroup);
+		$cek = $this->MasterData->edititemtype($id, $itemtype, $itemgroup, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('MasterDataControler/getdataitemtypebyid?id=' . base64_encode($codeitemgroup));
 	}

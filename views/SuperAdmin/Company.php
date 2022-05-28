@@ -142,9 +142,9 @@
 		lastid++;
 		var tabel = '';
 		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
-		tabel += '<td style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="transaksi_bank[]" value=""/></td>';
-		tabel += '<td style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="transaksi_norekening[]" value=""></td>';
-		tabel += '<td style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="transaksi_beneficiary[]" /></td>';
+		tabel += '<td style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="bank[]" value=""/></td>';
+		tabel += '<td style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="norekening[]" value=""></td>';
+		tabel += '<td style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="beneficiary[]" /></td>';
 		tabel += '<td style="border:none;" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
 		//return tabel;

@@ -808,7 +808,7 @@ if ($data2 != "Not Found") {
 					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 					$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
 					$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
-					$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+					$('#transaksi_' + xid + '_harga').val(formatRupiah(hasil["data"][i]["price"]));
 					$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_discpercent').val(0);
