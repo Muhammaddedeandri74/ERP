@@ -4728,7 +4728,7 @@ class MasterData extends CI_Model
 		}
 	}
 
-	function addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $userid, $bank, $norekening, $beneficiary)
+	function addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary)
 
 	{
 		date_default_timezone_set('Asia/Jakarta');
@@ -4739,9 +4739,9 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "Code Request Po telah terdaftar";
 		} else {
-			$this->db->trans_begin();
-			$data     = array($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_company(namecomp,email,nokantor,nohandphone,alamat,remarkinvoice,remarkquotation,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			// $this->db->trans_begin();
+			$data     = array($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, date('Y-m-d H:i:s'));
+			$query    = "INSERT INTO tb_company(namecomp,email,nokantor,nohandphone,alamat,remarkinvoice,remarkquotation,madelog)VALUES(?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax = array($namecomp);
@@ -4759,7 +4759,6 @@ class MasterData extends CI_Model
 									$respon = "Success";
 								} else {
 									$respon = "Failed on Detail";
-									break;
 								}
 							}
 						}
@@ -4770,11 +4769,11 @@ class MasterData extends CI_Model
 			} else {
 				$respon = "Failed on Detail";
 			}
-			if ($respon == "Success") {
-				$this->db->trans_commit();
-			} else {
-				$this->db->trans_rollback();
-			}
+			// if ($respon == "Success") {
+			// 	$this->db->trans_commit();
+			// } else {
+			// 	$this->db->trans_rollback();
+			// }
 			return $respon;
 		}
 	}

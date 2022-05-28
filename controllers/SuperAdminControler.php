@@ -469,14 +469,13 @@ class SuperAdminControler extends CI_Controller
 		$nokantor       = $this->input->post("nokantor");
 		$nohandphone    = $this->input->post("nohandphone");
 		$alamat         = $this->input->post("alamat");
-		$userid          = $this->input->post("userid");
+		$remarkinvoice  = $this->input->post("remarkinvoice");
+		$remarkquotation = $this->input->post("remarkquotation");
 		$bank           = $this->input->post("bank");
 		$norekening     = $this->input->post("norekening");
 		$beneficiary    = $this->input->post("beneficiary");
-		$remarkinvoice  = $this->input->post("remarkinvoice");
-		$remarkquotation = $this->input->post("remarkquotation");
 
-		$cek = $this->MasterData->addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary, $userid);
+		$cek = $this->MasterData->addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary);
 		echo $cek;
 	}
 
