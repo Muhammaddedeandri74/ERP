@@ -494,12 +494,12 @@ if ($data3 != "Not Found") {
 						$('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
 						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
-						$('#transaksi_' + xid + '_harga').val(formatRupiah(hasil["data"][i]["price"]));
+						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
 						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
 						$('#transaksi_' + xid + '_discpercent').val(0);
 						$('#transaksi_' + xid + '_disnom').val(hasil["data"][i]["disnom"]);
 						$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["subpo"]);
-						$('#transaksi_' + xid + '_sub').val(formatRupiah(hasil["data"][i]["totaldisc"]));
+						$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["totaldisc"]);
 						$('#transaksi_' + xid + '_total').val(hasil["data"][i]["grandtotal"]);
 
 						document.getElementById('transaksi_' + xid + '_action').disabled = true;
@@ -537,6 +537,7 @@ if ($data3 != "Not Found") {
 			data: "idreqpo=" + x,
 			dataType: "JSON",
 			success: function(hasil) {
+				console.log(hasil)
 				$('#codereqpo').val(hasil["codereqpo"]);
 				$('#idreqpo').val(hasil["idreqpo"]);
 				$('#date1').val(hasil["datereqpo"]);
@@ -551,24 +552,21 @@ if ($data3 != "Not Found") {
 					var xobj = $('#xitem option').filter(function() {
 						return this.value == val;
 					});
-
 					$('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
 					$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 					$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
-					$('#transaksi_' + xid + '_harga').val(formatRupiah(hasil["data"][i]["price"]));
+					$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
 					$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
 					$('#transaksi_' + xid + '_discpercent').val(0);
 					$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disc"] * hasil["data"][i]["qty"]);
-					$('#transaksi_' + xid + '_sub').val(formatRupiah(hasil["data"][i]["total"]));
+					$('#transaksi_' + xid + '_sub').val(hasil["data"][i]["total"]);
 					$('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
-					$('#transaksi_' + xid + '_total').val(formatRupiah(hasil["data"][i]["price"] * hasil["data"][i]["qty"]));
-					$('#transaksi_' + xid + '_grandtotal').val(formatRupiah(hasil["data"][i]["totalprice"]));
-
-					calc();
+					$('#transaksi_' + xid + '_total').val(hasil["data"][i]["price"] * hasil["data"][i]["qty"]);
+					$('#transaksi_' + xid + '_grandtotal').val(hasil["data"][i]["totalprice"]);
+					cal();
 
 				}
-
 			}
 		});
 	}
@@ -898,36 +896,36 @@ if ($data3 != "Not Found") {
 		}
 	});
 
-	function formatRupiah(angka, prefix) {
-		var number_string = angka.replace(/[^,\d]/g, '').toString(),
-			split = number_string.split(','),
-			sisa = split[0].length % 3,
-			rupiah = split[0].substr(0, sisa),
-			ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+	// function formatRupiah(angka, prefix) {
+	// 	var number_string = angka.replace(/[^,\d]/g, '').toString(),
+	// 		split = number_string.split(','),
+	// 		sisa = split[0].length % 3,
+	// 		rupiah = split[0].substr(0, sisa),
+	// 		ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-		// tambahkan titik jika yang di input sudah menjadi angka ribuan
-		if (ribuan) {
-			separator = sisa ? '.' : '';
-			rupiah += separator + ribuan.join('.');
-		}
+	// 	// tambahkan titik jika yang di input sudah menjadi angka ribuan
+	// 	if (ribuan) {
+	// 		separator = sisa ? '.' : '';
+	// 		rupiah += separator + ribuan.join('.');
+	// 	}
 
-		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-	}
+	// 	rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+	// 	return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	// }
 
-	function disableForm(form) {
-		var length = form.elements.length,
-			i;
-		for (i = 0; i < length; i++) {
-			form.elements[i].disabled = true;
-		}
-	}
+	// function disableForm(form) {
+	// 	var length = form.elements.length,
+	// 		i;
+	// 	for (i = 0; i < length; i++) {
+	// 		form.elements[i].disabled = true;
+	// 	}
+	// }
 
-	function enableform(form) {
-		var length = form.elements.length,
-			i;
-		for (i = 0; i < length; i++) {
-			form.elements[i].disabled = false;
-		}
-	}
+	// function enableform(form) {
+	// 	var length = form.elements.length,
+	// 		i;
+	// 	for (i = 0; i < length; i++) {
+	// 		form.elements[i].disabled = false;
+	// 	}
+	// }
 </script>

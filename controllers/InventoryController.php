@@ -211,7 +211,6 @@ class InventoryController extends CI_Controller
 		$f["headertrans"] = "Not Found";
 		$f["detailtrans"] = "Not Found";
 		$this->load->view("Superadmin/Header");
-
 		$this->load->view("PO/AddPurchaseOrder", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");

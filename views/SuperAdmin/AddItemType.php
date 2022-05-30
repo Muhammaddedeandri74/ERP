@@ -42,11 +42,26 @@ if ($data != "Not Found") {
 							<div class="col-1"></div>
 							<div class="col-10">
 								<label for="" class="form-label">Nama Item Type</label>
-								<input type="text" name="itemtype" class="form-control" required>
+								<input type="text" name="itemtype" class="form-control" required autocomplete="off" required>
 							</div>
 							<div class="col-1"></div>
 						</div>
 						<div class="row mb-3">
+							<div class="col-1"></div>
+							<div class="col-10">
+								<label for="" class="form-label">Item Group</label>
+								<select name="itemgroup" id="itemgroup" class="form-select">
+									<option value="">Pilih</option>
+									<?php if ($data != "Not Found") : ?>
+										<?php foreach ($data as $key) : ?>
+											<option value="<?php echo $key["itemgroup"] ?>"><?php echo $key["itemgroup"] ?></option>
+										<?php endforeach ?>
+									<?php endif ?>
+								</select>
+							</div>
+							<div class="col-1"></div>
+						</div>
+						<!-- <div class="row mb-3">
 							<div class="col-1"></div>
 							<div class="col-10">
 								<label for="" class="form-label">Item Group</label>
@@ -78,8 +93,8 @@ if ($data != "Not Found") {
 								</div>
 							</div>
 							<div class="col-1"></div>
-						</div>
-						<div class="text-center mb-3">
+						</div> -->
+						<div class="text-center mb-2">
 							<button type="submit" class="btn btn-primary px-5">Simpan</button>
 						</div>
 					</div>

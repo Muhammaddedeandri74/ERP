@@ -26,7 +26,7 @@
             </div>
             <div class="row mb-3" style="overflow-x: auto;">
                 <div class="col">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered list-akses">
                         <thead class="text-center">
                             <tr class="font-weight-bold">
                                 <td>Nama Role</td>

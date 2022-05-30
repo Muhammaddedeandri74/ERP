@@ -2,11 +2,11 @@
 $idnew;
 if ($data != "Not Found") {
 	foreach ($data as $key) {
-		$idnew = $key["codecomm"];
+		$idnew = $key["codeitemgroup"];
 		$idnew++;
 	}
 } else {
-	$idnew = "CR0001";
+	$idnew = "CB-01";
 }
 ?>
 
@@ -25,7 +25,7 @@ if ($data != "Not Found") {
 			<?php echo $this->session->flashdata('message'); ?>
 			<?php $this->session->set_flashdata('message', ''); ?>
 		</div>
-		<form action="<?php echo base_url('MasterDataControler/addbundling') ?>" method="POST" enctype="multipart/form-data">
+		<form action="<?php echo base_url('MasterDataControler/addbundling') ?>" method="POST" enctype="multipart/form-data" id="form">
 			<div class="row mb-3">
 				<div class="col-4">
 					<img src="<?= base_url("assets/img/lisa.jpg")  ?>" alt="mdo" id="uimg" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
@@ -36,9 +36,10 @@ if ($data != "Not Found") {
 						<div class="col-10">
 							<label for="" class="form-label">Item Group</label>
 							<select class="form-select" name="itemgroup" id="item_group" required>
+								<option value="">Pilih</option>
 								<?php if ($data != "Not Found") : ?>
 									<?php foreach ($data as $key) : ?>
-										<option value="<?php echo $key["namecomm"] ?>"><?php echo $key["namecomm"] ?></option>
+										<option value="<?php echo $key["codeitemgroup"] ?>"><?php echo $key["itemtype"] ?></option>
 									<?php endforeach ?>
 								<?php endif ?>
 							</select>
@@ -49,6 +50,7 @@ if ($data != "Not Found") {
 						<div class="col-10">
 							<label for="" class="form-label">Nama Item</label>
 							<input type="text" name="nameitem" id="nameitem" class="form-control" autocomplete="off" required readonly="true" />
+							<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -119,47 +121,149 @@ if ($data != "Not Found") {
 					<table class="table table-bordered table-striped">
 						<thead class="text-white text-center" style="background:#1143d8;">
 							<tr>
-								<th>Nama Item</th>
 								<th>SKU</th>
+								<th>Nama Item</th>
 								<th>Deskripsi</th>
 								<th>Qty</th>
 								<th>Action</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<select class="form-control">
-										<option value="">Pilih</option>
-									</select>
-								</td>
-								<td>-</td>
-								<td>-</td>
-								<td><input type="number" class="form-control"></td>
-								<td>
-									<div class="row">
-										<div class="col-6">
-											<a href="" class="btn btn btn-danger"><i class='bx bx-trash'></i></a>
-										</div>
-										<div class="col-6">
-											<a href="" class="mr-3 btn btn-primary " style="margin-right:16px;"><i class='bx bx-plus'></i></a>
-										</div>
-									</div>
-								</td>
-							</tr>
+						<tbody id="detail">
+
 						</tbody>
 					</table>
 				</div>
 			</div>
 			<div class="text-end">
-				<button type="submit" class="btn btn-primary px-5">Simpan</button>
+				<button type="button" class="btn btn-primary px-5" id="addorder" onclick="addorder()">Simpan</button>
 			</div>
 		</form>
 	</div>
 </div>
-
+<datalist id="xitem">
+	<?php
+	if ($data1 != 'Not Found') {
+		foreach ($data1 as $key) {
+	?>
+			<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"];  ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
+	<?php }
+	} ?>
+</datalist>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+	add_row_transaksi(0);
+
+	function add_row_transaksi(xxid) {
+		var lastid = 0;
+		if (parseInt(xxid) != 0) {
+			lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());
+		}
+		var xid = (parseInt(xxid) + 1);
+		lastid++;
+		var tabel = '';
+		tabel += '<tr class="result transaksi-row" style="border:none;"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<td style="border:none"height:1px"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control iditem" name="iditem[]" /><input style="width:100%;text-align:center" type="text" class="form-control sku" objtype="sku" id="transaksi_' + xid + '_sku" name="sku1[]" placeholder="Search" autocomplete="off" list="xitem" value="" required></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_nameitem"  class="form-control"name="nameitem1[]" value=""/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_deskripsi"  class="form-control" name="deskripsi[]" value=""></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" id="transaksi_' + xid + '_qty"  class="form-control" name="qty[]" value=""/></td>';
+
+		tabel += '<td style="border:none"height:1px" id="transaksi-tr-' + xid + '"><button id="transaksi_' + xid + '_action" name="action" class="form-control" type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
+		tabel += '</tr>';
+		$('#line-transaksi').val(xid);
+		$('#detail').append(tabel);
+		$('#transaksi_' + xid + '_nourut').val(lastid);
+		if (parseInt(xxid) != 0) {
+			var olddata = $('#transaksi-tr-' + xxid + '').html();
+			var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
+			$('#transaksi-tr-' + xxid + '').html(xdt);
+		}
+	}
+
+	function del_row_transaksi(xid) {
+		$('#transaksi-' + xid + '').remove();
+		reorder();
+		calc();
+	}
+
+	$(document).on('input', '.sku', function() {
+		var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+		var val = $(this).val();
+		var xobj = $('#xitem option').filter(function() {
+			return this.value == val;
+		});
+		if ((val == "") || (xobj.val() == undefined)) {
+			$('#transaksi_' + xid + '_iditem').val("");
+			$('#transaksi_' + xid + '_sku').val("");
+			$('#transaksi_' + xid + '_nameitem').val("");
+			$('#transaksi_' + xid + '_deskripsi').val("");
+			$('#transaksi_' + xid + '_qty').val("");
+
+		} else {
+			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
+			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+
+		}
+	});
+
+	function addorder() {
+		var cx = $('#form').serialize();
+		$.post("<?php echo base_url('MasterDataControler/addbundling') ?>", cx,
+			function(data) {
+				if (data == 'Success') {
+					alert('Input Data Berhasil');
+					cancelorder();
+				} else {
+					alert('Input Data Gagal. ' + data);
+				}
+			});
+	}
+
+	$('form button').on("click", function(e) {
+		if ($(this).attr('id') == "addorder") {
+			var xask = '';
+			if ($("#iditem").val() == "") {
+				xask = "Simpan Transaksi?";
+			} else {
+				xask = "Simpan Transaksi?";
+			}
+			if (confirm(xask)) {
+				if (validasi()) {
+					addorder();
+				}
+			}
+		}
+		e.preventDefault();
+	});
+
+	function validasi() {
+		var xval = 0;
+		var sts = 1;
+
+		xval = $("#namecomp").val();
+		if ($("#namecomp").val() == '') {
+			alert('Nama Perusahaan Wajib Diisi');
+			sts = 0;
+			return false;
+		}
+
+
+		xval = $("#nocontact").val();
+		if ($("#nocontact").val() == '') {
+			alert('Nocontact Wajib Diisi');
+			sts = 0;
+			return false;
+		}
+
+
+		if (sts == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function readURL(input) {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
@@ -195,7 +299,7 @@ if ($data != "Not Found") {
 	rupiah.addEventListener('keyup', function(e) {
 		// tambahkan 'Rp.' pada saat form di ketik
 		// gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-		rupiah.value = formatRupiah(this.value, 'Rp. ');
+		rupiah.value = formatRupiah(this.value);
 	});
 
 	/* Fungsi formatRupiah */
@@ -213,6 +317,11 @@ if ($data != "Not Found") {
 		}
 
 		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		return prefix == undefined ? rupiah : (rupiah ? +rupiah : '');
+	}
+
+	function cancelorder() {
+		location.reload();
+		//return false;
 	}
 </script>

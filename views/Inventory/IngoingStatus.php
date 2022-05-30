@@ -137,13 +137,13 @@
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Supplier</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Ingoing</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Gudang Penerima</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Nama Item</td>
+              <!-- <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Nama Item</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">SKU</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Tipe Item</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">QtyPo</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">QtyIn</td>
               <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Harga</td>
-              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Deskripsi</td>
+              <td style="border:solid;background:#1143d8;color:white;min-width: auto;text-align: center;">Deskripsi</td> -->
             </tr>
           </thead>
           <tbody id="printt">
@@ -154,16 +154,16 @@
                   <td style="border:solid;"><?php echo $no++; ?></td>
                   <td style="border:solid;"><?php echo $key["codein"] ?></td>
                   <td style="border:solid;"><?php echo $key["datein"] ?></td>
-                  <td style="border:solid;"><?php echo $key["namesupp"] ?></td>
+                  <td style="border:solid;"><?php echo $key["namecust"] ?></td>
                   <td style="border:solid;"><?php echo $key["namewarehouse"] ?></td>
                   <td style="border:solid;"><?php echo $key["typein"] ?></td>
-                  <td style="border:solid;"><?php echo $key["nameitem"] ?></td>
+                  <!-- <td style="border:solid;"><?php echo $key["nameitem"] ?></td>
                   <td style="border:solid;"><?php echo $key["sku"] ?></td>
                   <td style="border:solid;"><?php echo $key["itemgroup"] ?></td>
                   <td style="border:solid;"><?php echo $key["qtypodet"] ?></td>
                   <td style="border:solid;"><?php echo $key["qtyindet"] ?></td>
                   <td style="border:solid;"><?php echo number_format($key['price'], 0, '.', ',') ?></td>
-                  <td style="border:solid;"><?php echo $key["deskripsi"] ?></td>
+                  <td style="border:solid;"><?php echo $key["deskripsi"] ?></td> -->
                 </tr>
               <?php endforeach ?>
             <?php endif ?>

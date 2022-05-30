@@ -138,7 +138,7 @@
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="<?php echo base_url('SuperAdminControler/Syncplatform') ?>">
                 <div class="row mt-2">
                   <div class="col-2">
                     <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png') ?>" alt="">

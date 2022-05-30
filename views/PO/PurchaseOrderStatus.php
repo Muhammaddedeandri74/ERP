@@ -65,6 +65,7 @@
             <div class="col-4 mb-3">
               <label for="" class="form-label">Tipe Item</label>
               <select name="status" id="" class="form-select">
+                <option value="">Pilih</option>
                 <option value="Waiting">Bahan Baku</option>
                 <option value="Process">Setengah Jadi</option>
               </select>

@@ -55,17 +55,9 @@ if ($data3 != "Not Found") {
 						<div class="col-4"></div>
 					</div>
 					<div class="row mb-3">
-						<div class="col-8" id="namecust">
+						<div class="col-8" id="namecustx">
 							<label for="" class="form-label">Supplier</label>
-							<!-- <select name="namecust" id="namecust1" class="form-select">
-								<option value="">Pilih Supplier</option>
-								<?php if ($data4 != "Not Found") : ?>
-									<?php foreach ($data4 as $key) : ?>
-										<option value="<?php echo $key["idcust"] ?>"><?php echo $key["namecust"] ?></option>
-									<?php endforeach ?>
-								<?php endif ?>
-							</select> -->
-							<input type="text" id="namecust1" class="form-control" objectype="supp" list="xcust" name="namecust" autocomplete="off" required>
+							<input type="text" id="namecust" class="form-control" objectype="cust" list="xcust" name="namecust" autocomplete="off" required>
 							<input type="hidden" id="idcust" name="idcust">
 						</div>
 						<div class=" col-4 mb-3">
@@ -188,7 +180,7 @@ if ($data3 != "Not Found") {
 						<div class="row mb-3">
 							<div class="col-5">
 								<label for="" class="form-label">Gudang Penerima</label>
-								<select name="namewarehouse2" id="namewarehouse2" class="form-select" aria-label="Disabled select example">
+								<select name="namewarehouse2" id="namewarehouse2" class="form-select" aria-label="select example">
 									<option value="">Pilih</option>
 									<?php if ($data2 != "Not Found") : ?>
 										<?php foreach ($data2 as $key) : ?>
@@ -287,6 +279,7 @@ if ($data3 != "Not Found") {
 					<tr>
 						<th>SKU</th>
 						<th>Nama Item</th>
+						<th>Harga</th>
 						<th>Deskripsi</th>
 						<th>Qty </th>
 						<th>Expire Date</th>
@@ -479,7 +472,7 @@ if ($data3 != "Not Found") {
 	function ubah(x) {
 		if (x == "supplier") {
 			$('#supplier').show();
-			$('#namecust').show();
+			$('#namecustx').show();
 			$('#supplierx').show();
 			$('#warehouse').hide();
 			$('#warehousex').hide();
@@ -491,7 +484,7 @@ if ($data3 != "Not Found") {
 			$('#initialtable').hide();
 		} else if (x == "warehouse") {
 			$('#supplier').hide();
-			$('#namecust').hide();
+			$('#namecustx').hide();
 			$('#supplierx').hide();
 			$('#warehouse').show();
 			$('#warehousex').show();
@@ -503,7 +496,7 @@ if ($data3 != "Not Found") {
 			$('#initialtable').hide();
 		} else if (x == "return") {
 			$('#supplier').hide();
-			$('#namecust').show();
+			$('#namecustx').show();
 			$('#supplierx').hide();
 			$('#warehouse').hide();
 			$('#warehousex').hide();
@@ -612,12 +605,16 @@ if ($data3 != "Not Found") {
 
 	$(document).on('input', '#namecust', function() {
 		var val = $(this).val();
+		console.log(val);
 		var xobj = $('#xcust option').filter(function() {
 			return this.value == val;
 		});
 
 		if ((val == "") || (xobj.val() == undefined)) {
 			$('#idcust').val("");
+		} else {
+			$('#idcust').val(xobj.data('idcust'))
+
 		}
 	});
 
@@ -756,7 +753,8 @@ if ($data3 != "Not Found") {
 		tabel += '<tr class="result transaksi-row" style="border:none;height:1px" id="transaksi2-' + xid + '"><input type="hidden" id="transaksi2_' + xid + '_iditem2"  class="form-control  iditem2" name="transaksi_iditem2[]" / ></td>';
 		tabel += '<td style="border:none;"><input type="text" style="text-align:center;" class="form-control  sku2" objtype="sku2" id="transaksi2_' + xid + '_sku2" name="transaksi_sku2[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
 		tabel += '<td style="border:none;"><input type="text"  readonly id="transaksi2_' + xid + '_nameitem2"  class="form-control _nameitem2" name="transaksi_nameitem2[]" value=""/></td>';
-		tabel += '<td style="border:none;"><input type="text" id="transaksi2_' + xid + '_deskripsi2" autocomplete="off" class="form-control  _deskripsi2" name="transaksi_deskripsi2[]' + xid + '_deskripsi2"></td>';
+		tabel += '<td style="border:none;"><input type="text" id="transaksi2_' + xid + '_price2"  class="form-control _price2" name="transaksi_price2"></td>';
+		tabel += '<td style="border:none;"><input type="text" readonly id="transaksi2_' + xid + '_deskripsi2" autocomplete="off" class="form-control  _deskripsi2" name="transaksi_deskripsi2[]' + xid + '_deskripsi2"></td>';
 		tabel += '<td style="border:none;"><input type="number" id="transaksi2_' + xid + '_qtyin2" class="form-control  _qtyin2" value="0" name="transaksi_qtyin2[]" onchange="count2(' + xid + ')"></td>';
 		tabel += '<td style="border:none;"><input  autocomplete="off" type="date" id="transaksi2_' + xid + '_expiredate2" class="form-control _expiredate2" name="transaksi_expiredate2[]"></td>';
 		tabel += '<td style="border:none;" id="transaksi2-tr-' + xid + '"><button id="transaksi2_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi2(' + xid + ')"><b>+</b></button></td>';
@@ -831,14 +829,14 @@ if ($data3 != "Not Found") {
 			$('#transaksi2_' + xid + '_sku2').val("");
 			$('#transaksi2_' + xid + '_iditem2').val("");
 			$('#transaksi2_' + xid + '_nameitem2').val("");
-			$('#transaksi2_' + xid + '_harga2').val(0);
+			$('#transaksi2_' + xid + '_price2').val(0);
 			$('#transaksi2_' + xid + '_deskripsi2').val("");
 			$('#transaksi2_' + xid + '_expiredate2').val("");
 		} else {
 			$('#transaksi2_' + xid + '_sku2').val(xobj.data('sku'));
 			$('#transaksi2_' + xid + '_iditem2').val(xobj.data('iditem'));
 			$('#transaksi2_' + xid + '_nameitem2').val(xobj.data('nameitem'));
-			$('#transaksi2_' + xid + '_harga2').val(xobj.data('price'));
+			$('#transaksi2_' + xid + '_price2').val(xobj.data('price'));
 			$('#transaksi2_' + xid + '_deskripsi2').val(xobj.data('deskripsi'));
 			$('#transaksi2_' + xid + '_expiredate2').val(xobj.data('expiredate'));
 		}
@@ -858,7 +856,7 @@ if ($data3 != "Not Found") {
 				$("#codepo").val(data.headertrans['codepo']);
 				$("#datepo").val(data.headertrans['datepo']);
 				$("#idcust").val(data.headertrans['idcust']);
-				$("#namecust1").val(data.headertrans['namecust']);
+				$("#namecust").val(data.headertrans['namecust']);
 
 				var xiddet = 0;
 				var xlost = 0;
@@ -886,19 +884,6 @@ if ($data3 != "Not Found") {
 			}
 		});
 	}
-
-	// function addorder() {
-	// 	var cx = $('#form').serialize();
-	// 	$.post("<?php echo base_url('MasterDataControler/newinvin') ?>", cx,
-	// 		function(data) {
-	// 			if (data == 'Success') {
-	// 				alert('Input Data Berhasil');
-	// 				cancelorder();
-	// 			} else {
-	// 				alert('Input Data Gagal. ' + data);
-	// 			}
-	// 		});
-	// }
 
 	function addorderx() {
 		var xask = '';
@@ -986,7 +971,7 @@ if ($data3 != "Not Found") {
 		var sts = 1;
 		var pending = 0;
 
-		xval = $("#namecust1").val();
+		xval = $("#namecust").val();
 		if (xval == "") {
 			alert('Pilih Data Supplier');
 			sts = 0;

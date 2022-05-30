@@ -213,7 +213,6 @@ if ($data != "Not Found") {
 
 		add_row_transaksi(0);
 
-
 		var lastid = 0;
 		if (parseInt(xxid) != 0) {
 			lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());

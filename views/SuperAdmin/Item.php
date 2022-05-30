@@ -47,7 +47,7 @@
 									<?php else : ?>
 										<td>Non Active</td>
 									<?php endif ?>
-									<td><a href="" class="btn btn-outline-primary" style="font-size:13px;">Edit</a></td>
+									<td><a href="<?php echo base_url('MasterDataControler/getdataitembyid?id=' . base64_encode($key['iditem'])) ?>" class="btn btn-outline-primary" style="font-size:13px;">Edit</a></td>
 								</tr>
 							<?php endforeach ?>
 						<?php endif ?>

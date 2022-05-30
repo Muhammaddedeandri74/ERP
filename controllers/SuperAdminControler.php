@@ -44,30 +44,6 @@ class SuperAdminControler extends CI_Controller
 		$this->MasterData->userlog($f["iduser"], "adduser");
 	}
 
-	function locitem()
-	{
-		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
-		$f["title"] = "locitem";
-		$f["data"] = $this->MasterData->getitemloc();
-		$this->load->view("SuperAdmin/SuperAdmin", $f);
-		$this->load->view("SuperAdmin/locitem");
-		$this->load->view("SuperAdmin/Footer");
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "item manage dashboard");
-	}
-
-	function addlocitem()
-	{
-		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
-		$f["data"] = $this->MasterData->getitemloc();
-		$this->load->model("MasterData");
-		$this->load->view("SuperAdmin/Addlocitem", $f);
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "addlocitem");
-	}
-
 	public function item()
 	{
 		$f["title"]          = "List Item";
@@ -75,8 +51,6 @@ class SuperAdminControler extends CI_Controller
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Item", $f);
 		$this->load->view("SuperAdmin/Footer");
-
-		// $this->MasterData->userlog($f["iduser"], "item manage dashboard");
 	}
 
 	function additem()
@@ -85,44 +59,23 @@ class SuperAdminControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$f["data"]   = $this->MasterData->getitemmaterial();
 		$f["data1"]  = $this->MasterData->getitemtype();
-		$this->load->model("MasterData");
+		$f["data2"]  = $this->MasterData->getunit();
 		$this->load->view("SuperAdmin/Header");
-		$this->load->view("SuperAdmin/Produk", $f);
+		$this->load->view("SuperAdmin/AddItem", $f);
+		$this->load->view("SuperAdmin/Footer");
 	}
 
-	function Produk()
+	function addsupplier()
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
-		$f["data"]   = $this->MasterData->getitemmaterial();
-		$f["data1"]   = $this->MasterData->getitemtype();
+		$f["data"] = $this->MasterData->getsupplier();
+		$f["data2"]   = $this->MasterData->getcustomer();
 		$this->load->model("MasterData");
-		$this->load->view("Superadmin/Header");
-		$this->load->view("SuperAdmin/Footer");
-		$this->load->view("SuperAdmin/Produk", $f);
-	}
-
-	function ProdukJadi()
-	{
-		$this->load->Model("MasterData");
+		$this->load->view("SuperAdmin/Header", $f);
+		$this->load->view("SuperAdmin/AddSupplier", $f);
 		$f = $this->session->userdata("data");
-		$f["data"]   = $this->MasterData->getitemmaterial();
-		$f["data1"]   = $this->MasterData->getitemtype();
-		$this->load->model("MasterData");
-		$this->load->view("Superadmin/Header");
-		$this->load->view("SuperAdmin/Footer");
-		$this->load->view("SuperAdmin/ProdukJadi", $f);
-	}
-
-	function BahanMaterial()
-	{
-		$this->load->Model("MasterData");
-		$f          = $this->session->userdata("data");
-		$f["data"]  = $this->MasterData->getunit();
-		$this->load->model("MasterData");
-		$this->load->view("Superadmin/Header");
-		$this->load->view("SuperAdmin/Footer");
-		$this->load->view("SuperAdmin/BahanMaterial", $f);
+		$this->MasterData->userlog($f["iduser"], "addsupplier");
 	}
 
 	function addbundling()
@@ -130,6 +83,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["data"] = $this->MasterData->getitemtype();
+		$f["data1"] = $this->MasterData->getitemmaterialso();
 		$this->load->model("MasterData");
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/AddBundling", $f);
@@ -213,166 +167,6 @@ class SuperAdminControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "customer manage dashboard");
 	}
-	function supplier()
-	{
-		$this->load->library('pagination');
-
-		//pagination settings
-		$dari      = $this->uri->segment('3');
-		$sampai    = 50;
-
-		$like      = '';
-
-		//hitung jumlah row
-		$jumlah = $this->MasterData->jumlahsupplier();
-
-		//inisialisasi array
-		$config = array();
-
-		//set base_url untuk setiap link page
-		$config['base_url']         = base_url() . 'SuperAdminControler/supplier';
-
-		//hitung jumlah row
-		$config['total_rows'] = $jumlah;
-
-		//mengatur total data yang tampil per page
-		$config['per_page']   = $sampai;
-
-		//mengatur jumlah nomor page yang tampil
-		$config['num_links']  = $jumlah;
-
-		//mengatur tag
-		$config['num_links'] = 1;
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-		$config['next_tag_open'] = "<li>";
-		$config['next_tagl_close'] = "</li>";
-		$config['prev_tag_open'] = "<li>";
-		$config['prev_tagl_close'] = "</li>";
-		$config['first_tag_open'] = "<li>";
-		$config['first_tagl_close'] = "</li>";
-		$config['last_tag_open'] = "<li>";
-		$config['last_tagl_close'] = "</li>";
-		$config['cur_tag_open'] = '&nbsp;<a class="current">';
-		$config['cur_tag_close'] = '</a>';
-		$config['next_link'] = 'Next';
-		$config['prev_link'] = 'Previous';
-
-		$this->pagination->initialize($config);
-		$f = $this->session->userdata("data");
-
-		//inisialisasi array
-		$data = array();
-
-		// get item list
-		$f["title"] = "supplier";
-		$f["data"]  = $this->MasterData->getsupplierpagination($sampai, $dari, $like);
-
-		//Membuat link
-		$str_links  = $this->pagination->create_links();
-		$f["links"] = explode('&nbsp;', $str_links);
-
-		// load view
-
-		$this->load->view("SuperAdmin/SuperAdmin", $f);
-		$this->load->view("SuperAdmin/Supplier");
-		$this->load->view("SuperAdmin/Footer");
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "supplier manage supplier");
-	}
-	function searchsupplier()
-	{
-		$this->load->library('pagination');
-
-		//mengambil nilai keyword dari form pencarian
-		$search = (trim($this->input->post('key', true))) ? trim($this->input->post('key', true)) : '';
-
-		//jika uri segmen 3 ada, maka nilai variabel $search akan diganti dengan nilai uri segmen 3
-		$search = ($this->uri->segment(3)) ? $this->uri->segment(3) : $search;
-
-
-		//mengambil nilari segmen 4 sebagai offset
-		$dari   = $this->uri->segment('4');
-
-		//limit data yang ditampilkan
-		$sampai  = 10;
-
-		//inisialisasi variabel $like
-		$like      = '';
-
-		//mengisi nilai variabel $like dengan variabel $search, digunakan sebagai kondisi untuk menampilkan data
-		if ($search) $like = "(codecomm LIKE '%$search%' OR namecomm LIKE '%$search%' OR attrib1 LIKE '%$search%')";
-		//hitung jumlah row
-		$jumlah = $this->MasterData->jumlahsupplier($like);
-
-		//inisialisasi array
-		$config = array();
-
-		//set base_url untuk setiap link page
-		$config['base_url']         = base_url() . 'SuperAdminControler/searchsupplier/' . $search;
-
-		//hitung jumlah row
-		$config['total_rows'] = $jumlah;
-
-		//mengatur total data yang tampil per page
-		$config['per_page']   = $sampai;
-
-		//mengatur jumlah nomor page yang tampil
-		$config['num_links'] = $jumlah;
-
-		//mengatur tag
-		$config['num_links'] = 0;
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-		$config['next_tag_open'] = "<li>";
-		$config['next_tagl_close'] = "</li>";
-		$config['prev_tag_open'] = "<li>";
-		$config['prev_tagl_close'] = "</li>";
-		$config['first_tag_open'] = "<li>";
-		$config['first_tagl_close'] = "</li>";
-		$config['last_tag_open'] = "<li>";
-		$config['last_tagl_close'] = "</li>";
-		$config['cur_tag_open'] = '&nbsp;<a class="current">';
-		$config['cur_tag_close'] = '</a>';
-		$config['next_link'] = 'Next';
-		$config['prev_link'] = 'Previous';
-
-		$this->pagination->initialize($config);
-
-		//inisialisasi array
-		$data = array();
-
-		// get item list
-		$f = $this->session->userdata("data");
-		$f['title'] = 'Cari Supplier';
-
-		$f["data"]           = $this->MasterData->getsupplierpagination($sampai, $dari, $like);
-		//Membuat link
-		$str_links  = $this->pagination->create_links();
-		$f["links"] = explode('&nbsp;', $str_links);
-
-		// load view
-
-		$this->load->view("SuperAdmin/SuperAdmin", $f);
-		$this->load->view("SuperAdmin/searchsupplier", $f);
-		$this->load->view("SuperAdmin/Footer");
-
-		$this->MasterData->userlog($f["iduser"], "item manage dashboard");
-	}
-
-	function addsupplier()
-	{
-		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
-		$f["data"] = $this->MasterData->getsupplier();
-		$f["data2"]   = $this->MasterData->getcustomer();
-		$this->load->model("MasterData");
-		$this->load->view("SuperAdmin/Header", $f);
-		$this->load->view("SuperAdmin/AddSupplier", $f);
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "addsupplier");
-	}
-
 
 	function currency()
 	{
@@ -577,5 +371,15 @@ class SuperAdminControler extends CI_Controller
 		$this->load->view("SuperAdmin/managerole", $f);
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "Manage Role");
+	}
+
+	function Syncplatform()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->model("MasterData");
+		$this->load->view("SuperAdmin/Header");
+		$this->load->view("SuperAdmin/Syncplatform", $f);
+		$f = $this->session->userdata("data");
 	}
 }

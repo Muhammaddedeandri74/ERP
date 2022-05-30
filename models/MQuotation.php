@@ -21,7 +21,7 @@ class MQuotation extends CI_Model
     {
         $data = array("%" . $search . "%", "%" . $statusquo . "%", $startdate, $datefinish);
         $query = "SELECT * FROM(SELECT tb_quotation.*,tb_customer.namecust FROM tb_quotation,tb_customer WHERE tb_quotation.idcust = tb_customer.idcust) AS t where  t." . $filter . " LIKE ? AND t.statusquo LIKE  ? AND 
-        t.expquo BETWEEN ? AND ?";
+        t.datequo BETWEEN ? AND ?";
         $eksekusi = $this->db->query($query, $data)->result_object();
         if (count($eksekusi) > 0) {
             $respon = array();
@@ -128,11 +128,12 @@ class MQuotation extends CI_Model
 
     function getcompanydata()
     {
-        $query = "SELECT * FROM tb_company";
+        $query = "SELECT * FROM tb_companydet";
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
             $respon = array();
             foreach ($eksekusi as $key) {
+
                 $f["idcomp"] = $key->idcomp;
                 $f["bank"] = $key->bank;
                 $f["beneficiary"] = $key->beneficiary;
