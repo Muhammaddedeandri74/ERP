@@ -42,22 +42,18 @@
 						<div class="col-2"></div>
 					</div>
 				</div>
-				<!-- <div class="col-4">
-                    <div class="row">
-                        <div class="col-4">
-                            <label for="" class="form-label">Mulai Dari</label>
-                            <input type="date" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control">
-                        </div>
-                        <div class="col-4">
-                            <label for="" class="form-label">Sampai Dengan</label>
-                            <input type="date" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control">
-                        </div>
-                        <div class="col-4">
-                            <p></p>
-                            <a href="" class="btn btn-outline-primary mt-3">Terapkan</a>
-                        </div>
-                    </div>
-                </div> -->
+				<div class="col-4">
+					<div class="row">
+						<div class="col-4">
+							<label for="" class="form-label">Periode</label>
+							<input type="month" name="tanggalmasuk" id="date1" style="cursor: pointer;" class="form-control">
+						</div>
+						<div class="col-4">
+							<p></p>
+							<a href="" class="btn btn-outline-primary mt-3">Terapkan</a>
+						</div>
+					</div>
+				</div>
 				<div class="col-4">
 					<label for="" class="form-label">Cetak & Download</label>
 					<div class="row">

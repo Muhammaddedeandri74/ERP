@@ -24,6 +24,7 @@
 						<div class="col-10">
 							<label for="" class="form-label">Item Group</label>
 							<select name="itemgroup" onchange="ubah(this.value)" id="itemgroup" class="form-select" required>
+								<option value="">Pilih</option>
 								<?php if ($data1 != 'Not Found') {
 									foreach ($data1 as $key) : ?>
 										<option value="<?php echo $key["itemgroup"] ?>"><?php echo $key["itemtype"] ?></option>
@@ -82,7 +83,7 @@
 									</label>
 								</div>
 								<div class="col-4">
-									<input type="radio" class="form-check-input" name="jenisitem" value="non service">
+									<input type="radio" class="form-check-input" name="jenisitem" value="non service" checked>
 									<label class="form-check-label" for="flexRadioDefault1">
 										Non Service
 									</label>
@@ -137,15 +138,15 @@
 						</div>
 						<div class="col-2"></div>
 					</div>
-					<div class="row mb-3" id="nonbomx" style="display: none;">
+					<!-- <div class="row mb-3" id="nonbomx" style="display: none;">
 						<div class="col-10">
 							<label for="" class="form-label">Stock Minimum</label>
 							<div class="col">
-								<!-- <input name="stokmin1" type="text" id="stokmin" class="form-control" autocomplete="off" required> -->
+								<input name="stokmin1" type="text" id="stokmin" class="form-control" autocomplete="off" required>
 							</div>
 						</div>
 						<div class="col-2"></div>
-					</div>
+					</div> -->
 					<div id="usebomx"></div>
 					<div class="row mb-3">
 						<div class="col-10">
@@ -173,7 +174,7 @@
 								</div>
 								<div class="col-8">
 									<div class="form-check form-switch">
-										<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
+										<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
 									</div>
 								</div>
 							</div>
@@ -279,7 +280,6 @@
 </datalist>
 <script type="text/javascript">
 	add_row_transaksi(0)
-
 	var xitem = '';
 	xitem = '<?php
 				$x = '';
@@ -338,6 +338,13 @@
 	function validasi() {
 		var xval = 0;
 		var sts = 1;
+
+		xval = $("#itemgroup").val();
+		if ($("#itemgroup").val() == '') {
+			alert('Input Item Group Terlebih Dahulu');
+			sts = 0;
+			return false;
+		}
 
 		xval = $("#nameitem").val();
 		if ($("#nameitem").val() == '') {

@@ -401,7 +401,7 @@ if ($data3 != "Not Found") {
                                             <td>` + hasil[i]["codepo"] + `</td>
                                             <td>` + hasil[i]["datepo"] + `</td>
                                             <td>` + hasil[i]["namecust"] + `</td>
-											<td> ` + hasil[i]["qtypo"] + `</td>
+											<td>` + hasil[i]["qtypo"] + `</td>
                                             <td>` + formatnum(parseFloat(hasil[i]["grandtotal"]).toFixed(0)) + `</td>
                                             <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailpo(` + hasil[i]["idpo"] + `)">Pilih</a></td>
                                         </tr>`
@@ -772,6 +772,13 @@ if ($data3 != "Not Found") {
 		xval = $("#namesupp").val();
 		if ($("#namesupp").val() == '') {
 			alert('Input Supplier');
+			sts = 0;
+			return false;
+		}
+
+		xval = $("#tanggalpengiriman").val();
+		if ($("#tanggalpengiriman").val() == '') {
+			alert('Input Tanggal Pengiriman');
 			sts = 0;
 			return false;
 		}

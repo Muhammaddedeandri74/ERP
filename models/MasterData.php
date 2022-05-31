@@ -509,6 +509,41 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getitemfilter($filter, $search)
+	{
+		$data = "";
+		$query = "";
+
+		if ($search != "") {
+			$data     = array("%" . $search . "%");
+			$query    = "SELECT * FROM tb_item WHERE $filter LIKE ?";
+		} else {
+			$data     = array();
+			$query    = "SELECT * FROM tb_item";
+		}
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		// echo ($this->db->last_query());
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["iditem"]        =  $key->iditem;
+				$f["nameitem"]      =  $key->nameitem;
+				$f["price"]         =  $key->price;
+				$f["status"]        =  $key->status;
+				$f["sku"]           =  $key->sku;
+				$f["itemgroup"]     =  $key->itemgroup;
+				$f["deskripsi"]     =  $key->deskripsi;
+				$f["jenisqty"]      =  $key->jenisqty;
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getitemmaterial()
 	{
 		$query    = "SELECT * FROM tb_item WHERE bom ='y'";
@@ -784,8 +819,6 @@ class MasterData extends CI_Model
 				$f["role"] =  $key->role;
 				$f["namerole"] =  $key->namerole;
 				$f["namewarehouse"] =  $key->namewarehouse;
-
-
 
 				array_push($respon, $f);
 			}
@@ -1199,35 +1232,6 @@ class MasterData extends CI_Model
 		$data  = array("%" . $search . "%", "%" . $status . "%", $date1, $date2);
 		$query = "SELECT * FROM (SELECT tb_salesorder.*,tb_customer.namecust FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust ) AS t where t." . $filter . " LIKE 
 		? AND t.statusorder LIKE ? AND t.dateso between ? AND ?";
-
-		// if ($status != "" && $date1 == "" && $date2 == "" && $namecust == "") {
-		// 	$data = array($status);
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ?";
-		// } else if ($status == "" && $date1 != "" && $date2 != "" && $namecust == "") {
-		// 	$data = array($date1, $date2);
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND REPLACE(dateso, ' ', '') >= ? 
-		// 	AND REPLACE(dateso, ' ', '') <= ?";
-		// } else if ($status == "" && $date1 == "" && $date2 == "" && $namecust != "") {
-		// 	$data = array("%" . $namecust . "%");
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND namecust like ?";
-		// } else if ($status != "" && $date1 != "" && $date2 != "" && $namecust == "") {
-		// 	$data = array($status, $date1, $date2);
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND REPLACE(dateso, ' ', '') >= ? 
-		// 	AND REPLACE(dateso, ' ', '') <= ?";
-		// } else if ($status != "" && $date1 == "" && $date2 == "" && $namecust != "") {
-		// 	$data = array($status, "%" . $namecust . "%");
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND namecust like ?";
-		// } else if ($status == "" && $date1 != "" && $date2 != "" && $namecust != "") {
-		// 	$data = array($status, $date1, $date2, "%" . $namecust . "%");
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND REPLACE(dateso, ' ', '') >= ? 
-		// 	AND REPLACE(dateso, ' ', '') <= ? AND namecust like ? ";
-		// } else if ($status != "" && $date1 != "" && $date2 != "" && $namecust != "") {
-		// 	$data = array($status, $date1, $date2, "%" . $namecust . "%");
-		// 	$query = "SELECT * FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND statusorder = ? AND REPLACE(dateso, ' ', '') >= ? 
-		// 	AND REPLACE(dateso, ' ', '') <= ? AND namecust like ? ";
-		// } else {
-
-		// }
 
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
@@ -2410,6 +2414,53 @@ class MasterData extends CI_Model
 		}
 	}
 
+	function editnonbom(
+		$itemgroup,
+		$nameitem,
+		$sku,
+		$jenisitem,
+		$stockmin,
+		$price,
+		$deskripsi,
+		$status,
+		$id
+	) {
+		$data  = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $price, $deskripsi, $status, $id);
+		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?, jenisitem = ?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
+		$eksekusi = $this->db->query($query, $data);
+		if ($eksekusi == true) {
+			$respon = "Success";
+		} else {
+			$respon = "Failed";
+		}
+
+		return $respon;
+	}
+
+	function editbom(
+		$itemgroup,
+		$nameitem,
+		$sku,
+		$unit,
+		$stockmin,
+		$price,
+		$deskripsi,
+		$status,
+		$id
+	) {
+		$data  = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $price, $deskripsi, $status, $id);
+		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?, idunit =?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
+		$eksekusi = $this->db->query($query, $data);
+		if ($eksekusi == true) {
+			$respon = "Success";
+		} else {
+			$respon = "Failed";
+		}
+
+		return $respon;
+	}
+
+
 	function addbundling($itemgroup, $nameitem, $link, $status, $sku, $harga, $spec, $userid, $iditem, $qty)
 	{
 		date_default_timezone_set('Asia/Jakarta');
@@ -2759,8 +2810,8 @@ class MasterData extends CI_Model
 
 	function edituser($id, $username, $email, $warehouse, $role, $password, $userid)
 	{
-		$data = array($username, $email, $warehouse, $role, $password, $userid, $id);
-		$query = "UPDATE tb_user SET username = ? , email = ?,idwarehouse = ? , role = ?, password = ?, upduser = ? WHERE iduser = ? ";
+		$data = array($username, $email, $warehouse, $role, $password, $id);
+		$query = "UPDATE tb_user SET username = ? , email = ?,idwarehouse = ? , role = ?, password = ? WHERE iduser = ? ";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";

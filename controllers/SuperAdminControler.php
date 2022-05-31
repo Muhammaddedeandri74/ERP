@@ -44,10 +44,33 @@ class SuperAdminControler extends CI_Controller
 		$this->MasterData->userlog($f["iduser"], "adduser");
 	}
 
-	public function item()
+	function item()
 	{
 		$f["title"]          = "List Item";
 		$f["data"]           = $this->MasterData->getitem();
+		$this->load->view("SuperAdmin/Header");
+		$this->load->view("SuperAdmin/Item", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function filteritem()
+	{
+		$filter         = $this->input->post('filter');
+		$search         = $this->input->post('search');
+
+
+		if (!isset($filter)) {
+			$filter   = '';
+		}
+
+		if (!isset($search)) {
+			$search = '';
+		}
+
+		$this->load->Model("MasterData");
+		$f            = $this->session->userdata("data");
+		$f["title"]   = "List Item";
+		$f["data"]    = $this->MasterData->getitemfilter($filter, $search);
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Item", $f);
 		$this->load->view("SuperAdmin/Footer");

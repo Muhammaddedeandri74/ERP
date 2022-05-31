@@ -458,26 +458,26 @@ class MasterDataControler extends CI_Controller
 	}
 
 
-	function edititem()
-	{
-		$id = $this->input->post("id");
-		$userid = $this->input->post("userid");
-		$status = $this->input->post("status");
-		$itemname = $this->input->post("itemname");
-		$priceitem = $this->input->post("priceitem");
-		$pricebuyitem = $this->input->post("pricebuyitem");
-		$vat = $this->input->post("vat");
-		$location = $this->input->post("idcomm");
-		$sku = $this->input->post("sku");
-		$itemtype = $this->input->post("itemtype");
-		$min = $this->input->post("min");
-		$max = $this->input->post("max");
-		$pph = $this->input->post("pph");
-		$sn = $this->input->post("sn");
-		$cek = $this->MasterData->edititem($id, $itemname, $priceitem, $sku, $userid, $status, $itemtype, $min, $max, $pricebuyitem, number_format((float)$vat, 2, '.', ''), $location, $pph, $sn);
-		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('MasterDataControler/getdataitembyid?id=' . base64_encode($id));
-	}
+	// function edititem()
+	// {
+	// 	$id = $this->input->post("id");
+	// 	$userid = $this->input->post("userid");
+	// 	$status = $this->input->post("status");
+	// 	$itemname = $this->input->post("itemname");
+	// 	$priceitem = $this->input->post("priceitem");
+	// 	$pricebuyitem = $this->input->post("pricebuyitem");
+	// 	$vat = $this->input->post("vat");
+	// 	$location = $this->input->post("idcomm");
+	// 	$sku = $this->input->post("sku");
+	// 	$itemtype = $this->input->post("itemtype");
+	// 	$min = $this->input->post("min");
+	// 	$max = $this->input->post("max");
+	// 	$pph = $this->input->post("pph");
+	// 	$sn = $this->input->post("sn");
+	// 	$cek = $this->MasterData->edititem($id, $itemname, $priceitem, $sku, $userid, $status, $itemtype, $min, $max, $pricebuyitem, number_format((float)$vat, 2, '.', ''), $location, $pph, $sn);
+	// 	$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
+	// 	redirect('MasterDataControler/getdataitembyid?id=' . base64_encode($id));
+	// }
 
 	function editlockitem()
 	{
@@ -913,7 +913,7 @@ class MasterDataControler extends CI_Controller
 		$nameitem            = $this->input->post("nameitem");
 		$sku                 = $this->input->post("sku");
 		$jenisitem           = $this->input->post("jenisitem");
-		$stockmin            = $this->input->post("stockmin");
+		$stockmin            = $this->input->post("stokmin");
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
@@ -940,6 +940,73 @@ class MasterDataControler extends CI_Controller
 			echo $cek;
 		} elseif ($itemgroup == "bom") {
 			$cek                   = $this->MasterData->additembom(
+				$itemgroup,
+				$nameitem,
+				$sku,
+				$unit,
+				$stockmin,
+				$price,
+				$deskripsi,
+				$status,
+				$userid
+			);
+			echo $cek;
+		} elseif ($itemgroup == "usebom") {
+			$cek                   = $this->MasterData->additemusebom(
+				$itemgroup,
+				$nameitem,
+				$sku,
+				$jenisitem,
+				$price,
+				$deskripsi,
+				$status,
+				$userid,
+				$transaksi_iditembom,
+				$transaksi_sku,
+				$transaksi_nameitem,
+				$transaksi_deskripsi,
+				$transaksi_qty
+
+			);
+			echo $cek;
+		}
+	}
+
+	function edititem()
+	{
+		$id                  = $this->input->post("id");
+		$itemgroup           = $this->input->post("itemgroup");
+		$nameitem            = $this->input->post("nameitem");
+		$sku                 = $this->input->post("sku");
+		$jenisitem           = $this->input->post("jenisitem");
+		$stockmin            = $this->input->post("stokmin");
+		$price               = $this->input->post("price");
+		$deskripsi           = $this->input->post("deskripsi");
+		$status              = $this->input->post("status");
+		$userid              = $this->input->post("userid");
+		$unit                = $this->input->post("unit");
+		$transaksi_iditembom = $this->input->post("transaksi_iditembom");
+		$transaksi_sku       = $this->input->post("transaksi_sku");
+		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
+		$transaksi_deskripsi = $this->input->post("transaksi_deskripsi");
+		$transaksi_qty       = $this->input->post("transaksi_qty");
+
+		if ($itemgroup == "nonbom") {
+			$cek                   = $this->MasterData->editnonbom(
+				$itemgroup,
+				$nameitem,
+				$sku,
+				$jenisitem,
+				$stockmin,
+				$price,
+				$deskripsi,
+				$status,
+				$userid
+
+			);
+			echo $cek;
+		} elseif ($itemgroup == "bom") {
+			$cek                   = $this->MasterData->editbom(
 				$itemgroup,
 				$nameitem,
 				$sku,

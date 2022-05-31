@@ -17,7 +17,7 @@
 							<?php echo $this->session->flashdata('message'); ?>
 							<?php $this->session->set_flashdata('message', ''); ?>
 						</div>
-						<form action="<?php echo base_url('MasterDataControler/additemproduk') ?>" method="POST" enctype="multipart/form-data">
+						<form action="<?php echo base_url('MasterDataControler/editcustomer') ?>" method="POST" id="form" enctype="multipart/form-data">
 							<div class="row mb-3">
 								<div class="col-4">
 									<img src="<?= base_url("assets/icon/item.png")  ?>" alt="mdo" id="uimg" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
@@ -28,9 +28,9 @@
 										<div class="col-10">
 											<label for="" class="form-label">Item Group</label>
 											<select name="itemgroup" onchange="ubah(this.value)" id="itemgroup" class="form-select" required>
-												<?php if ($data1 != 'Not Found') {
+												<?php if ($data1 != "Not Found") {
 													foreach ($data1 as $key) : ?>
-														<option value="<?php echo $key["itemgroup"] ?>"><?php echo $key["itemtype"] ?></option>
+														<option value="<?php echo $key["itemgroup"] ?>" <?php echo ($key["itemgroup"] ==  $key["itemgroup"]) ? ' selected="selected"' : ''; ?>><?php echo $key["itemtype"] ?></option>
 												<?php endforeach;
 												} ?>
 											</select>
@@ -44,7 +44,6 @@
 											<div class="col">
 												<input type="text" name="nameitem" id="nameitem" class="form-control" value="<?php echo $data["nameitem"] ?>" autocomplete="off" required>
 												<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-												<input type="hidden" name="id" class="form-control" value="<?php echo $data["iditem"] ?>">
 											</div>
 										</div>
 										<div class="col-2"></div>
@@ -101,18 +100,21 @@
 										<div class="col-10">
 											<label class="form-label mb-3">Jenis Item</label>
 											<div class="row">
-												<div class="col-3">
-													<input type="radio" name="jenisitem" value="service" class="form-check-input">
-													<label class="form-check-label" for="flexRadioDefault1">
-														Service
-													</label>
-												</div>
-												<div class="col-4">
-													<input type="radio" class="form-check-input" name="jenisitem" value="non service">
-													<label class="form-check-label" for="flexRadioDefault1">
-														Non Service
-													</label>
-												</div>
+												<?php if ($data["jenisitem"] == "non service") : ?>
+													<div class="col-3">
+														<input type="radio" name="jenisitem" value="service" class="form-check-input" checked>
+														<label class="form-check-label" for="flexRadioDefault1">
+															Service
+														</label>
+													</div>
+												<?php else : ?>
+													<div class="col-4">
+														<input type="radio" class="form-check-input" name="jenisitem" value="non service">
+														<label class="form-check-label" for="flexRadioDefault1" checked>
+															Non Service
+														</label>
+													</div>
+												<?php endif ?>
 												<div class="col-6"></div>
 											</div>
 										</div>
@@ -142,15 +144,6 @@
 										</div>
 										<div class="col-2"></div>
 									</div>
-									<div class="row mb-3" id="nonbomx" style="display: none;">
-										<div class="col-10">
-											<label for="" class="form-label">Stock Minimum</label>
-											<div class="col">
-												<input name="stokmin" type="text" id="stokmin" class="form-control" autocomplete="off" required>
-											</div>
-										</div>
-										<div class="col-2"></div>
-									</div>
 									<div id="usebomx"></div>
 									<div class="row mb-3">
 										<div class="col-10">
@@ -165,7 +158,7 @@
 										<div class="col-10">
 											<label for="" class="form-label">Deskripsi</label>
 											<div class="col">
-												<textarea name="deskripsi" id="spesifikasi" value="<?php echo $data["deskripsi"] ?>" cols="6" rows="4" class="form-control" style="font-size:13px;" placeholder="Nasi goreng + beef premium + rempah pilihan"></textarea>
+												<textarea name="deskripsi" id="spesifikasi" value="<?php echo $data["deskripsi"] ?>" cols="6" rows="4" class="form-control" style="font-size:13px;" placeholder="Nasi goreng + beef premium + rempah pilihan"><?php echo $data["deskripsi"] ?></textarea>
 											</div>
 										</div>
 										<div class="col-2"></div>
@@ -210,7 +203,7 @@
 							</div>
 							<div class="row">
 								<div class="col text-end">
-									<button type="submit" class="btn btn-primary px-5">Buat Item</button>
+									<button type="button" class="btn btn-primary px-5" id="additem" onclick="additem()">Buat Item</button>
 								</div>
 							</div>
 						</form>
@@ -367,9 +360,26 @@
 			calc();
 		});
 
+		$('form button').on("click", function(e) {
+			if ($(this).attr('id') == "additem") {
+				var xask = '';
+				if ($("#iditem").val() == "") {
+					xask = "Ubah Transaksi?";
+				} else {
+					xask = "Simpan Transaksi?";
+				}
+				if (confirm(xask)) {
+					if (validasi()) {
+						addorder();
+					}
+				}
+			}
+			e.preventDefault();
+		});
+
 		function addorder() {
 			var cx = $('#form').serialize();
-			$.post("<?php echo base_url('MasterDataControler/additem') ?>", cx,
+			$.post("<?php echo base_url('MasterDataControler/edititem') ?>", cx,
 				function(data) {
 					if (data == 'Success') {
 						alert('Input Data Berhasil');
@@ -378,6 +388,30 @@
 						alert('Input Data Gagal. ' + data);
 					}
 				});
+		}
+
+		function validasi() {
+			var xval = 0;
+			var sts = 1;
+
+			xval = $("#nameitem").val();
+			if ($("#nameitem").val() == '') {
+				alert('Input Nama Item Terlebih Dahulu');
+				sts = 0;
+				return false;
+			}
+			xval = $("#sku").val();
+			if ($("#sku").val() == '') {
+				alert('Input SKU Terlebih Dahulu');
+				sts = 0;
+				return false;
+			}
+
+			if (sts == 1) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		function cancelorder() {
