@@ -26,9 +26,13 @@ class QuotationController extends CI_Controller
         $f = $this->session->userdata("data");
         $f["data"]  =  $this->MasterData->getcustomer();
         $f["data1"] =  $this->MQuotation->getquotationlast();
-
         $f["data2"] =  $this->MQuotation->getcompanydata();
         $f["item"] =  $this->MQuotation->getitem();
+        $f["codequox"] = $this->input->post("codequox");
+        if (!isset($f["codequox"])) {
+            $f["codequox"] = "";
+        }
+
         $this->load->view("SuperAdmin/header");
         $this->load->view("Quotation/addquot", $f);
         $this->load->view("SuperAdmin/Footer");
@@ -62,22 +66,27 @@ class QuotationController extends CI_Controller
         $iduser = $f["iduser"];
         $norek = $this->input->post('norek');
         $codequo = $this->input->post('codequo');
+        if (!isset($codequo) || $codequo == "") {
+            $codequo = $this->MQuotation->getquotationlast();
+        }
+
         $idcust = $this->input->post('idcust');
         $address = $this->input->post('address');
         $judulquo = $this->input->post('judulquo');
         $startquo = $this->input->post('startquo');
         $expquo = $this->input->post('expquo');
-        $subtotal = $this->input->post('subtotal');
-        $disnoms = $this->input->post('disnoms');
-        $ppn = $this->input->post('ppn');
-        $grandtotal = $this->input->post('grandtotal');
+        $subtotal = str_replace(".", "", $this->input->post('subtotal'));
+        $disnoms = str_replace(".", "", $this->input->post('disnoms'));
+        $ppn = str_replace(".", "", $this->input->post('ppn'));
+        $grandtotal = str_replace(".", "", $this->input->post('grandtotal'));
         $iditem = $this->input->post('iditem');
         $qty = $this->input->post('qty');
-        $disnom = $this->input->post('disnom');
-        $harga = $this->input->post('harga');
-        $total = $this->input->post('total');
+        $disnom = str_replace(".", "", $this->input->post('disnom'));
+        $harga = str_replace(".", "", $this->input->post('harga'));
+        $total = str_replace(".", "", $this->input->post('total'));
+        $remark = $this->input->post('remark');
 
-        $cek = $this->MQuotation->addquo($date, $iduser, $norek, $codequo, $idcust, $address, $judulquo, $startquo, $expquo, $subtotal, $disnoms, $ppn, $grandtotal, $iditem, $qty, $disnom, $harga, $total);
+        $cek = $this->MQuotation->addquo($date, $iduser, $norek, $codequo, $idcust, $address, $judulquo, $startquo, $expquo, $subtotal, $disnoms, $ppn, $grandtotal, $iditem, $qty, $disnom, $harga, $total, $remark);
         $this->session->set_flashdata('message', '<div class="alert alert-primary" role="alert">' . $cek . '</div>');
         redirect("QuotationController/addquot");
     }
@@ -93,6 +102,13 @@ class QuotationController extends CI_Controller
     {
         $codequo = $this->input->post("codequo");
         $cek = $this->MQuotation->cancelquo($codequo);
+        echo json_encode($cek);
+    }
+    function detailquotation()
+    {
+        $idquo         = $this->input->post('idquo');
+        $this->load->Model("MasterData");
+        $cek  = $this->MQuotation->detailquo($idquo);
         echo json_encode($cek);
     }
 }

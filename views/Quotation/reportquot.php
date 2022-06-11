@@ -84,6 +84,7 @@
                                     <td>Tanggal Exp</td>
                                     <td>Total Amount</td>
                                     <td>Status <i class='bx bx-down-arrow-alt'></i></td>
+                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody id="detailx">
@@ -156,6 +157,44 @@
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#1143d8;color:white;">
+                <h5 class="modal-title" id="exampleModalLabel">DETAIL DATA Quotation</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mx-3" style="overflow-x: auto;">
+                    <table class="table table-bordered table-striped" id="table-user">
+                        <thead>
+                            <tr>
+                                <td>#</td>
+                                <td>No Quotation </td>
+                                <td>Tanggal Quotation</td>
+                                <td>Name Item</td>
+                                <td>SKU</td>
+                                <td>Qty</td>
+                                <td>Harga Total</td>
+                            </tr>
+                        </thead>
+                        <tbody id="xdetails">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                <div id="edit"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<form action="<?php echo base_url('QuotationController/addquot') ?>" method="POST" id="formz">
+    <input type="hidden" id="codequox" name="codequox">
+</form>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
     loaddata()
@@ -170,12 +209,13 @@
 
                 console.log(hasil)
                 var baris = ""
+                totalquo = 0
+                waiting = 0
+                finish = 0
+                cancel = 0
+                process = 0;
                 if (hasil != "Not Found") {
-                    totalquo = 0
-                    waiting = 0
-                    finish = 0
-                    cancel = 0
-                    process = 0;
+
                     for (let i = 0; i < hasil.length; i++) {
 
 
@@ -186,6 +226,7 @@
                                             <td>` + hasil[i]["expquo"] + `</td>
                                             <td>` + formatRupiah(hasil[i]["totalquo"], "Rp.") + `</td>
                                             <td>` + hasil[i]["statusquo"] + `</td>
+                                            <td><a onclick="cekdetail('` + hasil[i]["codequo"] + `')" class="btn btn-primary" style="font-size: 12px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
                                            
                                         </tr>`
 
@@ -205,6 +246,8 @@
                         if (hasil[i]["statusquo"] == "Finish") {
                             finish = Number(finish) + Number(hasil[i]["totalquo"])
                         }
+
+
                     }
 
 
@@ -236,5 +279,47 @@
 
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+
+
+    function cekdetail(x) {
+
+        var ix = 1;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('QuotationController/detailquotation') ?>",
+            data: "idquo=" + x,
+            dataType: "JSON",
+            success: function(hasil) {
+                var baris = "";
+
+                for (var i = 0; i < hasil["data"].length; i++) {
+
+                    baris += '<tr>';
+                    baris += '<td scope="row">' + ix++ + '</td>';
+                    baris += '<td>' + hasil["codequo"] + '</td>';
+                    baris += '<td>' + hasil["datequo"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["nameitem"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["sku"] + '</td>';
+                    baris += '<td>' + hasil["data"][i]["qty"] + '</td>';
+                    baris += '<td>' + formatRupiah(hasil["data"][i]["totalprice"] + "", "Rp.") + '</td>';
+                    baris += '</tr>';
+
+                }
+                if (hasil["statusquo"] == "Waiting") {
+                    $('#edit').html(` <button type="button" class="btn btn-secondary" onclick = "edit()" data-mdb-dismiss="modal">Edit</button>`)
+                    $('#codequox').val(hasil["codequo"])
+                    // $('#formz').submit();
+                } else {
+                    $('#edit').html("")
+                }
+                console.log(hasil)
+                $('#xdetails').html(baris);
+            }
+        })
+    }
+
+    function edit() {
+        $('#formz').submit();
     }
 </script>

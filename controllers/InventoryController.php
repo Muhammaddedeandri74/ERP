@@ -33,6 +33,7 @@ class InventoryController extends CI_Controller
 		$f["data4"]   = $this->MasterData->getcustomerinvin();
 		$f["data6"]   = $this->MasterData->getlistinvin();
 		$f["data7"]   = $this->MasterData->getlistpo();
+		$f["data8"]   = $this->MasterData->getinvinlast();
 		$f["order"]   = $this->MasterData->getlistpoheader();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/Addinventoryin", $f);
@@ -108,7 +109,7 @@ class InventoryController extends CI_Controller
 	{
 		$namewarehouse   = $this->input->post('namewh');
 		$tipein          = $this->input->post('tipein');
-		$namesupp        = $this->input->post('namesupp');
+		$namesupp        = $this->input->post('namecust');
 		$date1           = $this->input->post('date1');
 		$date2           = $this->input->post('date2');
 		$nameitem        = $this->input->post('nameitem');
@@ -163,8 +164,12 @@ class InventoryController extends CI_Controller
 		$f["title"]   = "Register Inventory Out";
 		$f["data"]    = $this->MasterData->getitemmaterialso();
 		$f["data1"]    = $this->MasterData->getcustomer();
-		$f["codeout"]    = $this->MInventoryOut->getlastoutid();
+
 		$f["warehouse"]    = $this->MasterData->getwarehouse();
+		$f["noinvout"] = $this->input->post('noinvout');
+		if (!isset($f["noinvout"])) {
+			$f["noinvout"] = "";
+		}
 		$this->load->view("Superadmin/Header");
 		$this->load->view("Inventory/InventoryOutSales", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -207,14 +212,17 @@ class InventoryController extends CI_Controller
 		$f["data4"]   = $this->MasterData->getlistpo();
 		$f["data5"]   = $this->MasterData->getsupplier();
 		$f["data6"]   = $this->MasterData->getcompany();
-		$f["stat"]    = "";
-		$f["headertrans"] = "Not Found";
-		$f["detailtrans"] = "Not Found";
+		$f["data7"]   =  $this->MasterData->getpolast();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("PO/AddPurchaseOrder", $f);
 		$this->load->view("SuperAdmin/Footer");
-		$f = $this->session->userdata("data");
-		$this->load->view("xfooter");
+	}
+
+	function cancelpo()
+	{
+		$codepo = $this->input->post("codepo");
+		$cek = $this->MasterData->cancelpo($codepo);
+		echo json_encode($cek);
 	}
 
 	function getlistinvinincoice()
@@ -268,10 +276,20 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+	function getlistso()
+	{
+		$filter     = $this->input->post("filterx");
+		$search     = $this->input->post("searchx");
+		$statusso   = $this->input->post("statusorder");
+		$datestart  = $this->input->post("datestartx");
+		$finishdate = $this->input->post("finishdatex");
+		$cek        = $this->MasterData->getlistsodetail($filter, $search, $statusso, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
 	function detailpo()
 	{
 		$idpo = $this->input->post("idpo");
-
 		$cek  = $this->MasterData->detailpo($idpo);
 		echo json_encode($cek);
 	}
@@ -281,6 +299,14 @@ class InventoryController extends CI_Controller
 		$idreqpo = $this->input->post("idreqpo");
 
 		$cek  = $this->MasterData->detailreqpo($idreqpo);
+		echo json_encode($cek);
+	}
+
+	function detailso()
+	{
+		$idso         = $this->input->post('idso');
+		$this->load->Model("MasterData");
+		$cek  = $this->MasterData->salesorderdetail($idso);
 		echo json_encode($cek);
 	}
 
@@ -303,6 +329,28 @@ class InventoryController extends CI_Controller
 	{
 		$idpo = $this->input->post("idpo");
 		$cek  = $this->MasterData->detailpox($idpo);
+		echo json_encode($cek);
+	}
+
+	function getlistpostatus()
+	{
+		$filter = $this->input->post("filter");
+		$search = $this->input->post("search");
+		$statusquo = $this->input->post("statuspo");
+		$datestart = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek =  $this->MasterData->getlistpostatus($filter, $search, $statusquo, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function getlistinvinstatus()
+	{
+		$filter = $this->input->post("filter");
+		$search = $this->input->post("search");
+		$statusin = $this->input->post("statusin");
+		$datestart = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek =  $this->MasterData->getlistinvinstatus($filter, $search, $statusin, $datestart, $finishdate);
 		echo json_encode($cek);
 	}
 
@@ -338,18 +386,34 @@ class InventoryController extends CI_Controller
 		if (!isset($status)) {
 			$status = '';
 		}
-
 		$this->load->model("MasterData");
 		$f            = $this->session->userdata("data");
-		$f["title"]   = "Status Purchase Order";
 		$f["data"]    = $this->MasterData->getlistpodetail($codepo, $namesupp, $filter, $date1, $date2, $status);
-		$f["data1"]   = $this->MasterData->getwarehouse();
-		$f["data2"]   = $this->MasterData->getsupplier();
 		$this->load->view("Superadmin/Header");
 		$this->load->view("PO/PurchaseOrderStatus", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 	}
+
+	// function editpo()
+	// {
+	// 	$this->load->model("MasterData");
+	// 	$id           = $this->input->get("idpox");
+	// 	$f            = $this->session->userdata("data");
+	// 	$f["data"]    = $this->MasterData->getitemmaterialpo();
+	// 	$f["data2"]   = $this->MasterData->getcurrency();
+	// 	$f["data3"]   = $this->MasterData->getpo();
+	// 	$f["data4"]   = $this->MasterData->getlistpo();
+	// 	$f["data5"]   = $this->MasterData->getsupplier();
+	// 	$f["data6"]   = $this->MasterData->getcompany();
+	// 	$f["data7"]   =  $this->MasterData->getpolast();
+
+	// 	$this->load->view("Superadmin/Header");
+	// 	$this->load->view("PO/EditPurchaseOrder", $f);
+	// 	$this->load->view("SuperAdmin/Footer");
+	// 	$f = $this->session->userdata("data");
+	// 	$this->load->view("xfooter");
+	// }
 
 	function InOutReport()
 	{
@@ -431,6 +495,7 @@ class InventoryController extends CI_Controller
 		$f = $this->session->userdata("data");
 		$f["data"]  = $this->MasterData->getrequestpo();
 		$f["data1"] = $this->MasterData->getitemmaterialpo();
+		$f["data2"] =  $this->MasterData->getreqpolast();
 		$f["iditem"] = $this->input->post("iditemx");
 		if (!isset($f["iditem"])) {
 			$f["iditem"] = "";
@@ -525,6 +590,33 @@ class InventoryController extends CI_Controller
 		$f["data1"]   = $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Po/Expiredreport", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Inclosing()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/Inclosing", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function Stokopname()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/Stokopname", $f);
+		$this->load->view("SuperAdmin/Footer");
+	}
+
+	function ingoingreport()
+	{
+		$this->load->Model("MasterData");
+		$f = $this->session->userdata("data");
+		$this->load->view("SuperAdmin/header");
+		$this->load->view("Inventory/ingoingreport", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}
 }

@@ -39,21 +39,22 @@
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">Nama Perusahaan (Wajib)</label>
-							<input type="text" class="form-control" id="namecomp" name="namecomp" value="<?= set_value('namecomp') ?>" placeholder="Masukan Nama Perusahaan" autocomplete="off" required>
+							<input type="hidden" class="form-control" id="idcomp" name="idcomp" value="<?php echo $data["idcomp"] ?>" placeholder="Masukan Nama Perusahaan" autocomplete="off" required>
+							<input type="text" class="form-control" id="namecomp" name="namecomp" value="<?php echo $data["namecomp"] ?>" placeholder="Masukan Nama Perusahaan" autocomplete="off" required>
 						</div>
 						<div class="col-2"></div>
 					</div>
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">No. Kantor (Wajib)</label>
-							<input type="text" name="nokantor" id="nokantor" class="form-control" value="<?= set_value('nokantor') ?>" placeholder="Masukan Nomor Kantor" autocomplete="off" required>
+							<input type="text" name="nokantor" id="nokantor" class="form-control" value="<?php echo $data["nokantor"] ?>" placeholder="Masukan Nomor Kantor" autocomplete="off" required>
 						</div>
 						<div class="col-2"></div>
 					</div>
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">No. Handphone</label>
-							<input type="text" name="nohandphone" id="nohandphone" class="form-control" value="<?= set_value('nohandphone') ?>" placeholder="Masukan No Handphone" autocomplete="off" required>
+							<input type="text" name="nohandphone" id="nohandphone" class="form-control" value="<?php echo $data["nohandphone"] ?>" placeholder="Masukan No Handphone" autocomplete="off" required>
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -69,14 +70,14 @@
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">Email</label>
-							<input type="email" class="form-control" id="email" name="email" value="<?= set_value('email') ?>" placeholder="Masukan Email Perusahaan" autocomplete="off" required>
+							<input type="email" class="form-control" id="email" name="email" value="<?php echo $data["email"] ?>" placeholder="Masukan Email Perusahaan" autocomplete="off" required>
 						</div>
 						<div class="col-2"></div>
 					</div>
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">Alamat (Wajib)</label>
-							<textarea name="alamat" id="alamat" cols="6" rows="5" class="form-control" value="<?= set_value('alamat') ?>" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" required></textarea>
+							<textarea name="alamat" id="alamat" cols="6" rows="5" class="form-control" value="<?php echo $data["alamat"] ?>" placeholder="Nama Jalan, Kecamatan, Kota, Provinsi" required><?php echo $data["alamat"] ?></textarea>
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -106,7 +107,7 @@
 					<div class="row">
 						<div class="col-10">
 							<label for="" class="form-label">Remark Invoice</label>
-							<textarea name="remarkinvoice" id="" cols="6" rows="4" value="<?= set_value('remarkinvoice') ?>" class="form-control"></textarea>
+							<textarea name="remarkinvoice" id="" cols="6" rows="4" value="<?php echo $data["remarkinvoice"] ?>" class="form-control"><?php echo $data["remarkinvoice"] ?></textarea>
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -115,7 +116,7 @@
 					<div class="row">
 						<div class="col-10">
 							<label for="" class="form-label">Remark Quotation</label>
-							<textarea name="remarkquotation" id="" cols="6" rows="4" value="<?= set_value('remarkquotation') ?>" class="form-control"></textarea>
+							<textarea name="remarkquotation" id="" cols="6" rows="4" value="<?php echo $data["remarkquotation"] ?>" class="form-control"><?php echo $data["remarkquotation"] ?></textarea>
 						</div>
 						<div class="col-2"></div>
 					</div>
@@ -131,7 +132,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	add_row_transaksi(0);
+	// add_row_transaksi(0);
+	var data = <?php echo json_encode($data) ?>;
+	console.log(data)
+	if (data["detail"] != "Not Found") {
+		for (let i = 0; i < data["detail"].length; i++) {
+			var xid = Number(i) + Number(1);
+			add_row_transaksi(i)
+			$('#transaksi_' + xid + '_bank').val(data["detail"][i]["bank"]);
+			$('#transaksi_' + xid + '_norekening').val(data["detail"][i]["norekening"]);
+			$('#transaksi_' + xid + '_beneficiary').val(data["detail"][i]["beneficiary"]);
+		}
+
+	} else {
+		add_row_transaksi(0);
+
+	}
+
+	// add_row_transaksi(0);
+
 
 	function add_row_transaksi(xxid) {
 		var lastid = 0;
@@ -141,7 +160,7 @@
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_idcompdet"  class="form-control  idcompdet" name="idcompdet" / >';
 		tabel += '<td style="border:none;"><input style="text-align:center" autocomplete="off" type="text" id="transaksi_' + xid + '_bank"  class="form-control bank" name="bank[]" value=""/></td>';
 		tabel += '<td style="border:none;"><input style="text-align:center" type="text" class="form-control " objtype="norekening" id="transaksi_' + xid + '_norekening" name="norekening[]" value=""></td>';
 		tabel += '<td style="border:none;"><input type="text" id="transaksi_' + xid + '_beneficiary" objtype="_beneficiary" class="form-control  _beneficiary" name="beneficiary[]" /></td>';

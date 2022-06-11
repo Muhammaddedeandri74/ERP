@@ -23,17 +23,17 @@
 							<div class="row">
 								<div class="col">
 									<label for="" class="form-label">No. Transaksi</label>
-									<input type="text" name="notransaksi" class="form-control" style="font-size:1rem;" value="<?php echo $codeout ?>" readonly>
+									<input type="text" name="notransaksi" id="notransaksi" class="form-control" style="font-size:1rem;" value="" readonly>
 								</div>
 							</div>
 						</div>
 						<div class="col-5">
 							<label for="" class="form-label">Tipe Outgoing</label>
 							<select name="tipeingoing" id="tipeingoing" class="form-select" onchange="ubah(this.value)">
-								<option value="sales" selected>Sales</option>
-								<option value="mvwh">Move Warehouse</option>
-								<option value="ret">Return</option>
-								<option value="outg">Out Gudang</option>
+								<option value="Sales" selected>Sales</option>
+								<option value="Move Warehouse">Move Warehouse</option>
+								<option value="Return">Return</option>
+								<option value="Out Warehouse">Out Gudang</option>
 							</select>
 						</div>
 						<div class="col-2"></div>
@@ -202,7 +202,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-4">
+				<div class="col-4" id="other" style="display: none;">
 					<label for="" class="form-label fs-3 mb-3">Cetak & Download</label>
 					<div class="row">
 						<div class="col-3">
@@ -583,7 +583,7 @@
 
 <script>
 	function ubah(x) {
-		if (x == "sales") {
+		if (x == "Sales") {
 			$('#bodysales').html("")
 			$('#bodymovewh').html("")
 			$('#bodyreturn').html("")
@@ -605,7 +605,7 @@
 			$('#outg').hide();
 			$('#outgx').hide();
 			$('#outgxy').hide();
-		} else if (x == "mvwh") {
+		} else if (x == "Move Warehouse") {
 			$('#bodysales').html("")
 			$('#bodymovewh').html("")
 			$('#bodyreturn').html("")
@@ -627,7 +627,7 @@
 			$('#outg').hide();
 			$('#outgx').hide();
 			$('#outgxy').hide();
-		} else if (x == "ret") {
+		} else if (x == "Return") {
 			$('#bodysales').html("")
 			$('#bodymovewh').html("")
 			$('#bodyreturn').html("")
@@ -649,7 +649,7 @@
 			$('#outg').hide();
 			$('#outgx').hide();
 			$('#outgxy').hide();
-		} else if (x == "outg") {
+		} else if (x == "Out Warehouse") {
 			$('#bodysales').html("")
 			$('#bodymovewh').html("")
 			$('#bodyreturn').html("")
@@ -679,6 +679,152 @@
 
 
 <script>
+	var noinvout = <?php echo json_encode($noinvout) ?>;
+	console.log(noinvout);
+
+	if (noinvout != "") {
+		detailinvout(noinvout)
+	}
+
+	function detailinvout(x) {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo base_url('InventoryOutControler/dataoutbycode') ?>",
+			data: "noinvout=" + x,
+			dataType: "JSON",
+			success: function(hasil) {
+				console.log(hasil)
+				$('#notransaksi').val(hasil["codeinvout"])
+				$('#tipeingoing').val(hasil["typeout"])
+				ubah(hasil["typeout"])
+				$('#bodysales').html("")
+				$('#bodymovewh').html("")
+				$('#bodyreturn').html("")
+				$('#bodyout').html("")
+				if (hasil["typeout"] == "Sales") {
+					$('#codeso').val(hasil["codeso"])
+					$('#idso').val(hasil["idso"])
+					$('#namecust').val(hasil["namecust"])
+					$('#nopesanan').val(hasil["nopesanan"])
+					$('#delivaddr').val(hasil["delivaddr"])
+					$('#nodeliv').val(hasil["nodo"])
+					$('#idwhsales').val(hasil["idwh"])
+					for (let i = 0; i < hasil["data"].length; i++) {
+						add_item(i)
+						var xid = Number(i) + Number(1)
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"])
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						var val = hasil["data"][i]["sku"];
+						var xobj = $('#xitem option').filter(function() {
+							return this.value == val;
+						});
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+						$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+						$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
+						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyout"]);
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyso"]);
+						$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disnomdet"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						// count(xid)
+						calc();
+
+					}
+				} else if (hasil["typeout"] == "Move Warehouse") {
+					$('#idwhmovewh').val(hasil["idwh"])
+					$('#idwh2').val(hasil["idwh2"])
+					$('#dateoutmovewh').val(hasil["dateout"])
+					for (let i = 0; i < hasil["data"].length; i++) {
+						add_itemmovewh(i)
+						var xid = Number(i) + Number(1)
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"])
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						var val = hasil["data"][i]["sku"];
+						var xobj = $('#xitemx option').filter(function() {
+							return this.value == val;
+						});
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+						$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+						$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
+						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyout"]);
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyso"]);
+						$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disnomdet"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						// count(xid)
+						calc();
+
+					}
+				} else if (hasil["typeout"] == "Return") {
+					$('#idwhret').val(hasil["idwh"])
+					$('#dateret').val(hasil["dateout"])
+					$('#idsupp').val(hasil["idsupp"])
+					for (let i = 0; i < hasil["data"].length; i++) {
+						add_itemret(i)
+						var xid = Number(i) + Number(1)
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"])
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						var val = hasil["data"][i]["sku"];
+						var xobj = $('#xitemx option').filter(function() {
+							return this.value == val;
+						});
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+						$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+						$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
+						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyout"]);
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyso"]);
+						$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disnomdet"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						// count(xid)
+						calc();
+
+					}
+				} else if (hasil["typeout"] == "Out Warehouse") {
+					$('#idwhout').val(hasil["idwh"])
+					$('#dateoutwh').val(hasil["dateout"])
+
+					for (let i = 0; i < hasil["data"].length; i++) {
+						add_itemout(i)
+						var xid = Number(i) + Number(1)
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"])
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						var val = hasil["data"][i]["sku"];
+						var xobj = $('#xitemx option').filter(function() {
+							return this.value == val;
+						});
+						$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+						$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+						$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+						$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+						$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
+						$('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+						$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyout"]);
+						$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyso"]);
+						$('#transaksi_' + xid + '_discnominal').val(hasil["data"][i]["disnomdet"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+						// count(xid)
+						calc();
+
+					}
+				}
+
+
+
+			}
+		});
+	}
+
 	function loaddatapo() {
 		$.ajax({
 			type: "POST",
@@ -705,7 +851,7 @@
 					for (let i = 0; i < hasil.length; i++) {
 
 						if (hasil[i]["statusorder"] == "Waiting" || hasil[i]["statusorder"] == "Process") {
-							if (hasil[i]["qtyso"] > hasil[i]["qtyout"]) {
+							if (Number(hasil[i]["qtyso"]) > Number(hasil[i]["qtyout"])) {
 								baris += `  <tr>
                                     
                                     <td>` + hasil[i]["codeso"] + `</td>
@@ -721,14 +867,14 @@
                                         ` + hasil[i]["statusorder"] + `
                                     </td>
                               
-									<td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="cekdetail(` + hasil[i]["idso"] + `)">Pilih</a></td>
+									<td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="cekdetail('` + hasil[i]["codeso"] + `')">Pilih</a></td>
                                 </tr>`
 							}
 
 						}
 
 					}
-
+					console.log(baris)
 					$('#detailxxx').html(baris)
 
 				}
@@ -782,7 +928,7 @@
 					var xobj = $('#xitem option').filter(function() {
 						return this.value == val;
 					});
-					$('#transaksiksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+					$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
 					$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
 					$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
@@ -1318,59 +1464,60 @@
 		}
 		if (confirm(xask)) {
 
-			if ($('#tipeingoing').val() == "sales") {
+			if ($('#tipeingoing').val() == "Sales") {
 				if (validasisales()) {
 					var cx = $('#form').serialize();
 					$.post("<?php echo base_url('InventoryOutControler/AddInventoryout') ?>", cx,
 						function(data) {
-							if (data == 'Success') {
+							if (data.includes('Success')) {
 								alert('Input Data Berhasil');
-								cancelorder();
+								detailinvout(data.replace("Success dengan nomor Out ", ""));
 							} else {
 								alert('Input Data Gagal. ' + data);
 							}
 						});
 				}
-			} else if ($('#tipeingoing').val() == "mvwh") {
+			} else if ($('#tipeingoing').val() == "Move Warehouse") {
 				if (validasimovewh()) {
 					var cx = $('#form').serialize();
 					$.post("<?php echo base_url('InventoryOutControler/AddInventoryoutmovewh') ?>", cx,
 						function(data) {
-							if (data == 'Success') {
+							if (data.includes('Success')) {
 								alert('Input Data Berhasil');
-								cancelorder();
+								detailinvout(data.replace("Success dengan nomor Out ", ""));
 							} else {
 								alert('Input Data Gagal. ' + data);
 							}
 						});
 				}
-			} else if ($('#tipeingoing').val() == "ret") {
+			} else if ($('#tipeingoing').val() == "Return") {
 				if (validasiret()) {
 					var cx = $('#form').serialize();
 					$.post("<?php echo base_url('InventoryOutControler/AddInventoryoutret') ?>", cx,
 						function(data) {
-							if (data == 'Success') {
+							if (data.includes('Success')) {
 								alert('Input Data Berhasil');
-								cancelorder();
+								detailinvout(data.replace("Success dengan nomor Out ", ""));
 							} else {
 								alert('Input Data Gagal. ' + data);
 							}
 						});
 				}
-			} else if ($('#tipeingoing').val() == "outg") {
+			} else if ($('#tipeingoing').val() == "Out Warehouse") {
 				if (validasiout()) {
 					var cx = $('#form').serialize();
 					$.post("<?php echo base_url('InventoryOutControler/AddInventoryoutgoing') ?>", cx,
 						function(data) {
-							if (data == 'Success') {
+							if (data.includes('Success')) {
 								alert('Input Data Berhasil');
-								cancelorder();
+								detailinvout(data.replace("Success dengan nomor Out ", ""));
 							} else {
 								alert('Input Data Gagal. ' + data);
 							}
 						});
 				}
 			}
+
 
 		}
 	}

@@ -206,6 +206,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <div id="edit">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -250,6 +253,10 @@
             </tbody>
         </table>
     </div>
+</form>
+
+<form action="<?php echo base_url('OrderManagementController/addsalesorder') ?> " method="post" id="formz">
+    <input type="hidden" name="codeso" id="codeso">
 </form>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
@@ -303,6 +310,10 @@
                     baris += '</tr>';
 
                 }
+
+                if (hasil["statusorder"] == "Waiting" || hasil["statusorder"] == "Pending") {
+                    $('#edit').html(` <button type="button" onclick="edit('` + hasil["codeso"] + `')" class="btn btn-secondary" data-mdb-dismiss="modal">Edit</button>`)
+                }
                 console.log(hasil)
                 $('#xdetails').html(baris);
             }
@@ -310,6 +321,11 @@
 
 
 
+    }
+
+    function edit(x) {
+        $('#codeso').val(x)
+        $('#formz').submit()
     }
 
     function formatRupiah(angka, prefix) {
@@ -370,7 +386,7 @@
                                     <td style="text-align:left;">
                                         ` + hasil[i]["statusorder"] + `
                                     </td>
-                                    <td><a onclick="cekdetail(` + hasil[i]["idso"] + `)" class="btn btn-primary" style="font-size: 12px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
+                                    <td><a onclick="cekdetail('` + hasil[i]["codeso"] + `')" class="btn btn-primary" style="font-size: 12px;" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Detail</a></td>
                                 </tr>`
 
                         totalquo = Number(totalquo) + Number(hasil[i]["grandtotalso"])

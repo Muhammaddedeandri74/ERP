@@ -13,11 +13,11 @@
 			<?php echo $this->session->flashdata('message'); ?>
 			<?php $this->session->set_flashdata('message', ''); ?>
 		</div>
-		<form action="<?php echo base_url('MasterDataControler/additem') ?>" method="POST" id="form" enctype="multipart/form-data">
+		<form role="form" action="<?php echo base_url('MasterDataControler/additem') ?>" method="POST" id="form" enctype="multipart/form-data">
 			<div class="row mb-3">
 				<div class="col-4">
-					<img src="<?= base_url("assets/icon/item.png")  ?>" alt="mdo" id="uimg" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
-					<input type="file" class="form-control btn btn-outline-dark my-3 col-8" placeholder="Pilih Gambar" style="width:410px; " onchange="readURL(this)" id="inputGroupFile02">
+					<img src="<?= base_url("assets/icon/item.png")  ?>" alt="mdo" id="uimg" name="images" alt="" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
+					<input type="file" name="images" id="images" class="form-control btn btn-outline-dark my-3 col-8" placeholder="Pilih Gambar" style="width:410px; " onchange="readURL(this)" id="inputGroupFile02">
 				</div>
 				<div class="col-4">
 					<div class="row mb-3">
@@ -133,7 +133,7 @@
 						<div class="col-10">
 							<label for="" class="form-label">Stock Minimum</label>
 							<div class="col">
-								<input name="stokmin" type="text" id="stokmin" class="form-control" autocomplete="off" required>
+								<input name="stokmin" type="number" id="stokmin" class="form-control" autocomplete="off" required>
 							</div>
 						</div>
 						<div class="col-2"></div>
@@ -150,13 +150,23 @@
 					<div id="usebomx"></div>
 					<div class="row mb-3">
 						<div class="col-10">
-							<label for="" class="form-label">Harga</label>
+							<label for="" class="form-label">Harga Beli</label>
+							<div class="col">
+								<input type="number" name="pricebuy" class="form-control" autocomplete="off" required>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-10">
+							<label for="" class="form-label">Harga Jual</label>
 							<div class="col">
 								<input type="number" name="price" class="form-control" autocomplete="off" required>
 							</div>
 						</div>
 						<div class="col-2"></div>
 					</div>
+
 					<div class="row mb-3">
 						<div class="col-10">
 							<label for="" class="form-label">Deskripsi</label>
@@ -174,7 +184,7 @@
 								</div>
 								<div class="col-8">
 									<div class="form-check form-switch">
-										<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
+										<input name="status" id="check" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
 									</div>
 								</div>
 							</div>
@@ -192,11 +202,11 @@
 						<thead class="text-center text-white" style="background:#1143d8;">
 							<tr>
 								<th style="width: 10%;">No</th>
-								<th>SKU</th=>
-								<th>Nama Item</th=>
-								<th>Deskripsi</th=>
-								<th>Qty</th=>
-								<th>Action</th=>
+								<th>SKU</th>
+								<th>Nama Item</th>
+								<th>Deskripsi</th>
+								<th>Qty</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody id="detailx">
@@ -206,7 +216,7 @@
 			</div>
 			<div class="row">
 				<div class="col text-end">
-					<button type="button" class="btn btn-primary px-5" id="additem" onclick="additem()">Buat Item</button>
+					<button type="button" class="btn btn-primary px-5" id="additem">Buat Item</button>
 				</div>
 			</div>
 		</form>
@@ -305,6 +315,17 @@
 		});
 	}
 
+	$(function() {
+		$("#check").click(function() {
+			if ($(this).is(":checked")) {
+				$("#check").val(1);
+			} else {
+				$("#check").val(0);
+			}
+			calc();
+		});
+	});
+
 	$('form button').on("click", function(e) {
 		if ($(this).attr('id') == "additem") {
 			var xask = '';
@@ -322,18 +343,6 @@
 		e.preventDefault();
 	});
 
-	function addorder() {
-		var cx = $('#form').serialize();
-		$.post("<?php echo base_url('MasterDataControler/additem') ?>", cx,
-			function(data) {
-				if (data == 'Success') {
-					alert('Input Data Berhasil');
-					cancelorder();
-				} else {
-					alert('Input Data Gagal. ' + data);
-				}
-			});
-	}
 
 	function validasi() {
 		var xval = 0;
@@ -358,6 +367,13 @@
 			sts = 0;
 			return false;
 		}
+
+		// xval = $("#images").val();
+		// if ($("#images").val() == '') {
+		// 	alert('Input Gambar Terlebih Dahulu');
+		// 	sts = 0;
+		// 	return false;
+		// }
 
 		if (sts == 1) {
 			return true;
@@ -384,20 +400,7 @@
 		calc();
 	}
 
-	function readURL(input) {
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
 
-			reader.onload = function(e) {
-				$('#uimg')
-					.attr('src', e.target.result)
-					.width(412)
-					.height(309);
-			};
-
-			reader.readAsDataURL(input.files[0]);
-		}
-	}
 
 	function add_row_transaksi(xxid) {
 		var lastid = 0;
@@ -449,16 +452,37 @@
 	});
 
 	function addorder() {
-		var cx = $('#form').serialize();
-		$.post("<?php echo base_url('MasterDataControler/additem') ?>", cx,
-			function(data) {
+		var form = $('#form')[0];
+		var data = new FormData(form);
+		data.append("CustomField", "This is some extra data");
+		$.ajax({
+			type: "POST",
+			enctype: 'multipart/form-data',
+			url: "<?php echo base_url('MasterDataControler/additem') ?>",
+			data: data,
+			processData: false,
+			contentType: false,
+			cache: false,
+			timeout: 600000,
+			success: function(data) {
+
 				if (data == 'Success') {
 					alert('Input Data Berhasil');
 					cancelorder();
 				} else {
-					alert('Input Data Gagal. ' + data);
+					alert('Input Data Gagal ' + data);
 				}
-			});
+
+			},
+			error: function(e) {
+
+				$("#result").text(e.responseText);
+				console.log("ERROR : ", e);
+				$("#btnSubmit").prop("disabled", false);
+
+			}
+		});
+
 	}
 
 	function cancelorder() {
@@ -470,6 +494,21 @@
 			document.getElementById("price").disabled = false;
 		} else {
 			document.getElementById("price").enable = false;
+		}
+	}
+
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				$('#uimg')
+					.attr('src', e.target.result)
+					.width(412)
+					.height(309);
+			};
+
+			reader.readAsDataURL(input.files[0]);
 		}
 	}
 </script>

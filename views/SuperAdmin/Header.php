@@ -112,8 +112,8 @@
   }
 </style>
 
-<body class="body">
-  <nav class="navbar navbar-expand-lg navbar-light header px-4 nav-link">
+<body class="body" style="position: relative;">
+  <nav class="navbar navbar-expand-lg navbar-light header px-4 nav-link" style="position:sticky;top: 0;z-index: 100;">
     <div class="container-fluid">
       <a class="navbar-brand mt-2 mt-lg-0" href="<?php echo base_url('AuthControler/mainpage') ?>">
         <img src="<?php echo base_url('assets/icon/logo_yubi.png') ?>" height="25" alt="MDB Logo" loading="lazy" />
@@ -339,7 +339,7 @@
               <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingstatus') ?>">Ingoing Status</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingstatus') ?>">Ingoing Report</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/ingoingreport') ?>">Ingoing Report</a>
             </li>
           </ul>
         </li>
@@ -411,10 +411,10 @@
           </a>
           <ul class="dropdown-menu dropdown-submenu mt-2" style="border-radius: 10px;">
             <li>
-              <a class="dropdown-item m-2" href="#">Inventory Closing</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Inclosing') ?>">Inventory Closing</a>
             </li>
             <li>
-              <a class="dropdown-item m-2" href="#">Register Stock Opname</a>
+              <a class="dropdown-item m-2" href="<?php echo base_url('InventoryController/Stokopname') ?>">Register Stock Opname</a>
             </li>
             <li>
               <a class="dropdown-item m-2" href="#">Stock Opname Report</a>
@@ -437,17 +437,17 @@
                   <img class="h-75" src="<?php echo base_url('assets/icon/menu-item.png') ?>" alt="">
                 </div>
                 <div class="col-6 ms-3">
-                  <h6>Invoice Sales B2B</h6>
+                  <h6>Sales Invoice</h6>
                   <p>Menu Untuk Membuat Tagihan</p>
                 </div>
               </div>
             </a>
             <ul class="dropdown-menu dropdown-submenu" style="border-radius: 10px;">
               <li>
-                <a class="dropdown-item m-2" href="<?php echo base_url('QuotationController/addquot') ?>">Register Invoice Sales</a>
+                <a class="dropdown-item m-2" href="<?php echo base_url('SalesinvoiceControler/Registersales') ?>">Register Sales Invoice </a>
               </li>
               <li>
-                <a class="dropdown-item m-2" href="<?php echo base_url('QuotationController/reportquot') ?>">Invoice Report</a>
+                <a class="dropdown-item m-2" href="<?php echo base_url('SalesinvoiceControler/Salesinvoice') ?>">Sales Invoice Status</a>
               </li>
             </ul>
           </li>
@@ -465,7 +465,7 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu" style="border-radius: 10px;">
               <li>
-                <a class="dropdown-item m-2" href="#">Register Sales Adjustment</a>
+                <a class="dropdown-item m-2" href="<?php echo base_url('SalesinvoiceControler/salesinvoiceadj') ?>">Register Sales Invoice Adjustment</a>
               </li>
               <li>
                 <a class="dropdown-item m-2" href="#">Advance From Customer</a>
@@ -499,10 +499,10 @@
             </a>
             <ul class="dropdown-menu dropdown-submenu dropdown-submenu-left" style="border-radius: 10px;">
               <li>
-                <a class="dropdown-item m-2" href="<?php echo base_url('QuotationController/addquot') ?>">Sales Book Daily</a>
+                <a class="dropdown-item m-2" href="<?php echo base_url('SalesinvoiceControler/dailysales') ?>">Sales Book Daily</a>
               </li>
               <li>
-                <a class="dropdown-item m-2" href="<?php echo base_url('QuotationController/reportquot') ?>">Excel</a>
+                <a class="dropdown-item m-2" href="<?php echo base_url('SalesinvoiceControler/reportquot') ?>">Excel</a>
               </li>
             </ul>
           </li>

@@ -21,7 +21,8 @@ class background extends CI_Controller
     function syncitem($idshop, $idwh)
     {
         $cek =  $this->backgroundservice->syncitem($idshop);
-        // echo $cek;
+        echo $cek;
+        // print_r($cek);
 
         // $this->syncitem($idshop, $idwh);
         $this->syncinvin($idshop, $idwh);
@@ -30,14 +31,14 @@ class background extends CI_Controller
     function syncinvin($idshop, $idwh)
     {
         $cek =  $this->backgroundservice->syncinvin($idshop, $idwh);
-        // echo $cek;
+        echo $cek;
 
         $this->syncinvout($idshop, $idwh);
     }
     function syncinvout($idshop, $idwh)
     {
         $cek =  $this->backgroundservice->syncinvout($idshop, $idwh);
-        // echo $cek;
+        echo $cek;
 
         $this->syncsales($idshop, $idwh);
     }

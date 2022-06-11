@@ -17,10 +17,10 @@
 							<?php echo $this->session->flashdata('message'); ?>
 							<?php $this->session->set_flashdata('message', ''); ?>
 						</div>
-						<form action="<?php echo base_url('MasterDataControler/editcustomer') ?>" method="POST" id="form" enctype="multipart/form-data">
+						<form action="<?php echo base_url('MasterDataControler/edititem') ?>" method="POST" id="form" enctype="multipart/form-data">
 							<div class="row mb-3">
 								<div class="col-4">
-									<img src="<?= base_url("assets/icon/item.png")  ?>" alt="mdo" id="uimg" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
+									<img src="<?= $data['gambar']  ?>" alt="mdo" id="uimg" class="" style="object-fit:cover; width:412px;height:309px;border-radius: 4px;">
 									<input type="file" class="form-control btn btn-outline-dark my-3 col-8" placeholder="Pilih Gambar" style="width:410px; " onchange="readURL(this)" id="inputGroupFile02">
 								</div>
 								<div class="col-4">
@@ -80,13 +80,13 @@
 											<label class="form-label mb-3">Jenis Item</label>
 											<div class="row">
 												<div class="col-3">
-													<input type="radio" name="jenisitem" value="service" class="form-check-input">
+													<input type="radio" name="jenisitem" value="service" id="bomservice" class="form-check-input">
 													<label class="form-check-label" for="flexRadioDefault1">
 														Service
 													</label>
 												</div>
 												<div class="col-4">
-													<input type="radio" class="form-check-input" name="jenisitem" value="non service" checked>
+													<input type="radio" class="form-check-input" name="jenisitem" id="bomnonservice" value="non service" checked>
 													<label class="form-check-label" for="flexRadioDefault1">
 														Non Service
 													</label>
@@ -102,14 +102,14 @@
 											<div class="row">
 												<?php if ($data["jenisitem"] == "non service") : ?>
 													<div class="col-3">
-														<input type="radio" name="jenisitem" value="service" class="form-check-input" checked>
+														<input type="radio" name="jenisitem" id="nonbomservice" value="service" class="form-check-input" checked>
 														<label class="form-check-label" for="flexRadioDefault1">
 															Service
 														</label>
 													</div>
 												<?php else : ?>
 													<div class="col-4">
-														<input type="radio" class="form-check-input" name="jenisitem" value="non service">
+														<input type="radio" class="form-check-input" name="jenisitem" id="nonbomnonservice" value="non service">
 														<label class="form-check-label" for="flexRadioDefault1" checked>
 															Non Service
 														</label>
@@ -147,7 +147,16 @@
 									<div id="usebomx"></div>
 									<div class="row mb-3">
 										<div class="col-10">
-											<label for="" class="form-label">Harga</label>
+											<label for="" class="form-label">Harga Beli</label>
+											<div class="col">
+												<input type="number" name="pricebuy" value="<?php echo $data["pricebuy"] ?>" class="form-control" autocomplete="off" required>
+											</div>
+										</div>
+										<div class="col-2"></div>
+									</div>
+									<div class="row mb-3">
+										<div class="col-10">
+											<label for="" class="form-label">Harga Jual</label>
 											<div class="col">
 												<input type="number" name="price" value="<?php echo $data["price"] ?>" class="form-control" autocomplete="off" required>
 											</div>
@@ -170,9 +179,15 @@
 													<p style="font-size: 16px">Status</p>
 												</div>
 												<div class="col-8">
-													<div class="form-check form-switch">
-														<input name="status" value="1" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
-													</div>
+													<?php if ($data["status"] == 0) : ?>
+														<div class="form-check form-switch">
+															<input name="status" class="form-check-input" type="checkbox" id="check">
+														</div>
+													<?php else : ?>
+														<div class="form-check form-switch">
+															<input name="status" class="form-check-input" type="checkbox" id="check" checked>
+														</div>
+													<?php endif ?>
 												</div>
 											</div>
 										</div>
@@ -216,6 +231,30 @@
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script>
+		var data = <?php echo json_encode($data) ?>;
+		console.log(data)
+		$('#itemgroup').val(data["itemgroup"])
+		if (data["jenisitem"] == "non service" && data["itemgroup"] == "bom") {
+			$('#bomnonservice').prop('checked', true);
+		} else if (data["jenisitem"] == "service" && data["itemgroup"] == "bom") {
+			$('#bomservice').prop('checked', true);
+		} else if (data["jenisitem"] == "service" && data["itemgroup"] == "nonbom") {
+			$('#nonbomservice').prop('checked', true);
+		} else {
+			$('#nonbomnonservice').prop('checked', true);
+		}
+
+		$(function() {
+			$("#check").click(function() {
+				if ($(this).is(":checked")) {
+					$("#check").val(1);
+				} else {
+					$("#check").val(0);
+				}
+				calc();
+			});
+		});
+
 		function ubah(x) {
 			if (x == "usebom") {
 				$('#bom').hide();

@@ -281,6 +281,7 @@ class SuperAdminControler extends CI_Controller
 	{
 		$f = $this->session->userdata("data");
 		$this->load->Model("MasterData");
+		$idcomp       = $this->input->post("idcomp");
 		$namecomp       = $this->input->post("namecomp");
 		$email          = $this->input->post("email");
 		$nokantor       = $this->input->post("nokantor");
@@ -288,11 +289,12 @@ class SuperAdminControler extends CI_Controller
 		$alamat         = $this->input->post("alamat");
 		$remarkinvoice  = $this->input->post("remarkinvoice");
 		$remarkquotation = $this->input->post("remarkquotation");
+		$idcompdet           = $this->input->post("idcompdet");
 		$bank           = $this->input->post("bank");
 		$norekening     = $this->input->post("norekening");
 		$beneficiary    = $this->input->post("beneficiary");
 
-		$cek = $this->MasterData->addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary);
+		$cek = $this->MasterData->addcompany($idcomp, $namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $idcompdet, $bank, $norekening, $beneficiary);
 		echo $cek;
 	}
 

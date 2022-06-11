@@ -145,6 +145,174 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getpobyid($idpo)
+	{
+		$data  = array($idpo);
+		$query = "SELECT * FROM po,tb_customer WHERE po.idcust = tb_customer.idcust AND idpo = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"] = $key->idpo;
+				$f["codepo"] = $key->codepo;
+				$f["idcust"] = $key->idcust;
+				$f["idcurr"] = $key->idcurr;
+				$f["namecust"] = $key->namecust;
+				$f["datepo"] = $key->datepo;
+				$f["delivedate"] = $key->delivedate;
+				$f["exchange"] = $key->exchange;
+				$f["vat"] = $key->vat;
+				$f["qtypo"] = $key->qtypo;
+				$f["qtyin"] = $key->qtyin;
+				$f["norekening"] = $key->norekening;
+				$f["deskripsi"] = $key->deskripsi;
+				$f["statuspo"] = $key->statuspo;
+				$f["subtotal"] = $key->subtotal;
+				$f["disctrans"] = $key->disctrans;
+				$f["total"] = $key->total;
+				$f["vat"] = $key->vat;
+				$f["grandtotal"] = $key->grandtotal;
+				$f["data"] = array();
+				$datax = array($key->idpo);
+				$queryx = "SELECT *,podet.price as prices FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["nameitem"] = $keyx->nameitem;
+						$g["idpo"] = $keyx->idpo;
+						$g["qty"] = $keyx->qty;
+						$g["disnom"] = $keyx->disnom;
+						$g["disper"] = $keyx->disper;
+						$g["subpo"] = $keyx->subpo;
+						$g["price"] = $keyx->prices;
+						$g["totaldisc"] = $keyx->totaldisc;
+						$g["grandtotal"] = $keyx->grandtotal;
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getinvinbyid($idin)
+	{
+		$data  = array($idin);
+		$query = "SELECT * FROM invin,tb_customer WHERE invin.idcust = tb_customer.idcust AND idin = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"] = $key->idin;
+				$f["idpo"] = $key->idpo;
+				$f["codein"] = $key->codein;
+				$f["idcust"] = $key->idcust;
+				$f["typein"] = $key->typein;
+				$f["namecust"] = $key->namecust;
+				$f["idwh"] = $key->idwh;
+				$f["datein"] = $key->datein;
+				$f["idcurr"] = $key->idcurr;
+				$f["nosuratjalan"] = $key->nosuratjalan;
+
+				$data = array($key->idpo);
+				$queryx = "SELECT * FROM po WHERE idpo = ? ";
+				$eksekusix = $this->db->query($queryx, $data)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$f["idpo"]  = $keyx->idpo;
+						$f["codepo"]  = $keyx->codepo;
+					}
+				}
+
+				$f["data"] = array();
+				$datax = array($key->idin);
+				$queryx = "SELECT *FROM invindet,tb_item WHERE invindet.idin = ? AND invindet.iditem = tb_item.iditem";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["nameitem"] = $keyx->nameitem;
+						$g["idpo"] = $keyx->idpo;
+						$g["idin"] = $keyx->idin;
+						$g["qtypodet"] = $keyx->qtypodet;
+						$g["qtyindet"] = $keyx->qtyindet;
+						$g["price"] = $keyx->price;
+						$g["balance"] = $keyx->balance;
+						$g["expdate"] = $keyx->expdate;
+						$g["deskripsi"] = $keyx->deskripsi;
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getpolast()
+	{
+		$query = "SELECT * FROM po ORDER BY idpo DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$respon =   "PO-TRS-" . str_replace("PO-TRS-", "", $key->codepo)  + 1;
+			}
+		} else {
+			$respon = "PO-TRS-1";
+		}
+
+		return $respon;
+	}
+
+	function getreqpolast()
+	{
+		$query = "SELECT * FROM tb_requestpo ORDER BY idreqpo DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$respon =   "REQPO-TRS-" . str_replace("REQPO-TRS-", "", $key->codereqpo)  + 1;
+			}
+		} else {
+			$respon = "REQPO-TRS-1";
+		}
+
+		return $respon;
+	}
+
+	function getinvinlast()
+	{
+		$query = "SELECT * FROM invin ORDER BY idin DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$respon =   "INVIN-TRS-" . str_replace("INVIN-TRS-", "", $key->codein)  + 1;
+			}
+		} else {
+			$respon = "INVIN-TRS-1";
+		}
+
+		return $respon;
+	}
+
 	function getcustomer()
 	{
 		$query = "SELECT * FROM tb_customer ";
@@ -271,7 +439,7 @@ class MasterData extends CI_Model
 	function detailpo($idpo)
 	{
 		$data = array($idpo);
-		$query = "SELECT * FROM po,tb_customer where po.idcust = tb_customer.idcust  AND po.idpo = ?";
+		$query = "SELECT * FROM po,tb_customer where po.idcust = tb_customer.idcust  AND po.codepo = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 
@@ -290,20 +458,26 @@ class MasterData extends CI_Model
 				$f["norekening"] = $key->norekening;
 				$f["deskripsi"] = $key->deskripsi;
 				$f["statuspo"] = $key->statuspo;
+				$f["subtotal"] = $key->subtotal;
+				$f["disctrans"] = $key->disctrans;
+				$f["total"] = $key->total;
+				$f["vat"] = $key->vat;
+				$f["grandtotal"] = $key->grandtotal;
 				$f["data"] = array();
 				$datax = array($key->idpo);
-				$queryx = "SELECT * FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
+				$queryx = "SELECT *,podet.price as prices FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
 						$g["sku"] = $keyx->sku;
 						$g["iditem"] = $keyx->iditem;
+						$g["nameitem"] = $keyx->nameitem;
 						$g["idpo"] = $keyx->idpo;
 						$g["qty"] = $keyx->qty;
 						$g["disnom"] = $keyx->disnom;
 						$g["disper"] = $keyx->disper;
 						$g["subpo"] = $keyx->subpo;
-						$g["price"] = $keyx->price;
+						$g["price"] = $keyx->prices;
 						$g["totaldisc"] = $keyx->totaldisc;
 						$g["grandtotal"] = $keyx->grandtotal;
 
@@ -319,6 +493,37 @@ class MasterData extends CI_Model
 			}
 		} else {
 			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function cancelpo($codepo)
+	{
+		$data = array($codepo);
+
+		$query = "SELECT * FROM po where codepo = ? ";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				if ($key->statuspo != "Waiting") {
+					if ($key->statuspo == "Cancel") {
+						$respon = "PO Sudah Dicancel";
+					} else if ($key->statuspo) {
+						$respon = "PO Sudah Diproses";
+					}
+				} else {
+					$queryx = "UPDATE po SET statuspo = 'Cancel' where codepo = ?";
+					$eksekusix = $this->db->query($queryx, $data);
+					if ($eksekusix == true) {
+						$respon = "Success";
+					} else {
+						$respon = "PO Gagal Diupdate";
+					}
+				}
+			}
+		} else {
+			$respon = "PO Tidak ditemukan";
 		}
 
 		return $respon;
@@ -546,7 +751,7 @@ class MasterData extends CI_Model
 
 	function getitemmaterial()
 	{
-		$query    = "SELECT * FROM tb_item WHERE bom ='y'";
+		$query    = "SELECT * FROM tb_item WHERE status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -571,7 +776,7 @@ class MasterData extends CI_Model
 
 	function getitemmaterialso()
 	{
-		$query    = "SELECT * FROM tb_item";
+		$query    = "SELECT * FROM tb_item where status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -611,7 +816,7 @@ class MasterData extends CI_Model
 
 	function getitemmaterialpo()
 	{
-		$query = "SELECT * FROM tb_item WHERE itemgroup in('nonbom','bom')";
+		$query = "SELECT * FROM tb_item WHERE itemgroup in('nonbom','bom') AND status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -620,7 +825,7 @@ class MasterData extends CI_Model
 				$f["idunit"]        =  $key->idunit;
 				$f["nameitem"]      =  $key->nameitem;
 				$f["sku"]           =  $key->sku;
-				$f["price"]         =  $key->price;
+				$f["price"]         =  $key->pricebuy;
 				$f["bom"]           =  $key->bom;
 				$f["usebom"]        =  $key->usebom;
 				$f["itemgroup"]     =  $key->itemgroup;
@@ -647,7 +852,7 @@ class MasterData extends CI_Model
 
 	function getitemmaterialinvin()
 	{
-		$query = "SELECT * FROM tb_item WHERE itemgroup in('nonbom','bom')";
+		$query = "SELECT * FROM tb_item WHERE itemgroup in('nonbom','bom') AND status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -655,7 +860,7 @@ class MasterData extends CI_Model
 				$f["iditem"]        =  $key->iditem;
 				$f["nameitem"]      =  $key->nameitem;
 				$f["sku"]           =  $key->sku;
-				$f["price"]         =  $key->price;
+				$f["price"]         =  $key->pricebuy;
 				$f["bom"]           =  $key->bom;
 				$f["usebom"]        =  $key->usebom;
 				$f["itemgroup"]     =  $key->itemgroup;
@@ -1305,7 +1510,7 @@ class MasterData extends CI_Model
 	function salesorderdetail($idso)
 	{
 		$data  = array($idso);
-		$query = "SELECT tb_salesorder.*,tb_customer.namecust FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND tb_salesorder.idso = ?";
+		$query = "SELECT tb_salesorder.*,tb_customer.namecust FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust AND tb_salesorder.codeso = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 
@@ -1343,6 +1548,7 @@ class MasterData extends CI_Model
 						$g["sku"] = $keyx->sku;
 						$g["grandtotaldet"] = $keyx->grandtotaldet;
 						$g["disnomdet"] = $keyx->disnomdet;
+						$g["disperdet"] = $keyx->disperdet;
 						$g["totalso"] = $keyx->totalso;
 						$g["price"] = $keyx->price;
 						$g["iditem"] = $keyx->iditem;
@@ -1542,104 +1748,88 @@ class MasterData extends CI_Model
 
 		if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($namewarehouse);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ?";
 		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($tipein);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND typein = ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namecust = ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
 			$data  = array($date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
 			$data  = array("%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND nameitem like ?";
 		} else if ($namewarehouse != "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($namewarehouse, $tipein);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND typein = ? ";
 		} else if ($namewarehouse != "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($namewarehouse, $namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND namecust = ? ";
 		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
 			$data  = array($namewarehouse, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ? ";
 		} else if ($namewarehouse != "" && $tipein == "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
 			$data  = array($namewarehouse, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND nameitem like ? ";
 		} else if ($namewarehouse == "" && $tipein != "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem == "") {
 			$data  = array($tipein, $namesupp);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND typein = ? AND namecust = ?";
 		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem == "") {
 			$data  = array($tipein, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND typein = ? AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ?";
 		} else if ($namewarehouse == "" && $tipein != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $nameitem != "") {
 			$data  = array($tipein, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND typein = ? AND nameitem like ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem == "") {
 			$data  = array($namesupp, $date1, $date2);
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namecust = ? AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $nameitem != "") {
 			$data  = array($namesupp, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namecust = ? AND nameitem like ?";
 		} else if ($namewarehouse == "" && $tipein == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $nameitem != "") {
 			$data  = array($date1, $date2, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
 		} else if ($namewarehouse != "" && $tipein != "" && $namesupp != "" && $date1 != "" && $date2 != "" && $nameitem != "") {
 			$data  = array($namewarehouse, $tipein, $namesupp, $date1, $date2, "%" . $nameitem . "%");
-			$query = "SELECT * FROM invin,invindet,tb_item,tb_warehouse,tb_customer 
-			WHERE invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem 
-		    AND invin.idwh = tb_warehouse.idwarehouse 
+			$query = "SELECT * FROM invin,tb_warehouse,tb_customer 
+			WHERE invin.idwh = tb_warehouse.idwarehouse 
 			AND invin.idcust = tb_customer.idcust AND namewarehouse = ? AND typein = ? AND namecust = ? AND REPLACE(datein, ' ', '') >= ? 
 			AND REPLACE(datein, ' ', '') <= ? AND nameitem like ?";
 		} else {
@@ -1649,43 +1839,49 @@ class MasterData extends CI_Model
 			AND invin.idcust = tb_customer.idcust";
 		}
 		$eksekusi = $this->db->query($query, $data)->result_object();
+		// echo ($this->db->last_query());
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
 				$f["idin"]	        = $key->idin;
 				$f["idpo"]	        = $key->idpo;
 				$f["codein"]	    = $key->codein;
+				$f["nosuratjalan"]	= $key->nosuratjalan;
 				$f["datein"]	    = $key->datein;
 				$f["typein"]	    = $key->typein;
-				$f["namewarehouse"]       = $key->namewarehouse;
-				$f["namecust"]       = $key->namecust;
+				$f["namewarehouse"] = $key->namewarehouse;
+				$f["namecust"]      = $key->namecust;
 
-				$datax = array($f["idin"]);
-				$queryx = "SELECT * FROM invindet WHERE idin = ?";
+				$datax = array($key->idpo);
+				$queryx = "SELECT * FROM po WHERE idpo = ?";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $keyx) {
-						$f["idin"] = $keyx->idin;
-						$f["idindet"] = $keyx->idindet;
+					foreach ($eksekusix as $keyxs) {
+						$f["idpo"] = $keyxs->idpo;
+						$f["codepo"] = $keyxs->codepo;
+						$f["datepo"] = $keyxs->codepo;
 					}
 				}
 
 				$data = array($f["idin"]);
-				$query1 = "SELECT * FROM invin,invindet, tb_item  WHERE invin.idin = invindet.idin AND  invindet.iditem = tb_item.iditem AND invindet.idin = ?";
+				$query1 = "SELECT *,invindet.harga as pricebuy FROM invin,invindet, tb_item  WHERE invin.idin = invindet.idin AND  invindet.iditem = tb_item.iditem AND invindet.idin =?";
 				$eksekusi1 = $this->db->query($query1, $data)->result_object();
 				if (count($eksekusi1) > 0) {
 					$f["data"] = array();
 					foreach ($eksekusi1 as $keyx) {
 						$g["idin"] = $keyx->idin;
 						$g["idindet"] = $keyx->idindet;
-						$g["codein"] = $keyx->codein;
-						$g["datein"] = $keyx->datein;
-						$g["iditem"] = $keyx->iditem;
+						$g["nosuratjalan"] = $keyx->nosuratjalan;
+						$g["codein"]  = $keyx->codein;
+						$g["datein"]  = $keyx->datein;
+						$g["iditem"]  = $keyx->iditem;
 						$g["nameitem"]  = $keyx->nameitem;
 						$g["sku"]       = $keyx->sku;
-						$g["price"] = $keyx->price;
+						$g["price"]     = $keyx->pricebuy;
 						$g["deskripsi"] = $keyx->deskripsi;
 						$g["itemgroup"] = $keyx->itemgroup;
+						$g["qtypodet"]  = $keyx->qtypodet;
+						$g["qtyindet"]  = $keyx->qtyindet;
 
 
 						array_push($f["data"], $g);
@@ -1702,10 +1898,63 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistpostatus($filter, $search, $statusquo, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusquo . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT po.*,tb_customer.namecust FROM po,tb_customer WHERE po.idcust = tb_customer.idcust) AS t where  t." . $filter . " LIKE ? AND t.statuspo LIKE  ? AND 
+        t.datepo BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idpo"] = $key->idpo;
+				$f["codepo"] = $key->codepo;
+				$f["namecust"] = $key->namecust;
+				$f["deskripsi"] = $key->deskripsi;
+				$f["datepo"] = $key->datepo;
+				$f["delivedate"] = $key->delivedate;
+				$f["statuspo"] = $key->statuspo;
+				$f["grandtotal"] = $key->grandtotal;
+				$f["total"] = $key->total;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getlistinvinstatus($filter, $search, $statusin, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusin . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT invin.*,tb_customer.namecust,tb_warehouse.namewarehouse FROM invin,tb_customer,tb_warehouse WHERE invin.idcust = tb_customer.idcust AND invin.idwh = tb_warehouse.idwarehouse) AS t where  t." . $filter . " LIKE ? AND t.statusin LIKE  ? AND 
+        t.datein BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idin"] = $key->idin;
+				$f["codein"] = $key->codein;
+				$f["datein"] = $key->datein;
+				$f["namecust"] = $key->namecust;
+				$f["nosuratjalan"] = $key->nosuratjalan;
+				$f["namewarehouse"] = $key->namewarehouse;
+				$f["typein"] = $key->typein;
+				$f["statusin"] = $key->statusin;
+				$f["total"] = $key->total;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getlistpodetail($codepo, $namesupp, $filter, $date1, $date2, $status)
 	{
-		// $query = "SELECT * FROM po AS a INNER JOIN podet AS b ON a.idpo = b.idpo INNER JOIN tb_item AS c ON b.iditem = c.iditem INNER JOIN tb_supplier AS d ON a.idsupp = d.idsupp INNER JOIN tb_user AS e ON a.madeuser = e.iduser";
-		$data = "";
+		$data  = "";
 		$query = "";
 
 		if ($codepo != "" && $namesupp == "" && $date1 == "" && $date2 == "" && $status == "") {
@@ -1717,7 +1966,7 @@ class MasterData extends CI_Model
 		} elseif ($codepo == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $status == "") {
 			$data  = array($namesupp);
 			$query = "SELECT * FROM po AS a 
-			 INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
+			 INNER JOIN tb_customer AS c ON a.idcust   = c.idcust  
 			 INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
 			 WHERE namecust = ?";
 		} elseif ($codepo == "" && $namesupp == "" && $date1 != "" && $date2 != "" && $status == "") {
@@ -1761,7 +2010,7 @@ class MasterData extends CI_Model
 			$query = "SELECT * FROM po AS a 
 			INNER JOIN tb_customer AS c ON a.idcust = c.idcust  
 			INNER JOIN common_detail AS d ON a.idcurr = d.idcomm
-			WHERE namecust AND REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
+			WHERE namecust = ? AND REPLACE(a.$filter, ' ', '') >= ? AND REPLACE(a.$filter, ' ', '') <= ?";
 		} else if ($codepo == "" && $namesupp != "" && $date1 == "" && $date2 == "" && $status != "") {
 			$data  = array($namesupp, $status);
 			$query = "SELECT * FROM po AS a 
@@ -1798,6 +2047,7 @@ class MasterData extends CI_Model
 				$f["datepo"]	    = $key->datepo;
 				$f["subtotal"]	    = $key->subtotal;
 				$f["disctrans"]	    = $key->disctrans;
+				$f["total"]	        = $key->total;
 				$f["vat"]	        = $key->vat;
 				$f["grandtotal"]	= $key->grandtotal;
 				$f["delivedate"]	= $key->delivedate;
@@ -1806,13 +2056,16 @@ class MasterData extends CI_Model
 				$f["qtypo"]         = $key->qtypo;
 				$f["qtyin"]         = $key->qtyin;
 				$f["namecust"]      = $key->namecust;
+				$f["deskripsi"]      = $key->deskripsi;
 
-				if ($f["qtyin"] == 0) {
+				if ($f["statuspo"] == "Waiting") {
 					$f["statuspo"] = "Waiting";
 				} else if ($f["qtyin"] != 0 && $f["qtyin"] < $f["qtypo"]) {
 					$f["statuspo"] = "Process";
-				} else {
+				} else if ($f["qtyin"] == $f["qtypo"]) {
 					$f["statuspo"] = "Finish";
+				} else if ($f["statuspo"] == "Cancel") {
+					$f["statuspo"] = "Cancel";
 				}
 
 				$datax = array($f["idpo"]);
@@ -1821,12 +2074,12 @@ class MasterData extends CI_Model
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
 						$f["price"] = $keyx->price;
-						$f["grandtotal"] = $keyx->grandtotal;
+						// $f["grandtotalx"] = $keyx->grandtotal;
 					}
 				}
 
 				$data = array($f["idpo"]);
-				$query1 = "SELECT * FROM po,podet, tb_item  WHERE po.idpo = podet.idpo AND  podet.iditem = tb_item.iditem AND podet.idpo = ?";
+				$query1 = "SELECT *,podet.price as pricebuy FROM po,podet, tb_item  WHERE po.idpo = podet.idpo AND  podet.iditem = tb_item.iditem AND podet.idpo = ?";
 				$eksekusi1 = $this->db->query($query1, $data)->result_object();
 				if (count($eksekusi1) > 0) {
 					$f["data"] = array();
@@ -1837,11 +2090,11 @@ class MasterData extends CI_Model
 						$g["iditem"] = $keyx->iditem;
 						$g["nameitem"]  = $keyx->nameitem;
 						$g["sku"]       = $keyx->sku;
-						$g["price"] = $keyx->price;
+						$g["price"] = $keyx->pricebuy;
 						$g["qty"] = $keyx->qty;
 						$g["vat"] = $keyx->vat;
 						$g["deskripsi"] = $keyx->deskripsi;
-						$g["grandtotal"] = $keyx->grandtotal;
+						$g["grandtotalx"] = $keyx->grandtotal;
 						$g["disctrans"]      = $key->disctrans;
 
 
@@ -2294,9 +2547,10 @@ class MasterData extends CI_Model
 		$sku,
 		$jenisitem,
 		$stockmin,
+		$pricebuy,
 		$price,
 		$deskripsi,
-		$status,
+		$images,
 		$userid
 	) {
 		date_default_timezone_set('Asia/Jakarta');
@@ -2307,28 +2561,47 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "SKU telah terdaftar";
 		} else {
-			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $price, $deskripsi, $status, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisitem,jenisqty,minstock,price,deskripsi,status,madelog,madeuser)VALUES(?,?,?,?,'stock',?,?,?,?,?,?)";
+
+			$photo = 0;
+			if ($images != "") {
+				if (!file_exists("./assets/img/Produk/")) {
+					mkdir("./assets/img/Produk/");
+				}
+				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
+			}
+
+
+			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisitem,jenisqty,minstock,pricebuy,price,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'stock',?,?,?,?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
-				if ($eksekusi == true) {
-					$respon = "Success";
+
+				if ($images != "") {
+					if (move_uploaded_file($images, $photo)) {
+						$respon = "Success";
+					} else {
+						$respon = $images;
+					}
 				} else {
-					$respon = "Failed";
+					$respon = "Success";
 				}
-				return $respon;
+			} else {
+				$respon = "Failed";
 			}
 		}
+		return $respon;
 	}
+
 
 	function additemusebom(
 		$itemgroup,
 		$nameitem,
 		$sku,
 		$jenisitem,
+		$pricebuy,
 		$price,
 		$deskripsi,
-		$status,
+		$images,
 		$userid,
 		$transaksi_iditembom,
 		$transaksi_sku,
@@ -2344,11 +2617,27 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "SKU telah terdaftar";
 		} else {
-			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $price, $deskripsi, $status, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,price,bom,usebom,deskripsi,status,madelog,madeuser)VALUES(?,?,?,'stock',?,?,'n','y',?,?,?,?)";
+			$photo = 0;
+			if ($images != "") {
+				if (!file_exists("./assets/img/Produk/")) {
+					mkdir("./assets/img/Produk/");
+				}
+				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
+			}
+			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $pricebuy, $price, $deskripsi,  $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,'non stock',?,?,?,'n','y',?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
-				$respon = "Success";
+				if ($images != "") {
+					if (move_uploaded_file($images, $photo)) {
+						$respon = "Success";
+					} else {
+						$respon = $images;
+					}
+				} else {
+					$respon = "Success";
+				}
+				// $respon = "Success";
 				if ($eksekusi == true) {
 					$datax = array($sku);
 					$queryx = "SELECT * FROM tb_item WHERE sku = ?";
@@ -2377,10 +2666,9 @@ class MasterData extends CI_Model
 				} else {
 					$respon = "Failed on Detail";
 				}
-
-				return $respon;
 			}
 		}
+		return $respon;
 	}
 
 	function additembom(
@@ -2389,9 +2677,10 @@ class MasterData extends CI_Model
 		$sku,
 		$unit,
 		$stockmin,
+		$pricebuy,
 		$price,
 		$deskripsi,
-		$status,
+		$images,
 		$userid
 	) {
 		date_default_timezone_set('Asia/Jakarta');
@@ -2402,11 +2691,27 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "SKU telah terdaftar";
 		} else {
-			$data     = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $price, $deskripsi, $status, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,idunit,minstock,price,bom,usebom,deskripsi,status,madelog,madeuser)VALUES(?,?,?,'stock','non service',?,?,?,'y','n',?,?,?,?)";
+			$photo = 0;
+			if ($images != "") {
+				if (!file_exists("./assets/img/Produk/")) {
+					mkdir("./assets/img/Produk/");
+				}
+				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
+			}
+			$data     = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,idunit,minstock,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,'stock','non service',?,?,?,?,'y','n',?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
-				$respon = "Success";
+
+				if ($images != "") {
+					if (move_uploaded_file($images, $photo)) {
+						$respon = "Success";
+					} else {
+						$respon = $images;
+					}
+				} else {
+					$respon = "Success";
+				}
 			} else {
 				$respon = "Failed";
 			}
@@ -2423,6 +2728,7 @@ class MasterData extends CI_Model
 		$price,
 		$deskripsi,
 		$status,
+		$userid,
 		$id
 	) {
 		$data  = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $price, $deskripsi, $status, $id);
@@ -2446,6 +2752,7 @@ class MasterData extends CI_Model
 		$price,
 		$deskripsi,
 		$status,
+		$userid,
 		$id
 	) {
 		$data  = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $price, $deskripsi, $status, $id);
@@ -2730,28 +3037,6 @@ class MasterData extends CI_Model
 	// 	return $respon;
 	// }
 
-	function edititem($id, $itemname, $priceitem, $sku, $userid, $status, $itemtype, $min, $max, $pricebuyitem, $vat, $location, $pph, $sn)
-	{
-
-		if ($status != "") {
-			$status = "1";
-		} else {
-			$status = '0';
-		}
-		date_default_timezone_set('Asia/Jakarta');
-		$subprice = $priceitem + ($priceitem - $priceitem);
-		$data = array($itemname, $priceitem, $sku, $userid, date('Y-m-d H:i:s'), $status, $itemtype, $min, $max, $vat, $location, $pricebuyitem, $subprice, $pph, $sn, $id);
-		$query = "UPDATE tb_item SET nameitem = ? , priceitem = ? , sku = ?, upduser = ?,updlog =?, status = ? , itemtype = ?, minstock = ?, maxstock = ?, VAT = ?, idlocation = ?, pricebuyitem = ?, subprice = ?, pph22= ?, usesn = ?  WHERE iditem = ?";
-		$eksekusi = $this->db->query($query, $data);
-		if ($eksekusi == true) {
-			$respon = "Success";
-		} else {
-			$respon = "Failed";
-		}
-
-		return $respon;
-	}
-
 	function editlockitem($id, $codecomm, $namecomm, $attrib1, $attrib2, $attrib3, $attrib4, $userid)
 	{
 
@@ -2947,10 +3232,13 @@ class MasterData extends CI_Model
 				$f["nameitem"] = $key->nameitem;
 				$f["jenisitem"] = $key->jenisitem;
 				$f["jenisqty"] = $key->jenisqty;
+				$f["itemgroup"] = $key->itemgroup;
+				$f["pricebuy"] = $key->pricebuy;
 				$f["price"] = $key->price;
 				$f["minstock"] = $key->minstock;
 				$f["deskripsi"] = $key->deskripsi;
 				$f["status"] = $key->status;
+				$f["gambar"] = base_url() . $key->gambar;
 			}
 			$respon = $f;
 		} else {
@@ -3164,28 +3452,114 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-
 	function getcompany()
 	{
 		$query = "SELECT * FROM tb_company";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
+			$respon = array();
 			foreach ($eksekusi as $key) {
-				$respon = array();
-				foreach ($eksekusi as $key) {
-					$f["idcomp"]      = $key->idcomp;
-					$f["namecomp"]    = $key->namecomp;
-					$f["email"]       = $key->email;
-					$f["logo"]        = $key->logo;
-					array_push($respon, $f);
-				}
-			}
+				$f["idcomp"] = $key->idcomp;
+				$f["namecomp"] = $key->namecomp;
+				$f["email"] = $key->email;
+				$f["nokantor"] = $key->nokantor;
+				$f["nohandphone"] = $key->nohandphone;
+				$f["alamat"] = $key->alamat;
+				$f["remarkinvoice"] = $key->remarkinvoice;
+				$f["remarkquotation"] = $key->remarkquotation;
 
-			return $respon;
+				$f["detail"] = array();
+				$data1 = array($key->idcomp);
+				$query1 = "SELECT * FROM tb_companydet WHERE idcomp = ?";
+				$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+				if (count($eksekusi1) > 0) {
+					foreach ($eksekusi1 as $keyx) {
+						$g["bank"]      = $keyx->bank;
+						$g["norekening"] = $keyx->norekening;
+						$g["beneficiary"] = $keyx->beneficiary;
+						array_push($f["detail"], $g);
+					}
+				} else {
+					$f["detail"] = "Not Found";
+				}
+
+				$respon = $f;
+			}
+		} else {
+			$f["idcomp"] = "";
+			$f["namecomp"] = "";
+			$f["email"] = "";
+			$f["nokantor"] = "";
+			$f["nohandphone"] = "";
+			$f["alamat"] = "";
+			$f["remarkinvoice"] = "";
+			$f["remarkquotation"] = "";
+			$f["detail"] = "Not Found";
+
+			$respon = $f;
 		}
+
+		return $respon;
 	}
 
-	function addcompany($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary)
+	function addcompany($idcomp, $namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $idcompdet, $bank, $norekening, $beneficiary)
+	{
+		if ($idcomp == "") {
+			$data     = array($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, date('Y-m-d H:i:s'));
+			$query    = "INSERT INTO tb_company(namecomp,email,nokantor,nohandphone,alamat,remarkinvoice,remarkquotation,madelog)VALUES(?,?,?,?,?,?,?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$datax = array($namecomp);
+				$queryx = "SELECT * FROM tb_company WHERE namecomp = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $key) {
+						$idcomp = $key->idcomp;
+						for ($i = 0; $i < count($bank); $i++) {
+							if ($bank[$i] != "") {
+								$dataxx     = array($idcomp, $bank[$i], $norekening[$i], $beneficiary[$i]);
+								$queryxx    = "INSERT INTO tb_companydet (idcomp,bank,norekening,beneficiary)VALUES(?,?,?,?)";
+								$eksekusixx = $this->db->query($queryxx, $dataxx);
+								if ($eksekusixx == true) {
+									$respon = "Success";
+								} else {
+									$respon = "Failed on Detail";
+								}
+
+								$dataxs   = array($bank[$i], $norekening[$i], $beneficiary[$i], $idcompdet);
+								$queryxs  = "UPDATE tb_companydet  SET bank =? ,norekening =?, beneficiary =? WHERE idcompdet = ?";
+								$eksekusisxs   = $this->db->query($queryxs, $dataxs);
+								if ($eksekusisxs == true) {
+									$respon  = "Success";
+								} else {
+									$respon  = "Failed on Qtyin";
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					$respon = "Failed on Detail";
+				}
+			} else {
+				$respon = "Failed";
+			}
+		} else {
+			$data = array($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $idcomp);
+			$query = "UPDATE tb_company SET namecomp = ? , email = ? , nokantor =? , nohandphone =?, alamat  = ? , remarkinvoice = ?, remarkquotation = ?WHERE idcomp = ?";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$respon = "Success";
+			} else {
+				$respon = "Failed";
+			}
+		}
+
+		return $respon;
+	}
+
+
+	function addcompanya($namecomp, $email, $nokantor, $nohandphone, $alamat, $remarkinvoice, $remarkquotation, $bank, $norekening, $beneficiary)
 
 	{
 		date_default_timezone_set('Asia/Jakarta');
@@ -3505,29 +3879,24 @@ class MasterData extends CI_Model
 	function getlistpodet($filter, $search, $statuspo, $startdate, $datefinish)
 	{
 		$data = array("%" . $search . "%", "%" . $statuspo . "%", $startdate, $datefinish);
-		$query = "SELECT * FROM(SELECT po.*,tb_customer.namecust FROM po,tb_customer WHERE po.idcust = tb_customer.idcust) AS t where  t." . $filter . " LIKE ? AND t.statuspo LIKE  ? AND 
-        t.datepo BETWEEN ? AND ?";
+		$query = "SELECT * FROM(SELECT po.*,tb_customer.namecust FROM po,tb_customer WHERE po.idcust = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ? AND t.statuspo LIKE  ? AND 
+        t.datepo BETWEEN ? AND ? AND t.statuspo not in('Finish','Cancel') ";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
 			foreach ($eksekusi as $key) {
-				$f["idpo"]     = $key->idpo;
-				$f["codepo"]   = $key->codepo;
-				$f["qtypo"]   = $key->qtypo;
-				$f["datepo"]   = $key->datepo;
-				$f["namecust"]   = $key->namecust;
-				$f["statuspo"]   = $key->statuspo;
+				$f["idpo"]         = $key->idpo;
+				$f["codepo"]       = $key->codepo;
+				$f["idcust"]       = $key->idcust;
+				$f["namecust"]     = $key->namecust;
+				$f["qtypo"]        = $key->qtypo;
+				$f["qtyin"]        = $key->qtyin;
+				$f["datepo"]       = $key->datepo;
+				$f["delivedate"]   = $key->delivedate;
+				$f["statuspo"]     = $key->statuspo;
+				$f["grandtotal"]   = $key->grandtotal;
 
-				$data1 = array($key->idpo);
-				$query1 = "SELECT * FROM podet where idpo = ?";
-				$eksekusi1 = $this->db->query($query1, $data1)->result_object();
-				if (count($eksekusi1) > 0) {
-					foreach ($eksekusi1 as $key) {
-						$f["idpo"] = $key->idpo;
-						$f["idpodet"] = $key->idpodet;
-						$f["grandtotal"] = $key->grandtotal;
-					}
-				}
+
 				array_push($respon, $f);
 			}
 		} else {
@@ -3550,6 +3919,8 @@ class MasterData extends CI_Model
 				$f["datereqpo"] = $key->datereqpo;
 				$f["deskripsi"] = $key->deskripsi;
 				$f["statusreqpo"] = $key->statusreqpo;
+				$f["subtotal"] = $key->subtotal;
+				$f["grandtotal"] = $key->grandtotal;
 
 				$f["data"] = array();
 				$datax = array($key->idreqpo);
@@ -3580,10 +3951,55 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function detailso($idso)
+	{
+		$data = array($idso);
+		$query = "SELECT * FROM tb_salesorder WHERE codeso = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idso"] = $key->idso;
+				$f["codeso"] = $key->codeso;
+				$f["dateso"] = $key->dateso;
+				$f["delivedate"] = $key->delivedate;
+				$f["data"] = array();
+				$datax = array($key->idso);
+				$queryx = "SELECT * FROM tb_salesorderdetail,tb_item WHERE tb_salesorderdetail.idso = ? AND tb_salesorderdetail.iditem = tb_item.iditem";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["qty"] = $keyx->qty;
+						$g["pricebuy"] = $keyx->pricebuy;
+						$g["qty"] = $keyx->qty;
+						$g["disnomdet"] = $keyx->disnomdet;
+						$g["disperdet"] = $keyx->disperdet;
+						$g["totalso"] = $keyx->totalso;
+						$g["grandtotal"] = $keyx->grandtotal;
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function detailinvin($idin)
 	{
 		$data = array($idin);
-		$query = "SELECT * FROM invin WHERE idin = ?";
+		$query = "SELECT * FROM invin,tb_customer WHERE  invin.idcust = tb_customer.idcust AND idin = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 			foreach ($eksekusi as $key) {
@@ -3591,7 +4007,9 @@ class MasterData extends CI_Model
 				$f["codein"] = $key->codein;
 				$f["datein"] = $key->datein;
 				$f["qtyin"] = $key->qtyin;
+				$f["namecust"] = $key->namecust;
 				$f["statusin"] = $key->statusin;
+				$f["nosuratjalan"] = $key->nosuratjalan;
 
 				$f["data"] = array();
 				$datax = array($key->idin);
@@ -3603,10 +4021,13 @@ class MasterData extends CI_Model
 						$g["iditem"] = $keyx->iditem;
 						$g["sku"] = $keyx->sku;
 						$g["nameitem"] = $keyx->nameitem;
+						$g["deskripsi"] = $keyx->deskripsi;
 						$g["qtypodet"] = $keyx->qtypodet;
 						$g["qtyindet"] = $keyx->qtyindet;
 						$g["harga"] = $keyx->harga;
 						$g["price"] = $keyx->price;
+						$g["balance"] = $keyx->balance;
+						$g["expdate"] = $keyx->expdate;
 
 						array_push($f["data"], $g);
 					}
@@ -3641,7 +4062,7 @@ class MasterData extends CI_Model
 
 				$f["data"] = array();
 				$datax = array($key->codeinvout);
-				$queryx = "SELECT * FROM invoutdet,tb_item,tb_warehouse WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
+				$queryx = "SELECT * FROM invoutdet,tb_item WHERE invoutdet.codeinvout = ? AND invoutdet.iditem = tb_item.iditem";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
@@ -3691,22 +4112,27 @@ class MasterData extends CI_Model
 					$f["norekening"] = $key->norekening;
 					$f["deskripsi"] = $key->deskripsi;
 					$f["statuspo"] = $key->statuspo;
+
 					$f["data"] = array();
 					$datax = array($key->idpo);
-					$queryx = "SELECT * FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
+					$queryx = "SELECT *,podet.price as pricebuy FROM podet,tb_item WHERE podet.idpo = ? AND podet.iditem = tb_item.iditem";
 					$eksekusix = $this->db->query($queryx, $datax)->result_object();
 					if (count($eksekusix) > 0) {
 						foreach ($eksekusix as $keyx) {
 							$g["sku"] = $keyx->sku;
-							$g["iditem"] = $keyx->iditem;
-							$g["idpo"] = $keyx->idpo;
-							$g["qty"] = $keyx->qty;
-							$g["disnom"] = $keyx->disnom;
-							$g["disper"] = $keyx->disper;
-							$g["subpo"] = $keyx->subpo;
-							$g["price"] = $keyx->price;
-							$g["totaldisc"] = $keyx->totaldisc;
-							$g["grandtotal"] = $keyx->grandtotal;
+							$g["iditem"]        = $keyx->iditem;
+							$g["sku"]           = $keyx->sku;
+							$g["nameitem"]      = $keyx->nameitem;
+							$g["deskripsi"]        = $keyx->deskripsi;
+							$g["price"]        = $keyx->price;
+							$g["idpo"]          = $keyx->idpo;
+							$g["qty"]           = $keyx->qty - $keyx->qtyindet;
+							$g["disnom"]        = $keyx->disnom;
+							$g["disper"]        = $keyx->disper;
+							$g["price"]        = $keyx->pricebuy;
+							$g["subpo"]         = $keyx->subpo;
+							$g["totaldisc"]     = $keyx->totaldisc;
+							$g["grandtotal"]    = $keyx->grandtotal;
 
 							array_push($f["data"], $g);
 						}
@@ -3800,8 +4226,34 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistsodetail($filter, $search, $statusso, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusso . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT tb_salesorder.*,tb_customer.namecust FROM tb_salesorder,tb_customer WHERE tb_salesorder.idcust = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ? AND t.statusorder LIKE  ? AND 
+        t.dateso BETWEEN ? AND ? AND t.statusorder ='Waiting'";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idso"]        = $key->idso;
+				$f["codeso"]      = $key->codeso;
+				$f["dateso"]      = $key->dateso;
+				$f["nopesanan"]   = $key->nopesanan;
+				$f["namecust"]    = $key->namecust;
+				$f["statusorder"] = $key->statusorder;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 
 	function addporeq(
+		$idporeq,
+		$idso,
 		$codereqpo,
 		$date,
 		$desc,
@@ -3823,41 +4275,43 @@ class MasterData extends CI_Model
 		if (count($eksekusi1) > 0) {
 			$respon = "Code Request Po telah terdaftar";
 		} else {
-			$this->db->trans_begin();
-			$data     = array($codereqpo, $date, $desc, $subtotal, $grandtotal, date('Y-m-d H:i:s'), $iduser);
-			$query    = "INSERT INTO tb_requestpo(codereqpo,datereqpo,deskripsi,subtotal,grandtotal,statusreqpo,madelog,madeuser)VALUES(?,?,?,?,?,'Waiting',?,?)";
-			$eksekusi = $this->db->query($query, $data);
-			if ($eksekusi == true) {
-				$datax = array($codereqpo);
-				$queryx = "SELECT * FROM tb_requestpo WHERE codereqpo = ?";
-				$eksekusix = $this->db->query($queryx, $datax)->result_object();
-				if (count($eksekusix) > 0) {
-					foreach ($eksekusix as $key) {
-						$idreqpo = $key->idreqpo;
-						for ($i = 0; $i < count($iditem); $i++) {
-							if ($iditem[$i] != "") {
-								$dataxx     = array($idreqpo, $iditem[$i], $harga[$i], $qty[$i], $total[$i]);
-								$queryxx    = "INSERT INTO tb_requestpodet (idreqpo,iditem,price,qty,total)VALUES(?,?,?,?,?)";
-								$eksekusixx = $this->db->query($queryxx, $dataxx);
-								if ($eksekusixx == true) {
-									$respon = "Success";
-								} else {
-									$respon = "Failed on Detail";
-									break;
+			$respon = array();
+			if ($idporeq == "" || $idporeq == 0) {
+				$data     = array($idso, $codereqpo, $date, $desc, $subtotal, $grandtotal, date('Y-m-d H:i:s'), $iduser);
+				$query    = "INSERT INTO tb_requestpo(idso,codereqpo,datereqpo,deskripsi,subtotal,grandtotal,statusreqpo,madelog,madeuser)VALUES(?,?,?,?,?,?,'Waiting',?,?)";
+				$eksekusi = $this->db->query($query, $data);
+				if ($eksekusi == true) {
+					$datax = array($codereqpo);
+					$queryx = "SELECT * FROM tb_requestpo WHERE codereqpo = ?";
+					$eksekusix = $this->db->query($queryx, $datax)->result_object();
+					if (count($eksekusix) > 0) {
+						foreach ($eksekusix as $key) {
+							$idreqpo = $key->idreqpo;
+							for ($i = 0; $i < count($iditem); $i++) {
+								if ($iditem[$i] != "") {
+									$dataxx     = array($idreqpo, $iditem[$i], $harga[$i], $qty[$i], $total[$i]);
+									$queryxx    = "INSERT INTO tb_requestpodet (idreqpo,iditem,price,qty,total)VALUES(?,?,?,?,?)";
+									$eksekusixx = $this->db->query($queryxx, $dataxx);
+									if ($eksekusixx == true) {
+										$respon = "Success Dengan No. " . $codereqpo . "";
+									} else {
+										$respon = "Failed on Detail";
+										break;
+									}
 								}
 							}
 						}
+					} else {
+						$respon = "Failed on Detail";
 					}
 				} else {
 					$respon = "Failed on Detail";
 				}
-			} else {
-				$respon = "Failed on Detail";
-			}
-			if ($respon == "Success") {
-				$this->db->trans_commit();
-			} else {
-				$this->db->trans_rollback();
+				// if ($respon == "Success") {
+				// 	$this->db->trans_commit();
+				// } else {
+				// 	$this->db->trans_rollback();
+				// }
 			}
 			return $respon;
 		}
@@ -3961,6 +4415,23 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlastsalesorder()
+	{
+
+		$query = "SELECT * FROM tb_salesorder ORDER BY idso DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+
+		if (count($eksekusi) > 0) {
+
+			foreach ($eksekusi as $key) {
+				$codeso  = "SLS-TRS-" . str_replace("SLS-TRS-", "", $key->codeso) + 1;
+			}
+		} else {
+			$codeso  = "SLS-TRS-1";
+		}
+
+		return $codeso;
+	}
 	function addso(
 		$idwh,
 		$idsox,
@@ -4027,11 +4498,19 @@ class MasterData extends CI_Model
 										$data1 = array($transaksi_qty[$i], $transaksi_iditem[$i], $idwh);
 										$query1 = "UPDATE tb_itemqty SET qtyso = qtyso + ? WHERE iditem = ? AND idwh = ?";
 										$eksekusi1 = $this->db->query($query1, $data1);
-										if ($eksekusi1 == true) {
-											$respon = "Success";
+										if ($this->db->affected_rows()) {
+											$respon = "Success dengan nomor sales order " . $codeso;
 										} else {
-											$respon = "Failed Update Item QTY";
-											break;
+											$data2 = array($transaksi_iditem[$i], $idwh, 0, 0, 0 + $transaksi_qty[$i]);
+											$query2 = "INSERT INTO tb_itemqty(iditem,idwh,outqty,endqty,qtyso)VALUES(?,?,?,?,?)";
+
+											$eksekusi2 =  $this->db->query($query2, $data2);
+											if ($eksekusi2 == true) {
+												$respon = "Success dengan nomor sales order " . $codeso;
+											} else {
+												$respon = "Failed Update Item QTY";
+												break;
+											}
 										}
 									} else {
 										$respon = "Failed on Detail";
@@ -4048,12 +4527,12 @@ class MasterData extends CI_Model
 				}
 
 
-				if ($respon == "Success" && $idquo != "" && $idsox == "") {
+				if (str_contains($respon, "Success") && $idquo != "" && $idsox == "") {
 					$datax = array($idquo);
 					$queryx = "UPDATE tb_quotation set statusquo = 'Process' WHERE idquo = ?";
 					$eksekusix = $this->db->query($queryx, $datax);
 					if ($eksekusix == true) {
-						$respon = "Success";
+						$respon = "Success dengan nomor sales order " . $codeso;
 					} else {
 						$respon = "Failed For Update Quotation";
 					}
@@ -4113,11 +4592,19 @@ class MasterData extends CI_Model
 										$data1 = array($transaksi_qty[$i], $transaksi_iditem[$i], $idwh);
 										$query1 = "UPDATE tb_itemqty SET qtyso = qtyso + ? WHERE iditem = ? AND idwh = ?";
 										$eksekusi1 = $this->db->query($query1, $data1);
-										if ($eksekusi1 == true) {
-											$respon = "Success";
+										if ($this->db->affected_rows()) {
+											$respon = "Success dengan nomor sales order " . $codeso;
 										} else {
-											$respon = "Failed Update Item QTY";
-											break;
+											$data2 = array($transaksi_iditem[$i], $idwh, 0, 0, 0 + $transaksi_qty[$i]);
+											$query2 = "INSERT INTO tb_itemqty(iditem,idwh,outqty,endqty,qtyso)VALUES(?,?,?,?,?)";
+
+											$eksekusi2 =  $this->db->query($query2, $data2);
+											if ($eksekusi2 == true) {
+												$respon = "Success dengan nomor sales order " . $codeso;
+											} else {
+												$respon = "Failed Update Item QTY";
+												break;
+											}
 										}
 									} else {
 										$respon = "Failed on Detail";
@@ -4131,12 +4618,12 @@ class MasterData extends CI_Model
 					} else {
 						$respon = "Failed on Detail";
 					}
-					if ($respon == "Success" && $key->idquo != "") {
+					if (str_contains($respon, "Success") && $key->idquo != "") {
 						$datax = array($idquo);
 						$queryx = "UPDATE tb_quotation set statusquo = 'Process' WHERE idquo = ?";
 						$eksekusix = $this->db->query($queryx, $datax);
 						if ($eksekusix == true) {
-							$respon = "Success";
+							$respon = "Success dengan nomor sales order " . $codeso;
 						} else {
 							$respon = "Failed For Update Quotation";
 						}
@@ -4147,7 +4634,7 @@ class MasterData extends CI_Model
 			}
 		}
 
-		if ($respon == "Success") {
+		if (str_contains($respon, "Success")) {
 			$this->db->trans_commit();
 		} else {
 			$this->db->trans_rollback();
@@ -4157,6 +4644,7 @@ class MasterData extends CI_Model
 
 	function addpo(
 		$idpox,
+		$idso,
 		$codepo,
 		$idreqpo,
 		$codereqpo,
@@ -4169,6 +4657,7 @@ class MasterData extends CI_Model
 		$norekening,
 		$subtotal,
 		$distrans,
+		$totaldis,
 		$ppn,
 		$grandtotal,
 		$iditem,
@@ -4193,8 +4682,8 @@ class MasterData extends CI_Model
 				$respon = "Code Po telah terdaftar";
 			} else {
 				if ($idpox == "" || $idpox == 0) {
-					$data     = array($codepo, $idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $norekening, $subtotal, $distrans, $ppn, $grandtotal, date('Y-m-d H:i:s'), $iduser);
-					$query    = "INSERT INTO po(codepo,idreqpo,codereqpo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,norekening,subtotal,disctrans,vat,grandtotal,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
+					$data     = array($idso, $codepo, $idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $norekening, $subtotal, $distrans, $totaldis, $ppn, $grandtotal, date('Y-m-d H:i:s'), $iduser);
+					$query    = "INSERT INTO po(idso,codepo,idreqpo,codereqpo,idcust,deskripsi,datepo,delivedate,idcurr,exchange,norekening,subtotal,disctrans,total,vat,grandtotal,statuspo,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Waiting',?,?)";
 					$eksekusi = $this->db->query($query, $data);
 					if ($eksekusi == true) {
 						$datax = array($codepo);
@@ -4211,7 +4700,7 @@ class MasterData extends CI_Model
 										$queryxx    = "INSERT INTO podet (idpo,iditem,price,qty,disnom,disper,subpo,totaldisc,grandtotal)VALUES(?,?,?,?,?,?,?,?,?)";
 										$eksekusixx = $this->db->query($queryxx, $dataxx);
 										if ($eksekusixx == true) {
-											$respon = "Success";
+											$respon = "Success Dengan No. " . $codepo . "";
 
 											$totalqtypo += $qty[$i];
 										} else {
@@ -4222,6 +4711,142 @@ class MasterData extends CI_Model
 								$querypo  = "UPDATE po set qtypo = " . $totalqtypo . " where codepo = '" . $codepo . "'";
 								$eksekusipo = $this->db->query($querypo);
 								if ($eksekusixx == true) {
+									$respon = "Success Dengan No. " . $codepo . "";
+								} else {
+									$respon = "Failed on Qtypo";
+								}
+
+								$queryreqpo  = "UPDATE tb_requestpo set statusreqpo = 'Process' where idreqpo = '" . $idreqpo . "'";
+								$eksekusireqpo = $this->db->query($queryreqpo);
+								if ($eksekusireqpo == true) {
+									$respon = "Success Dengan No. " . $codepo . "";
+								} else {
+									$respon = "Failed on Qtypo";
+								}
+							}
+						} else {
+							$respon = "Failed on Detail";
+						}
+					} else {
+						$respon = "Failed on Detail";
+					}
+				}
+				return $respon;
+			}
+		} else {
+
+			$datax = array($idpox);
+			$queryx = "SELECT * FROM po where idpo = ?";
+			$eksekusix = $this->db->query($queryx, $datax)->result_object();
+			if (count($eksekusix) > 0) {
+				foreach ($eksekusix as $key) {
+
+					$data      = array($idso, $codepo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $ppn, $norekening, date('Y-m-d H:i:s'), $iduser, $idpox);
+					$query     = "UPDATE po set idso =?,codepo = ?, idcust = ? , deskripsi = ?, datepo = ? , delivedate = ? , idcurr = ?, exchange = ?, vat = ?, norekening= ?,  madelog = ?, madeuser=? WHERE idpo = ?";
+					$eksekusi  = $this->db->query($query, $data);
+					if ($eksekusi == true) {
+						$datax     = array($idpox);
+						$queryx    = "DELETE FROM podet WHERE idpo = ?";
+						$eksekusix = $this->db->query($queryx, $datax);
+						if ($eksekusix == true) {
+							$idpoxs = $idpox;
+							for ($i = 0; $i < count($iditem); $i++) {
+								if ($iditem[$i] != "") {
+									if ($qty[$i] != "") {
+										$dataxx     = array($idpoxs, $iditem[$i], $harga[$i], $qty[$i], $disnom[$i], $discpercent[$i], $sub[$i], $totaldisc[$i], $total[$i]);
+										$queryxx    = "INSERT INTO podet (idpo,iditem,price,qty,disnom,disper,subpo,totaldisc,grandtotal)VALUES(?,?,?,?,?,?,?,?,?)";
+										$eksekusixx = $this->db->query($queryxx, $dataxx);
+										if ($eksekusixx == true) {
+											$respon = "Success";
+										} else {
+											$respon = "Failed on Detail";
+										}
+									}
+								}
+							}
+						} else {
+							$respon = "Failed on Detail";
+						}
+					} else {
+						$respon = "Failed on Detail";
+					}
+				}
+			} else {
+				$respon = "Purchase Order Tidak Ditemukan";
+			}
+		}
+		return $respon;
+	}
+
+	function editpo(
+		$idpox,
+		$codepo,
+		$idreqpo,
+		$codereqpo,
+		$supplier,
+		$judulpurchase,
+		$datepo,
+		$delivedate,
+		$matauang,
+		$exchange,
+		$norekening,
+		$subtotal,
+		$distrans,
+		$totaldis,
+		$ppn,
+		$grandtotal,
+		$iditem,
+		$sku,
+		$nameitem,
+		$harga,
+		$qty,
+		$disnom,
+		$discpercent,
+		$sub,
+		$totaldisc,
+		$total,
+		$iduser
+	) {
+		if ($idpox == "" || $idpox == 0) {
+			date_default_timezone_set('Asia/Jakarta');
+			$fail   = 0;
+			$data1  = array($codepo);
+			$query1 = "SELECT * FROM po WHERE codepo = ?";
+			$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+			if (count($eksekusi1) > 0) {
+				$respon = "Code Po telah terdaftar";
+			} else {
+				if ($idpox == "" || $idpox == 0) {
+					$data     = array($idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $norekening, $subtotal, $distrans, $totaldis, $ppn, $grandtotal, $codepo);
+					$query    = "UPDATE po SET idreqpo = ?, codereqpo = ? , idcust = ? ,deskripsi =? ,datepo =? ,delivedate =?,idcurr = ?,exchange =?,norekening =?,subtotal = ?,disctrans = ?,total = ?,vat = ?,grandtotal = ? WHERE codepo = ?";
+					$eksekusi = $this->db->query($query, $data);
+					if ($eksekusi == true) {
+						$datax = array($codepo);
+						$queryx = "SELECT * FROM po WHERE codepo = ?";
+						$eksekusix = $this->db->query($queryx, $datax)->result_object();
+						if (count($eksekusix) > 0) {
+							foreach ($eksekusix as $key) {
+								$idpo = $key->idpo;
+								$totalqtypo = 0;
+
+								for ($i = 0; $i < count($iditem); $i++) {
+									if ($iditem[$i] != "") {
+										$dataxx     = array($iditem[$i], $harga[$i], $qty[$i], $disnom[$i], $discpercent[$i], $sub[$i], $totaldisc[$i], $total[$i], $idpo);
+										$queryxx    = "UPDATE podet SET iditem = ?, price = ?,qty = ? , disnom = ?, disper = ?,subpo =?,totaldisc = ?,grandtotal = ? WHERE idpo = ?";
+										$eksekusixx = $this->db->query($queryxx, $dataxx);
+										if ($eksekusixx == true) {
+											$respon = "Success";
+
+											$totalqtypo += $qty[$i];
+										} else {
+											$respon = "Failed on Detail";
+										}
+									}
+								}
+
+								$querypo  = "UPDATE po SET qtypo = " . $totalqtypo . " WHERE codepo = '" . $codepo . "'";
+								$eksekusipo = $this->db->query($querypo);
+								if ($eksekusipo == true) {
 									$respon = "Success";
 								} else {
 									$respon = "Failed on Qtypo";
@@ -4251,9 +4876,9 @@ class MasterData extends CI_Model
 			$eksekusix = $this->db->query($queryx, $datax)->result_object();
 			if (count($eksekusix) > 0) {
 				foreach ($eksekusix as $key) {
-
-					$data      = array($codepo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $vat, $norekening, date('Y-m-d H:i:s'), $iduser, $idpox);
-					$query     = "UPDATE po set codepo = ?, idcust = ? , deskripsi = ?, datepo = ? , delivedate = ? , idcurr = ?, exchange = ?, vat = ?, norekening= ?,  madelog = ?, madeuser=? WHERE idpo = ?";
+					$totalqtypo = 0;
+					$data     = array($idreqpo, $codereqpo, $supplier, $judulpurchase, $datepo, $delivedate, $matauang, $exchange, $norekening, $subtotal, $distrans, $totaldis, $ppn, $grandtotal, $codepo);
+					$query    = "UPDATE po SET idreqpo = ?, codereqpo = ? , idcust = ? ,deskripsi =? ,datepo =? ,delivedate =?,idcurr = ?,exchange =?,norekening =?,subtotal = ?,disctrans = ?,total = ?,vat = ?,grandtotal = ? WHERE codepo = ?";
 					$eksekusi  = $this->db->query($query, $data);
 					if ($eksekusi == true) {
 						$datax     = array($idpox);
@@ -4269,11 +4894,19 @@ class MasterData extends CI_Model
 										$eksekusixx = $this->db->query($queryxx, $dataxx);
 										if ($eksekusixx == true) {
 											$respon = "Success";
+											$totalqtypo += $qty[$i];
 										} else {
 											$respon = "Failed on Detail";
 										}
 									}
 								}
+							}
+							$querypo  = "UPDATE po SET qtypo = " . $totalqtypo . " WHERE codepo = '" . $codepo . "'";
+							$eksekusipo = $this->db->query($querypo);
+							if ($eksekusipo == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Failed on Qtypo";
 							}
 						} else {
 							$respon = "Failed on Detail";
@@ -4317,6 +4950,7 @@ class MasterData extends CI_Model
 		$namewarehouse,
 		$datein,
 		$currency,
+		$nosuratjalan,
 		$transaksi_iditem,
 		$transaksi_sku,
 		$transaksi_nameitem,
@@ -4341,8 +4975,282 @@ class MasterData extends CI_Model
 				$idpo = 0;
 			}
 			$this->db->trans_begin();
-			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,'Finish',?,?)";
+			$data     = array($codein, $tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, $nosuratjalan, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO invin (codein,typein,idpo,idcust,idwh,datein,idcurr,nosuratjalan,statusin,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,'Finish',?,?)";
+			$eksekusi = $this->db->query($query, $data);
+			if ($eksekusi == true) {
+				$datax     = array($codein);
+				$queryx    = "SELECT * FROM invin WHERE codein = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $key) {
+						$idin  = $key->idin;
+						$price = 0;
+						$qtyin = 0;
+						$qtypo = 0;
+						for ($i = 0; $i < count($transaksi_iditem); $i++) {
+							if ($transaksi_iditem[$i] != "") {
+								$dataxx     = array(
+									$idin, $idpo, $transaksi_iditem[$i], $transaksi_harga[$i], $transaksi_qtypo[$i],
+									$transaksi_qtyin[$i], $transaksi_balance[$i], $transaksi_expiredate[$i]
+								);
+								$queryxx    = "INSERT INTO invindet (idin,idpo,iditem,harga,qtypodet,qtyindet,balance,expdate)VALUES(?,?,?,?,?,?,?,?)";
+								$eksekusixx = $this->db->query($queryxx, $dataxx);
+								if ($eksekusixx == true) {
+									$respon    = "Success Dengan No. " . $codein . "";
+									$price    += $transaksi_harga[$i];
+									$qtyin    += $transaksi_qtyin[$i];
+									$qtypo    += $transaksi_qtypo[$i];
+									$listqtyin = $transaksi_qtyin[$i];
+								} else {
+									$respon = "Failed on Detail";
+									break;
+								}
+
+								$dataxs   = array($transaksi_qtyin[$i], $idpo, $transaksi_iditem[$i]);
+								$queryxs  = "UPDATE podet  set qtyindet = qtyindet + ? WHERE idpo = ? AND iditem = ?";
+								$eksekusisxs   = $this->db->query($queryxs, $dataxs);
+								if ($eksekusisxs == true) {
+									$respon  = "Success Dengan No. " . $codein . "";
+								} else {
+									$respon  = "Failed on Qtyin";
+									break;
+								}
+							}
+						}
+
+						$queryin    = "UPDATE invin set total = " . $price . " WHERE idin = '" . $idin . "'";
+						$eksekusiin = $this->db->query($queryin);
+						if ($eksekusiin == true) {
+							$respon = "Success Dengan No. " . $codein . "";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+
+						$queryin    = "UPDATE invin set qtyin = " . $qtyin . ",qtypo = " . $qtypo . " WHERE idin = '" . $idin . "'";
+						$eksekusiin = $this->db->query($queryin);
+						if ($eksekusiin == true) {
+							$respon = "Success Dengan No. " . $codein . "";
+						} else {
+							$respon = "Failed on Qtyin";
+							break;
+						}
+
+
+						$queryqtyin  = "UPDATE po  set qtyin = qtyin + " . $qtyin . " WHERE idpo = " . $idpo . "";
+						$eksekusis   = $this->db->query($queryqtyin);
+						if ($eksekusis == true) {
+							$respon  = "Success Dengan No. " . $codein . "";
+						} else {
+							$respon  = "Failed on Qtyin";
+							break;
+						}
+
+						$data12 = array($idpo);
+						$query12 = "SELECT * FROM po WHERE idpo = " . $idpo . "";
+						$eksekusi =  $this->db->query($query12, $data12)->result_object();
+						if (count($eksekusi) > 0) {
+							foreach ($eksekusi as $keys) {
+								if ($keys->qtypo != $keys->qtyin) {
+									$querystatus  = "UPDATE po  set statuspo='Process' WHERE idpo = " . $idpo . " ";
+									$eksekusiss   = $this->db->query($querystatus);
+									if ($eksekusiss == true) {
+										$respon  = "Success Dengan No. " . $codein . "";
+									} else {
+										$respon  = "Failed on Qtyin";
+										break;
+									}
+								} else {
+									$querystatusa  = "UPDATE po  set statuspo='Finish' WHERE idpo = " . $idpo . "";
+									$eksekusissa   = $this->db->query($querystatusa);
+									if ($eksekusissa == true) {
+										$respon  = "Success Dengan No. " . $codein . "";
+									} else {
+										$respon  = "Failed on Qtyin";
+										break;
+									}
+								}
+							}
+						}
+
+						// if ($qtypo != $qtyin) {
+						// 	$querystatus  = "UPDATE po  set statuspo='Process' WHERE idpo = " . $idpo . " ";
+						// 	$eksekusiss   = $this->db->query($querystatus);
+						// 	if ($eksekusiss == true) {
+						// 		$respon  = "Success Dengan No. " . $codein . "";
+						// 	} else {
+						// 		$respon  = "Failed on Qtyin";
+						// 		break;
+						// 	}
+						// } else {
+						// 	$querystatusa  = "UPDATE po  set statuspo='Finish' WHERE idpo = " . $idpo . "";
+						// 	$eksekusissa   = $this->db->query($querystatusa);
+						// 	if ($eksekusissa == true) {
+						// 		$respon  = "Success Dengan No. " . $codein . "";
+						// 	} else {
+						// 		$respon  = "Failed on Qtyin";
+						// 		break;
+						// 	}
+						// }
+					}
+				} else {
+					$respon = "Failed on Detail";
+				}
+			} else {
+				$respon     = "Failed on Detail";
+			}
+			if ($respon == "Success Dengan No. " . $codein . "") {
+				for ($x = 0; $x < count($transaksi_iditem); $x++) {
+					if ($transaksi_iditem[$x] != "") {
+						$data2  = array($transaksi_iditem[$x], $namewarehouse);
+						$query2 = "SELECT * FROM tb_itemqty WHERE iditem = ? AND idwh = ?";
+						$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+						if (count($eksekusi2) > 0) {
+							$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse,);
+							$query3    = "UPDATE tb_itemqty SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? ";
+							$eksekusi3 = $this->db->query($query3, $data3);
+							if ($eksekusi3 == true) {
+								$respon = "Success Dengan No. " . $codein . "";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
+						} else {
+							$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_qtyin[$x], $transaksi_qtyin[$x]);
+							$query4    = "INSERT INTO tb_itemqty(iditem,idwh,beginqty,inqty,outqty,endqty,qtyso)VALUES(?,?,0,?,0,?,0)";
+							$eksekusi4 = $this->db->query($query4, $data4);
+							if ($eksekusi4 == true) {
+								$respon = "Success Dengan No. " . $codein . "";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
+						}
+						$data2     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+						$query2    = "SELECT * FROM tb_itemqtyexp WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+						$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+						if (count($eksekusi2) > 0) {
+							$data3     = array($transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x]);
+							$query3    = "UPDATE tb_itemqtyexp SET inqty = inqty + ?,endqty = endqty + ? WHERE iditem = ? AND idwh = ? AND expdate = ? ";
+							$eksekusi3 = $this->db->query($query3, $data3);
+							if ($eksekusi3 == true) {
+								$respon = "Success Dengan No. " . $codein . "";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
+						} else {
+							$data4     = array($transaksi_iditem[$x], $namewarehouse, $transaksi_expiredate[$x], $transaksi_qtyin[$x], $transaksi_qtyin[$x], $transaksi_harga[$x]);
+							$query4    = "INSERT INTO tb_itemqtyexp(iditem,idwh,expdate,beginqty,inqty,outqty,endqty,hpp)VALUES(?,?,?,0,?,0,?,?)";
+							$eksekusi4 = $this->db->query($query4, $data4);
+							if ($eksekusi4 == true) {
+								$respon = "Success Dengan No. " . $codein . "";
+							} else {
+								$respon = "Failed on Qtyin";
+								break;
+							}
+						}
+					}
+				}
+			}
+			if ($respon == "Success Dengan No. " . $codein . "") {
+				$this->db->trans_commit();
+			} else {
+				$this->db->trans_rollback();
+			}
+			return $respon;
+		}
+	}
+
+	function editinvin(
+		$codein,
+		$tipeingoing,
+		$idpo,
+		$namesupp,
+		$namewarehouse,
+		$datein,
+		$currency,
+		$nosuratjalan,
+		$transaksi_iditem,
+		$transaksi_sku,
+		$transaksi_nameitem,
+		$transaksi_deskripsi,
+		$transaksi_harga,
+		$transaksi_qtypo,
+		$transaksi_qtyin,
+		$transaksi_balance,
+		$transaksi_expiredate,
+		$userid
+	) {
+		date_default_timezone_set('Asia/Jakarta');
+		$fail   = 0;
+		$data1  = array($codein);
+		$query1 = "SELECT * FROM invin WHERE codein = ?";
+		$eksekusi1 = $this->db->query($query1, $data1)->result_object();
+
+		if (count($eksekusi1) > 0) {
+			if ($idpo == "") {
+				$idpo = 0;
+			}
+			$this->db->trans_begin();
+			foreach ($eksekusi1 as $keys) {
+				$data5 = array($keys->qtyin, $keys->idpo);
+				$query5 = "UPDATE po SET qtyin = qtyin -? WHERE idpo = ? ";
+				$eksekusi5 = $this->db->query($query5, $data5);
+				if ($eksekusi5 == true) {
+					$respon = "Success";
+				} else {
+					$respon = "Failed";
+				}
+				if ($respon == "Success") {
+					$data2  = array($keys->idin);
+					$query2 = "SELECT * FROM invindet WHERE idin = ?";
+					$eksekusi2 = $this->db->query($query2, $data2)->result_object();
+					if (count($eksekusi2) > 0) {
+						foreach ($eksekusi2 as $keys1) {
+							$data3 = array($keys1->qtyindet, $keys1->qtyindet, $keys->idwh, $keys1->iditem);
+							$query3 = "UPDATE tb_itemqty SET inqty = inqty -?, endqty = endqty-? WHERE idwh = ? AND iditem = ?";
+							$eksekusi3 = $this->db->query($query3, $data3);
+							if ($eksekusi3 == true) {
+								$data4 = array($keys1->qtyindet, $keys1->qtyindet, $keys->idwh, $keys1->iditem, $keys1->expdate);
+								$query4 = "UPDATE tb_itemqtyexp SET inqty = inqty -?, endqty = endqty-? WHERE idwh = ? AND iditem = ? AND expdate = ?";
+								$eksekusi4 = $this->db->query($query4, $data4);
+								if ($eksekusi4 == true) {
+									$respon = "Success";
+								} else {
+									$respon = "failed";
+								}
+							} else {
+								$respon = "failed";
+							}
+						}
+					}
+				}
+				if ($respon == "Success") {
+					$data6  = array($keys->idin);
+					$query6 = "DELETE FROM invindet WHERE idin = ?";
+					$eksekusi6 = $this->db->query($query6, $data6);
+					if ($respon == true) {
+						$respon = "Success";
+					} else {
+						$respon = "Failed";
+					}
+				}
+
+				if ($respon == "Success") {
+					$data7  = array($keys->idin);
+					$query7 = "UPDATE invin set qtyin = 0,qtypo = 0 WHERE idin = ?";
+					$eksekusi7 = $this->db->query($query7, $data7);
+					if ($respon == true) {
+						$respon = "Success";
+					} else {
+						$respon = "Failed";
+					}
+				}
+			}
+			$data     = array($tipeingoing, $idpo, $namesupp, $namewarehouse, $datein, $currency, $nosuratjalan, $codein);
+			$query    = "UPDATE invin set typein =?, idpo = ?, idcust = ?,idwh = ?,datein = ?, idcurr = ?, nosuratjalan = ? WHERE codein = ?";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax     = array($codein);
@@ -4413,23 +5321,30 @@ class MasterData extends CI_Model
 							break;
 						}
 
-						if ($qtypo != $qtyin) {
-							$querystatus  = "UPDATE po  set statuspo='Process' WHERE idpo = " . $idpo . "";
-							$eksekusiss   = $this->db->query($querystatus);
-							if ($eksekusiss == true) {
-								$respon  = "Success";
-							} else {
-								$respon  = "Failed on Qtyin";
-								break;
-							}
-						} else {
-							$querystatusa  = "UPDATE po  set statuspo='Finish' WHERE idpo = " . $idpo . "";
-							$eksekusissa   = $this->db->query($querystatusa);
-							if ($eksekusissa == true) {
-								$respon  = "Success";
-							} else {
-								$respon  = "Failed on Qtyin";
-								break;
+						$data12 = array($idpo);
+						$query12 = "SELECT * FROM po WHERE idpo = " . $idpo . "";
+						$eksekusi =  $this->db->query($query12, $data12)->result_object();
+						if (count($eksekusi) > 0) {
+							foreach ($eksekusi as $keys) {
+								if ($keys->qtypo != $keys->qtyin) {
+									$querystatus  = "UPDATE po  set statuspo='Process' WHERE idpo = " . $idpo . " ";
+									$eksekusiss   = $this->db->query($querystatus);
+									if ($eksekusiss == true) {
+										$respon  = "Success";
+									} else {
+										$respon  = "Failed on Qtyin";
+										break;
+									}
+								} else {
+									$querystatusa  = "UPDATE po  set statuspo='Finish' WHERE idpo = " . $idpo . "";
+									$eksekusissa   = $this->db->query($querystatusa);
+									if ($eksekusissa == true) {
+										$respon  = "Success";
+									} else {
+										$respon  = "Failed on Qtyin";
+										break;
+									}
+								}
 							}
 						}
 					}
@@ -4499,6 +5414,8 @@ class MasterData extends CI_Model
 				$this->db->trans_rollback();
 			}
 			return $respon;
+		} else {
+			$respon = "InventoryIn Tidak Dikenali";
 		}
 	}
 

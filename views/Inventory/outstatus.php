@@ -301,6 +301,7 @@
                         <label for="" class="form-label">Status</label>
                         <p id="statusout">~</p>
                     </div>
+
                 </div>
                 <div class="row mx-1">
                     <table class="table table-bordered table-striped" id="table-user">
@@ -367,10 +368,15 @@
                     </table>
                 </div>
                 <button class="btn btn-danger" style="float: right;" id="cancel" onclick="cancelout()">Cancel</button>
+                <button class="btn btn-danger" style="float: right;" id="edit" onclick="editout()">Edit</button>
             </div>
         </div>
     </div>
 </div>
+
+<form action="<?php echo base_url('InventoryController/inventoryout') ?>" method="POST" id="formz">
+    <input type="hidden" id="noinvoutx" name="noinvout">
+</form>
 
 <script>
     function ubah(x) {
@@ -416,6 +422,10 @@
         });
     }
 
+    function editout() {
+        $('#formz').submit();
+    }
+
     function detailout(x) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]["idinvout"] == x) {
@@ -426,6 +436,12 @@
                     $('#cancel').hide()
                 }
 
+                if (data[i]["edit"] == "yes") {
+                    $('#edit').show()
+                } else {
+                    $('#edit').hide()
+                }
+
                 console.log(data[i])
                 $('#noinvout').html(data[i]["codeinvout"])
                 $('#typeout').html(data[i]["typeout"])
@@ -434,6 +450,7 @@
                 $('#idwhx').html(data[i]["namewarehouse"])
                 $('#nodo').html(data[i]["nodo"])
                 $('#statusout').html(data[i]["statusout"])
+                $('#noinvoutx').val(data[i]["codeinvout"])
 
                 var baris = ""
                 for (let b = 0; b < data[i]["data"].length; b++) {

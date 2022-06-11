@@ -1,378 +1,490 @@
-<html>
-
-<head>
-
-	<!-- Link Font dari adobe -->
-	<link rel="stylesheet" href="https://use.typekit.net/vke3pqz.css">
-	<!-- Link Box Icon -->
-	<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-
-	<link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="<?= base_url('assets/css/indexxxx.css') ?>" />
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-	</script>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-	<!-- DataTables -->
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')?>">
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')?>">
-	<link rel="stylesheet" href="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')?>">
-		<title>S-ERP</title>
-	</head>
-<body class="body" >
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header" style="background:#1143d8;color:white;">
-        <h5 class="modal-title" id="exampleModalLabel">PILIH DATA PURCHASE ORDER</h5>
-        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;"></button>
-      </div>
-      <div class="modal-body">
-		<div class="row mx-3">
-			<div class="col-3 mb-3">
-				<label for="">Pencarian</label>
-				<input type="text" class="form-control" placeholder="Cari berdasarkan customer">
-			</div>
-			<div class="col-2"></div>
-			<div class="col-2">
-				<label for="">Mulai Dari</label>
-				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-			</div>
-			<div class="col-2">
-				<label for="">Sampai Dengan</label>
-				<input type="text" name="tanggalmasuk" id="date1" value="<?= set_value('date1') ?>"  style="cursor: pointer;" class="form-control"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-			</div>
-			<div class="col-2 mt-4"> 
-				<button type="button" class="btn btn-primary">Terapkan</button>
-			</div>
-		</div>
-		<div class="row mx-3" style="overflow-x: auto;">
-			<table class="table table-bordered table-striped" id="table-user">
-				<thead>
-					<tr>
-						<td>#</td>
-						<td>No. PO</td>
-						<td>Tanggal Order</td>
-						<td>Due Date</td>
-						<td>Qty Item</td>
-						<td>Total Amount</td>
-						<td>Status</td>
-						<td>Action</td>
-					</tr>
-                </thead>
-				<tbody>
-					<?php if($data4 !="Not Found"):?>
-						 <?php $no=1;?>
-						  <?php foreach($data4 as $key):?>
-					<tr>
-							<td><?php echo $no++;?></td>
-							<td><?php echo $key["codepo"]?></td>
-							<td><?php echo $key["datepo"]?></td>
-							<td><?php echo $key["datepo"]?></td>
-							<td><?php echo $key["qty"]?></td>
-							<td><?php echo $key["grandtotal"]?></td>
-							<td><?php echo $key["statuspo"]?></td>
-							<td><a href="<?php echo base_url('MasterDataControler/getdatapobyid?id=' . base64_encode($key['idpo'])) ?>">Pilih</a></td>
-					</tr>
-					<?php endforeach?>
-					<?php endif?>
-				</tbody>
-			</table>
-		</div>
-	  </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<form action="<?php echo base_url('MasterDataControler/addpo') ?>" method="POST" enctype="multipart/form-data" id="form">
-<div class="header px-4 pt-2" style="height: 196px;">
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb m-0">
-    <li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Purchase Management </a></li>
-    <li class="breadcrumb-item m-0 bc-active" aria-current="page">Purchase Order</li>
-  </ol>
-  <h3 class="text-white">Register Purchase Order</h3>
-</nav>
-</div>
-<div class="content bg-white  mx-4">
-<div class="container-fluid">
-	<div class="row no-gutters">
-		<div class="col-12 bays">
-		<div class="biodata">
-		<div class="row">
-			<?php echo $this->session->flashdata('message'); ?>
-			<?php $this->session->set_flashdata('message', ''); ?>
-		</div>
-		<input type="hidden" name="idpo" id="idpo">
-		<input type="hidden" name="codepo" id="codepo">
-		<div class="row">
-			<div class="col-3">
-				<div class="col d-flex align-middle mb-3" style="align-items:center"><i class='bx bx-left-arrow-alt' style="font-size:2rem;"></i>
-					<a style="text-decoration:none;color:black;" href="<?php echo base_url('AuthControler/mainpage')?>">Kembali</a>
-				</div>
-			</div>
-		</div>
-        <div class="row mb-3">
-          <div class="col-1"></div>
-          <div class="col-3 mb-3">
-           <h5>Informasi Dasar</h5>
-           <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:75%;">
-                  <label for="">No. Purchase Order</label>
-                  <input type="text" name="codepo" class="form-control" value="<?php echo $data7["codepo"] ?>" readonly>
-                  <input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
-                  <input type="hidden" name="idpo" class="form-control">
-             </div>
-			 <!-- <button type="button" style="height:36px;font-size:13px;" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">Cari Data</button> -->
-           </div>
-
-           <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-2" style="width:75%;">
-                  <label for="">Supplier</label>
-                  <select name="supplier" id="supplier" class="form-select">
-                    <option value="">Pilih</option>
-					<?php if($data5 !="Not Found"):?>
-				    	<?php foreach($data5 as $key):?>
-						 <option value="<?php echo $key["idsupp"] ?>" <?php echo ($key["idsupp"] ==  $key["idsupp"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namesupp"] ?></option>
-					    <?php  endforeach?>
-					    <?php  endif?>
-                  </select>
-             </div>
-             <!-- &nbsp;&nbsp;<button class="btn btn-primary" style="height:36px;font-size:13px;">Cari Data</button> -->
-           </div>
-           <div class="me-3" style="width:75%;">
-                  <label for="">Judul Purchase</label>
-                  <textarea name="judulpurchase" id="" cols="7" rows="4" class="form-control" placeholder="Contoh : Penawaran PT. ABC" style="font-size:13px;"><?php echo $data7["deskripsi"]?></textarea>
-             </div>
-          </div>
-
-          <div class="col-3">
-           <h5>Informasi Gudang & Mata Uang </h5>
-           <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:50%;">
-                  <label for="">Gudang Penerima</label>
-                  <select name="namewarehouse" id="namewarehouse" class="form-select" required>
-                    <option value="">Pilih</option>
-					<?php if($data1 !="Not Found"):?>
-						<?php foreach($data1 as $key) :?>
-						 <option value="<?php echo $key["idwarehouse"] ?>" <?php echo ($key["idwarehouse"] ==  $key["idwarehouse"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namewarehouse"] ?></option>
-
-						<?php endforeach?>
-					<?php endif?>
-                  </select>
-             </div>
-             <div class="" style="width:50%;">
-                  <label for="">Tanggal Masuk</label>
-                  <input type="text" name="tanggalmasuk" id="datepo" value="<?php echo $data7["datepo"] ?>"  style="cursor: pointer;" class="form-control datetrans"  onfocus=" (this.type='date' )" onblur="(this.type='text')">
-             </div>
-           </div>
-
-           <div class="me-3 mb-3" style="width:fit-content;width:50%;">
-                  <label for="">Mata Uang</label>
-                  <select name="matauang" id="matauang" class="form-select" required>
-                    <option value="">Pilih</option>
-					<?php if($data2 !="Not Found"):?>
-						<?php foreach($data2 as $key) :?>
-							<option value="<?php echo $key["idcomm"] ?>" <?php echo ($key["idcomm"] ==  $key["idcomm"]) ? ' selected="selected"' : ''; ?>><?php echo $key["namecomm"] ?></option>
-						<?php endforeach?>
-					<?php endif?>
-                  </select>
-             </div>
-			 <label for="" style="font-size:20px;">Pajak</label>
-			 <div class="d-flex mb-3" style="align-items: flex-end;">
-             <div class="me-3" style="width:50%;">
-                  <label for="">Gunakan VAT</label>
-             </div>
-			 <div class="form-check form-switch">
-                    <input type="checkbox" name="vat"  value="11" class="form-check-input"  id="flexSwitchCheckDefault" checked>
-                </div>
-           </div>
-             
-          </div>
-			<div class="col-3">
-			<h5>Akun Perbankan</h5>
-			<div class="d-flex mb-3" style="align-items: flex-end;">
-			<div class="border px-3 py-2 rounded">   
-				<div class="form-check">
-					<input class="form-check-input" type="radio" name="idcomp" id=""  value="<?php echo $data6["idcomp"]?>" checked>
-					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["bank"]?> - <?php echo $data6["norekening"]?></label><br>
-					<label class="form-check-label" for="flexRadioDefault1"> <?php echo $data6["namecomp"]?> </label>
-				</div>
-			</div>
-		  
-        </div>
+<form action="<?php echo base_url('MasterDataControler/editpo') ?>" method="POST" enctype="multipart/form-data" id="form">
+	<div class="header px-4 pt-2" style="height: 196px;">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb m-0">
+				<li class="breadcrumb-item m-0"><a class="text-white text-decoration-none" href="#">Purchase Management </a></li>
+				<li class="breadcrumb-item m-0 bc-active" aria-current="page">Purchase Order</li>
+			</ol>
+			<h3 class="text-white">Edit Purchase Order</h3>
+		</nav>
 	</div>
-</div>
-</div>
+	<div class="content bg-white  mx-4">
+		<div class="container-fluid">
+			<div class="row">
+				<?php echo $this->session->flashdata('message'); ?>
+				<?php $this->session->set_flashdata('message', ''); ?>
+			</div>
+			<div class="row mb-3">
+				<div class="col-3 mb-3">
+					<lable for="" class="form-label fs-3">Informasi Dasar</lable>
+					<div class="row my-3">
+						<label for="" class="form-label">No. Purchase Order</label>
+						<div class="col-8">
+							<input type="text" name="codepo" id="codepo" class="form-control" value="<?php echo $data7["codepo"] ?>" autocomplete="off" readonly>
+							<input type="hidden" name="userid" class="form-control" value="<?php echo $iduser ?>">
+							<input type="hidden" name="idpo" id="idpo" value="<?php echo $data7["idpo"] ?>" class="form-control">
+						</div>
+						<div class="col-4">
+							<!-- <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal" onclick="loaddata()">Cari Data</button> -->
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="" class="form-label">No. Request PO</label>
+						<div class="col-8">
+							<input type="text" name="codereqpo" id="codereqpo" class="form-control" value="" autocomplete="off" readonly>
+							<input type="hidden" name="idreqpo" id="idreqpo" class="form-control" value="" autocomplete="off" readonly>
+						</div>
+						<div class="col-4">
+							<!-- <button type="button" data-mdb-toggle="modal" id="loadquo" data-mdb-target="#requestpo" class="btn btn-primary" onclick="loaddatax()">Cari Data</button> -->
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-8">
+							<label for="" class="form-label">Supplier</label>
+							<input type="text" id="namesupp" class="form-control" value="<?php echo $data7["namecust"] ?>" objectype="supp" list="xsupp" name="namesupp" autocomplete="off" required>
+							<input type="hidden" id="idsupp" name="idsupp" value="<?php echo $data7["idcust"] ?>">
+						</div>
+						<div class="col-4"></div>
+					</div>
+				</div>
+				<div class="col-3">
+					<lable for="" class="form-label fs-3">Informasi Gudang & Mata Uang </lable>
+					<div class="row my-3">
+						<div class="col-5">
+							<label for="" class="form-label">Tanggal PO</label>
+							<input type="date" name="datepo" id="date1" value="<?php echo $data7["datepo"] ?>" style="cursor: pointer;" class="form-control">
+						</div>
+						<div class="col-5">
+							<label for="" class="form-label">Tanggal Pengiriman</label>
+							<input type="date" name="delivedate" id="tanggalpengiriman" value="<?php echo $data7["delivedate"] ?>" style="cursor: pointer;" class="form-control">
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-5">
+							<label for="" class="form-label">Mata Uang</label>
+							<select name="matauang" id="matauang" class="form-select" required>
+								<?php if ($data2 != "Not Found") : ?>
+									<?php foreach ($data2 as $key) : ?>
+										<option value="<?php echo $key["idcomm"] ?>"><?php echo $key["namecomm"] ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+						</div>
+						<div class="col-5">
+							<label for="" class="form-label">Exchange Rate</label>
+							<input type="text" name="exchange" id="exchange" value="<?php echo $data7["exchange"] ?>" style="cursor: pointer;" class="form-control" autocomplete="off">
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row">
+						<div class="col-10">
+							<label for="" class="form-label">Judul Purchase</label>
+							<textarea name="judulpurchase" id="judulpurchase" cols="7" rows="4" class="form-control" placeholder="Contoh : Penawaran PT. ABC" style="font-size:13px;" value="<?php echo $data7["deskripsi"] ?>"><?php echo $data7["deskripsi"] ?></textarea>
+							<div class="">
+								<span class="text-muted" style="font-size: 13px;">Maksimal 250 Karakter</span>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+				</div>
+				<div class="col-3">
+					<lable for="" class="form-label fs-3">Akun Perbankan</lable>
+					<div class="row my-3">
+						<div class="col-10">
+							<label for="" class="form-label">No. Rekening Customer </label>
+							<select name="norekening" id="norekening" class="form-select" required>
+								<option value="<?php echo $data7["norekening"] ?>" id="norekening"><?php echo $data7["norekening"] ?></option>
+							</select>
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row">
+						<lable for="" class="form-label fs-3">Pajak</lable>
+						<div class="col-7">
+							<label for="">Gunakan VAT</label>
+						</div>
+						<div class="col-3">
+							<div class="form-check form-switch">
+								<input type="checkbox" name="vat" value="11" class="form-check-input" id="check" checked>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+				</div>
+				<div class="col-3" id="action" style="display: none;">
+					<lable for="" class="form-label fs-3">Cetak & Download</lable>
+					<div class="row ">
+						<div class="col-3">
+							<p></p>
+							<a class="btn btn-light" id="btn_exportexcel"><i class='bx bxs-download'>Download</i></a>
+						</div>
+						<div class="col-3">
+							<p></p>
+							<a class="btn btn-light" onclick="printDiv('po')"><i class='bx bx-printer'>Cetak</i></a>
+						</div>
+						<div class="col-3">
+							<p></p>
+							<a href="<?php echo base_url('InventoryController/AddPo') ?>" class="btn btn-light"><i class='bx bx-reset'>Baru</i></a>
+						</div>
+						<div class="col-3"></div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<lable for="" class="form-label fs-3">Item/Produk</lable>
+					<input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
+					<table class="table table-bordered table-striped " id="table-user">
+						<thead class="text-white" style="background:#1143d8;">
+							<tr>
+								<td>Sku</td>
+								<td>Nama Item</td>
+								<td>Harga</td>
+								<td>Qty</td>
+								<td>Discount Percent</td>
+								<td>Discount Nominal</td>
+								<td>Sub Total</td>
+								<td>Total Discount</td>
+								<td>Grand Total</td>
+								<td>Action</td>
+							</tr>
+						</thead>
+						<tbody id="detail">
 
-<div class="row">
-  <div class="col-1">
-    </div>
-      <div class="col-9">
-        <h5>Item/Produk</h5>
-        <input type="hidden" id="line-transaksi" name="line-transaksi" value="0" />
-          <table class="table m-0" >
-		  <thead class="border-0">
-			<tr>
-			<th style="background:#1143d8;color:white;text-align:right;">SKU</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Nama Item</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Harga</th>
-			<th style="background:#1143d8;color:white;text-align:right;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qty</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Expired Date</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Disc Nominal</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Disc Persen</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Total</th>
-			<th style="background:#1143d8;color:white;text-align:right;">Action</th>
-			</tr>
-			</thead>
-          </table>
-		<table class="table table-striped table-hover">
-			<tbody id="detailx">
-		      
-			</tbody>
-		</table>
-		  <div class="row rounded me-1" style="justify-content: end;">
-			  <div class="col-2" style="text-align: end;background:#E6ECFF; width:fit-content">
-				  <p>DPP</p>
-				  <p>Subtotal</p>
-				  <p>Discount Transaksi</p>
-				  <p>Pph</p>
-				  <p>Grand Total</p>
-			  </div>
-			  <div class="col-2" style="text-align: end;background:#E6ECFF;">
-				  <input type="text" name="dpp" id="dpp" class="form-control" readonly>
-				  <input type="text" name="subtotal" id="subtotal"  class="form-control" readonly>
-				  <input type="text" name="discount" id="discount" value="0" class="form-control" readonly>
-				  <input type="text" name="pph22" id="pph22" value="0" class="form-control" readonly>
-				  <input type="text" name="grandtotal" id="grandtotal" class="form-control" readonly>
-			  </div>
-		  </div>
-          <div class="mr-4 mt-3" style="text-align:right;">
-            <button type="button" class="btn btn-primary" style="font-size:13px;" id="addorder" onclick="addorder()">Buat Transaksi</button>
-          </div>
-      </div>
-  </div>
-</div>
-</div>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-8"></div>
+						<div class="col-4 text-end">
+							<div class="card p-3" style="background-color: #E6ECFF;border-radius: 8px">
+								<div class="row">
+									<div class="col-6 ">
+										<p>Sub Total</p>
+									</div>
+									<div class="col-6">
+										<input type="text" class="form-control" id="subtotal" name="subtotal" readonly>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6 ">
+										<p>Discount Transaksi</p>
+									</div>
+									<div class="col-6">
+										<input type="number" class="form-control" id="disnom" name="distrans" value="0" oninput="calc()">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6 ">
+										<p>Total Setelah Diskon</p>
+									</div>
+									<div class="col-6">
+										<input type="text" class="form-control" id="totaldisc" name="totaldis" readonly>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6 ">
+										<p>VAT</p>
+									</div>
+									<div class="col-6">
+										<input type="text" class="form-control" id="ppn" name="ppn" readonly>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6 ">
+										<p>Grand Total</p>
+									</div>
+									<div class="col-6">
+										<input type="text" class="form-control" id="grandtotal" name="grandtotal" readonly>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="mr-4 mt-3" style="text-align:right;">
+						<button type="button" class="btn btn-primary" id="addorder" onclick="addorder()">Update</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<!-- <form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms"> -->
+				<div class="modal-header" style="background:#1143d8;color:white;">
+					<h5 class="modal-title" id="exampleModalLabel">List Purchase Order</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+				</div>
+				<!-- <input type="hidden" name="idcust" id="idcust"> -->
+				<div class="modal-body">
+					<div class="row mb-4">
+						<div class="col-6">
+							<div class="row">
+								<div class="col-8">
+									<label for="" class="form-label">Pencarian</label>
+									<div class="input-group">
+										<select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
+											<option value="codepo">No.Po</option>
+										</select>
+										<input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+									</div>
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Status</label>
+									<select class="form-select" id="statuspo" aria-label="Default select example">
+										<option value="">Pilih Status Quotation</option>
+										<option value="Waiting">Waiting</option>
+										<option value="Process">Process</option>
+										<option value="Finish">Finish</option>
+										<option value="Cancel">Cancel</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-1"></div>
+						<div class="col-5">
+							<div class="row">
+								<div class="col-4">
+									<label for="" class="form-label">Mulai Dari</label>
+									<input type="date" class="form-control" name="" id="datestart" value="<?php echo date('Y-m-01') ?>">
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Sampai Dengan</label>
+									<input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-t') ?>">
+								</div>
+								<div class="col-4">
+									<p></p>
+									<a href="#" class="btn btn-primary mt-3" onclick="loaddata()">Terapkan</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>No. Request</th>
+										<th>Tgl Request</th>
+										<th>Nama Supplier</th>
+										<th>Qty Item</th>
+										<th>Total Amount</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody id="detailx">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="requestpo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<!-- <form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms"> -->
+				<div class="modal-header" style="background:#1143d8;color:white;">
+					<h5 class="modal-title" id="exampleModalLabel">List Request Purchase Order</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+				</div>
+				<input type="hidden" name="idcust" id="idcust">
+				<div class="modal-body">
+					<div class="row mb-4">
+						<div class="col-6">
+							<div class="row">
+								<div class="col-8">
+									<label for="" class="form-label">Pencarian</label>
+									<div class="input-group">
+										<select name="filters" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filters">
+											<option value="codereqpo">No.Request Po</option>
+										</select>
+										<input type="text" id="searchs" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+									</div>
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Status</label>
+									<select class="form-select" id="statusreqpos" aria-label="Default select example">
+										<option value="">Pilih Status Quotation</option>
+										<option value="Waiting">Waiting</option>
+										<option value="Process">Process</option>
+										<option value="Finish">Finish</option>
+										<option value="Cancel">Cancel</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-1"></div>
+						<div class="col-5">
+							<div class="row">
+								<div class="col-4">
+									<label for="" class="form-label">Mulai Dari</label>
+									<input type="date" class="form-control" name="" id="datestarts" value="<?php echo date('Y-m-01') ?>">
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Sampai Dengan</label>
+									<input type="date" class="form-control" name="" id="finishdates" value="<?php echo date('Y-m-t') ?>">
+								</div>
+								<div class="col-4">
+									<p></p>
+									<a href="#" class="btn btn-primary mt-3" onclick="loaddatax()">Terapkan</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Code Request PO</th>
+										<th>Tgl Request PO</th>
+										<th>Deskripsi</th>
+										<th>Status Request PO</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody id="detailreqpo">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
+
+</body>
+<datalist id="xsupp">
+	<?php
+	if ($data5 != 'Not Found' || !empty($data5)) {
+		foreach ($data5 as $key) {
+	?>
+			<option value="<?php echo $key["namecust"]; ?>" namecust="<?php echo $key["namecust"]; ?>" data-idcust="<?php echo $key["idcust"]; ?>" data-email="<?php echo $key["email"]; ?>" data-address="<?php echo $key["addresscust"]; ?>" data-phone="<?php echo $key["phonecust"]; ?>"><?php echo $key["codecust"] . ' - ' . $key["namecust"]; ?></option>
+	<?php }
+	} ?>
+</datalist>
+
 <datalist id="xitem">
 	<?php
 	if ($data != 'Not Found') {
 		foreach ($data as $key) {
 	?>
-			<option value="<?php echo $key["nameitem"]. '     Rp. ' . $key["hargaitem"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditembom="<?php echo $key["iditembom"]; ?>" data-price="<?php echo $key["hargaitem"]; ?>" data-nameitem="<?php echo $key["nameitem"]; ?>" data-sku="<?php echo $key["sku"]; ?>" data-hargaitem="<?php echo $key["hargaitem"]; ?>"><?php echo $key["sku"] ; ?></option>
+			<option value="<?php echo $key["sku"]; ?>" nameitem="<?php echo $key["nameitem"]; ?>" data-iditem="<?php echo $key["iditem"]; ?>" data-price="<?php echo $key["price"]; ?>" data-nameitem="<?php echo $key["nameitem"];  ?>" data-sku="<?php echo $key["sku"]; ?>" data-price="<?php echo $key["price"]; ?>" data-deskripsi="<?php echo $key["deskripsi"]; ?>"><?php echo $key["sku"] . ' - ' . $key["nameitem"]; ?></option>
 	<?php }
 	} ?>
 </datalist>
-</body>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables/jquery.dataTables.min.js ')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/jszip/jszip.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/pdfmake/pdfmake.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/pdfmake/vfs_fonts.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.print.min.js')?>"></script>
-<script src="<?php echo base_url('assets/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js')?>"></script>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-	 $('#data').hide();
-			$(function () {
-				$("#table-user").DataTable({
-				"responsive": true, "lengthChange": false, "autoWidth": false,
-				"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-				}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-				$('#example2').DataTable({
-				"paging": true,
-				"lengthChange": false,
-				"searching": false,
-				"ordering": true,
-				"info": true,
-				"autoWidth": false,
-				"responsive": true,
-				});
-			});
-		add_row_transaksi(0)
-		var xitem = '';
-	    xitem = '<?php
-				$x = '';
-				if ($data != 'Not Found') {
-					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["iditembom"] . '" price="' . $key["hargaitem"] . '" nameitem="' . $key["nameitem"] . '" sku="' . $key["sku"] . '">' . $key["sku"] . ' - ' . $key["nameitem"] . '</option>';
-					}
-				}
-				echo $x;
-				?>';
+	var data = <?php echo json_encode($data7); ?>;
+	for (let i = 0; i < data["data"].length; i++) {
+		add_row_transaksi(i)
+		var xid = Number(i) + Number(1);
+		$('#transaksi_' + xid + '_iditem').val(data["data"][i]["sku"]);
+		$('#transaksi_' + xid + '_sku').val((data["data"][i]["sku"]));
+		$('#transaksi_' + xid + '_iditem').val((data["data"][i]["iditem"]));
+		$('#transaksi_' + xid + '_nameitem').val((data["data"][i]["nameitem"]));
+		$('#transaksi_' + xid + '_harga').val((data["data"][i]["price"]));
+		$('#transaksi_' + xid + '_qty').val(data["data"][i]["qty"]);
+		$('#transaksi_' + xid + '_discpercent').val(0);
+		$('#transaksi_' + xid + '_disnom').val(0);
+		$('#transaksi_' + xid + '_sub').val(data["data"][i]["subpo"]);
+		$('#transaksi_' + xid + '_totaldisc').val(data["data"][i]["totaldisc"]);
+		$('#transaksi_' + xid + '_total').val(data["data"][i]["grandtotal"]);
+		calc();
+	}
 
-		var xunit = '';
-	    xunit = '<?php
-				$x = '';
-				if ($data != 'Not Found') {
-					foreach ($data as $key) {
-						$x = $x . '<option value="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '" nameitem="' . $key["nameitem"] . '">' . $key["nameitem"] . ' - ' . $key["nameitem"] . '</option>';
-					}
-				}
-				echo $x;
-				?>';
+	$(function() {
+		$("#check").click(function() {
+			if ($(this).is(":checked")) {
+				$("#check").val(1);
+			} else {
+				$("#check").val(0);
+			}
+			calc();
+		});
+	});
 
-		function calc() {
+	$(document).keypress(function(e) {
+		if (e.which == 13) {
+			e.preventDefault();
+		}
+	});
+
+	$(document).on('input', '#namesupp', function() {
+		var val = $(this).val();
+		var xobj = $('#xsupp option').filter(function() {
+			return this.value == val;
+		});
+
+		if ((val == "") || (xobj.val() == undefined)) {
+			$('#idsupp').val("");
+			$('#norekening').val("");
+		} else {
+
+			$('#idsupp').val(xobj.data('idcust'));
+			var data = <?php echo json_encode($data5) ?>;
+			for (let i = 0; i < data.length; i++) {
+
+				if (data[i]["idcust"] == xobj.data('idcust')) {
+					var baris = '<option value="">Pilih</option>'
+					for (let b = 0; b < data[i]["data"].length; b++) {
+
+						baris += `<option value="` + data[i]["data"][b]["norekening"] + `">` + data[i]["data"][b]["norekening"] + ` - ` + data[i]["data"][b]["beneficiary"] + ` ( ` + data[i]["data"][b]["namabank"] + ` ) </option>`
+					}
+					$('#norekening').html(baris)
+				}
+
+
+			}
+		}
+	});
+
+
+	function calc() {
 		var xcnt = 0;
 		var xqty = 0;
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				xcnt++;
 				xqty += parseFloat($('#transaksi_' + xid + '_qty').val());
 			}
 		});
 	}
 
-		function reorder() {
+	function reorder() {
 		$('input[objtype=nourut]').each(function(i, obj) {
 			$(this).val(i + 1);
 		});
-	   }
+	}
 
-		function del_row_transaksi(xid) {
+	function del_row_transaksi(xid) {
 		$('#transaksi-' + xid + '').remove();
 		reorder();
 		calc();
-	     }
+	}
 
-		function readURL(input) {
-			if (input.files && input.files[0]) {
-				var reader = new FileReader();
+	function readURL(input) {
+		if (input.files && input.files) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#uimg')
+					.attr('src', e.target.result)
+					.width(412)
+					.height(309);
+			};
 
-				reader.onload = function (e) {
-					$('#uimg')
-						.attr('src', e.target.result)
-						.width(412)
-						.height(309);
-				};
-
-				reader.readAsDataURL(input.files[0]);
-			}
+			reader.readAsDataURL(input.files);
 		}
+	}
 
-		function add_row_transaksi(xxid) {
+	function add_row_transaksi(xxid) {
 		var lastid = 0;
 		if (parseInt(xxid) != 0) {
 			lastid = parseInt($("#transaksi_" + xxid + "_nourut").val());
@@ -380,22 +492,22 @@
 		var xid = (parseInt(xxid) + 1);
 		lastid++;
 		var tabel = '';
-		tabel += '<tr class="result transaksi-row" style="border:none;text-align:center"height:1px" id="transaksi-' + xid + '"><input type="hidden" id="transaksi_' + xid + '_iditembom"  class="form-control  iditembom" name="transaksi_iditembom[]" / ></td>';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text" class="form-control  sku" objtype="sku" id="transaksi_' + xid + '_sku" name="transaksi_sku[]" placeholder="Search" list="xitem" value="" autocomplete="off"></td>';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" type="text"  readonly id="transaksi_' + xid + '_nameitem"  class="form-control "name="transaksi_nameitem[]" value=""/></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_harga" autocomplete="off" objtype="_harga" class="form-control  _harga" name="transaksi_harga[]' + xid + '_harga"></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_qty" objtype="_qty" class="form-control  _qty" name="transaksi_qty[]' + xid + '_qty" autocomplete="off" value="0" onchange="count('+ xid +')"></td>';
-		tabel += '<td class="p-0" style="border:none; width:12%;"><input type="date" id="transaksi_' + xid + '_expiredate" objtype="_expiredate" class="form-control  _expiredate" name="transaksi_expiredate[]" />';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discnominal"  class="form-control _discnominal" name="transaksi_discnominal[]' + xid + '_discnominal"  value="0" onchange="count('+ xid +')"></td>';
-		tabel += '<td class="p-0" style="border:none;"><input style="text-align:center" autocomplete="off" type="number" id="transaksi_' + xid + '_discpersen"  class="form-control _discpersen" name="transaksi_discpersen[]' + xid + '_discpersen"  max="100" min="0" oninput="discountpersent('+ xid +',this.value)"></td>';
-		tabel += '<td class="p-0" style="border:none;"><input type="number" id="transaksi_' + xid + '_total" objtype="_total" class="form-control _total" name="transaksi_total[]' + xid + '_total"  autocomplete="off" value="0" onchange="count('+ xid +')"></td>';
-		tabel += '<td class="p-0" style="border:none;" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control " type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
+		tabel += '<tr class="result transaksi-row" style="border:none;"height:1px" id="transaksi-' + xid + '">';
+		tabel += '<td style="border:none"height:1px"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control iditem" name="iditem[]" /><input style="width:150px;text-align:center" type="text" class="form-control sku" objtype="sku" id="transaksi_' + xid + '_sku" name="sku[]" placeholder="Search" autocomplete="off" list="xitem" value="" required></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="text" readonly id="transaksi_' + xid + '_nameitem"  class="form-control"name="nameitem[]" value=""/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_harga"  class="form-control" name="harga[]" oninput="cal(' + xid + ')" value=""/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" id="transaksi_' + xid + '_qty"  class="form-control" name="qty[]" value="" oninput="cal(' + xid + ')"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" id="transaksi_' + xid + '_discpercent" oninput="discx(' + xid + ')"  class="form-control"name="discpercent[]" value="" oninput="discp(' + xid + ')"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" id="transaksi_' + xid + '_disnom" oninput="discxx(' + xid + ')"  class="form-control"name="disnom[]" value="" oninput="disn(' + xid + ')"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_sub"  class="form-control"name="sub[]" value="" oninput="disn(' + xid + ')"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_totaldisc"  class="form-control"name="totaldisc[]" value="" oninput="disn(' + xid + ')"/></td>';
+		tabel += '<td style="border:none"height:1px"><input style="width:100%" type="number" readonly id="transaksi_' + xid + '_total"  class="form-control"name="total[]" value=""/></td>';
+		tabel += '<td style="border:none"height:1px" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control" type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
 		tabel += '</tr>';
-		//return tabel;
+		// return tabel;
 		$('#line-transaksi').val(xid);
-		$('#detailx').append(tabel);
+		$('#detail').append(tabel);
 		$('#transaksi_' + xid + '_nourut').val(lastid);
-		// var i = document.getElementById("test").value = test1++;
 		if (parseInt(xxid) != 0) {
 			var olddata = $('#transaksi-tr-' + xxid + '').html();
 			var xdt = olddata.replace('onclick="add_row_transaksi(' + xxid + ')"><b>+</b>', 'onclick="del_row_transaksi(' + xxid + ')"><b>x</b>');
@@ -403,41 +515,62 @@
 		}
 	}
 
-	function discountpersent(disc,disc1)
-	{
-		if(disc1 > 100)
-		{
-			$('#transaksi_' + disc + '_discpersen').val(100);
-		    alert("Maaf Angka terlalu banyak");
 
-    	}else if(disc1 < 1)
-		{
+
+	function discountpersent(disc, disc1) {
+		if (disc1 > 100) {
+			$('#transaksi_' + disc + '_discpersen').val(100);
+			alert("Maaf Angka terlalu banyak");
+
+		} else if (disc1 < 1) {
 			$('#transaksi_' + disc + '_discpersen').val(0);
-		    alert("Masukan Discount");
+			alert("Masukan Discount");
 		}
 
 	}
 
-   
 
-	$(document).on('change', '.sku', function() {
-		var xid  = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-		var val  = $(this).val();
+
+	$(document).on('input', '.sku', function() {
+		var xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
+		var val = $(this).val();
 		var xobj = $('#xitem option').filter(function() {
 			return this.value == val;
 		});
 		if ((val == "") || (xobj.val() == undefined)) {
-			$('#transaksi_' + xid + '_sku').val("");
-			$('#transaksi_' + xid + '_iditembom').val("");
+
+			$('#transaksi_' + xid + '_iditem').val("");
 			$('#transaksi_' + xid + '_nameitem').val("");
-			$('#transaksi_' + xid + '_harga').val(0);
-			$('#transaksi_' + xid + 'qty').val(0);
+			$('#transaksi_' + xid + '_deskripsi').val("");
+			$('#transaksi_' + xid + '_harga').val("");
+			$('#transaksi_' + xid + '_qty').val("");
+			$('#transaksi_' + xid + '_discpercent').val("");
+			$('#transaksi_' + xid + '_disnom').val("");
+			$('#transaksi_' + xid + '_totaldisc').val("");
+			$('#transaksi_' + xid + '_total').val("");
+			$('#transaksi_' + xid + '_sub').val("");
+
+			document.getElementById('transaksi_' + xid + '_qty').readOnly = true;
+			document.getElementById('transaksi_' + xid + '_harga').readOnly = true;
+			document.getElementById('transaksi_' + xid + '_discpercent').readOnly = true;
+			document.getElementById('transaksi_' + xid + '_disnom').readOnly = true;
 		} else {
 			$('#transaksiksi_' + xid + '_sku').val(xobj.data('sku'));
-			$('#transaksi_' + xid + '_iditembom').val(xobj.data('iditembom'));
+			$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
 			$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
-			$('#transaksi_' + xid + '_harga').val(xobj.data('hargaitem'));
-			$('#transaksi_' + xid + 'qty').val(xobj.data('qty'));
+			$('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
+			$('#transaksi_' + xid + '_harga').val(xobj.data('price'));
+			$('#transaksi_' + xid + '_qty').val(1);
+			$('#transaksi_' + xid + '_discpercent').val(0);
+			$('#transaksi_' + xid + '_disnom').val(0);
+			$('#transaksi_' + xid + '_totaldisc').val(0);
+			$('#transaksi_' + xid + '_total').val(xobj.data('price'));
+			$('#transaksi_' + xid + '_sub').val(xobj.data('price'));
+
+			document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
+			document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
+			document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
+			document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
 		}
 		calc();
 	});
@@ -446,7 +579,7 @@
 		if ($(this).attr('id') == "addorder") {
 			var xask = '';
 			if ($("#idpo").val() == "") {
-				xask = "Simpan Transaksi?";
+				xask = "Ubah Transaksi?";
 			} else {
 				xask = "Ubah Transaksi?";
 			}
@@ -455,34 +588,29 @@
 					addorder();
 				}
 			}
-		} 
+		}
 		e.preventDefault();
 	});
+
 
 	function validasi() {
 		var xval = 0;
 		var sts = 1;
-		
-		xval = $("#supplier").val();
-		if (xval == "") {
+
+		xval = $("#namesupp").val();
+		if ($("#namesupp").val() == '') {
 			alert('Input Supplier');
 			sts = 0;
 			return false;
 		}
 
-		xval = $("#namewarehouse").val();
-		if (xval == "") {
-			alert('Input Gudang Penerima');
+		xval = $("#tanggalpengiriman").val();
+		if ($("#tanggalpengiriman").val() == '') {
+			alert('Input Tanggal Pengiriman');
 			sts = 0;
 			return false;
 		}
 
-		xval = $("#datepo").val();
-		if ($("#datepo").val() == '') {
-			alert('Input Tanggal Masuk');
-			sts = 0;
-			return false;
-		}
 
 		xval = $("#mataung").val();
 		if ($("#matauang").val() == '') {
@@ -491,53 +619,63 @@
 			return false;
 		}
 
-		xval = $("#_qty").val();
-		if ($("#_qty").val() == 0) {
-			alert('Input QTY');
+		xval = $("#norekening").val();
+		if ($("#norekening").val() == '') {
+			alert('Pilih Nomor Rekening');
 			sts = 0;
 			return false;
 		}
 
-		xval = $("#_expiredate").val();
-		if ($("#_expiredate").val() == "") {
-			alert('Input Expiredate');
-			sts = 0;
-			return false;
-		}
+		$('input[objtype=sku]').each(function(i, obj) {
+			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
 
-		$('input[objtype=expiredate]').each(function(i, obj) {
-
-			xid = $(this).attr('id').replace("transaksi_", "").replace("_expiredate", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
-				if ($("#datepo").val() >= $(this).val()) {
-					alert('Tanggal Expired Dibawah Atau Sama Dengan Tanggal Transaksi');
-					sts = 0;
-					return false;
-				}
+			if (Number($('#transaksi_' + xid + '_disnom').val()) > Number($('#transaksi_' + xid + '_total').val())) {
+				alert('Discount Tidak Boleh Lebih Besar Dari Grand Total !!');
+				sts = 0;
+				return false;
 			}
+
+			// if ($('#transaksi_' + xid + '_sku').val() == 0) {
+			// 	alert('Masukan Item Terlebih Dahulu');
+			// 	sts = 0;
+			// 	return false;
+			// }
+
+			// if ($('#transaksi_' + xid + '_qtyin').val() == "") {
+			// 	alert('Masukan QTY Terlebih Dahulu');
+			// 	sts = 0;
+			// 	return false;
+			// }
 		});
+
+
+
 		if (sts == 1) {
 			return true;
 		} else {
 			return false;
 		}
-		//return 'ok';
 	}
 
-	function count(xid)
-	{
-		var harga  = $('#transaksi_' + xid + '_harga').val();
-		var qty    = $('#transaksi_' + xid + '_qty').val();
-		var disnom = $('#transaksi_' + xid + '_discnominal').val();
-		var disper = $('#transaksi_' + xid + '_discpersen').val();
-		var totals = parseFloat(harga.replaceAll(".","") * qty - disnom) ;
-
-		// var discpersen = totals * disper / 100;
-
-		$('#transaksi_' + xid + '_total').val(totals);
-
+	function cal(x) {
+		console.log($('#transaksi_' + x + '_qty').val() + " a " + $('#transaksi_' + x + '_harga').val() + " b " +
+			$('#transaksi_' + x + '_disnom').val() + " c " + $('#transaksi_' + x + '_disnom').val() + " d ")
+		$('#transaksi_' + x + '_sub').val($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_harga').val())
+		$('#transaksi_' + x + '_totaldisc').val($('#transaksi_' + x + '_disnom').val())
+		$('#transaksi_' + x + '_total').val($('#transaksi_' + x + '_sub').val() - $('#transaksi_' + x + '_totaldisc').val())
 		calc();
+	}
 
+	function discx(xid) {
+
+		console.log($('#transaksi_' + xid + '_discpercent').val() + " " + xid)
+		$('#transaksi_' + xid + '_disnom').val($('#transaksi_' + xid + '_harga').val() * $('#transaksi_' + xid + '_discpercent').val() / 100);
+		cal(xid)
+	}
+
+	function discxx(xid) {
+		$('#transaksi_' + xid + '_discpercent').val(0)
+		cal(xid)
 	}
 
 	function calc() {
@@ -546,31 +684,36 @@
 		var xid = 0;
 		$('input[objtype=sku]').each(function(i, obj) {
 			xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
-			if ($('#transaksi_' + xid + '_iditembom').val() != '') {
+			if ($('#transaksi_' + xid + '_iditem').val() != '') {
 				xttl += parseFloat($('#transaksi_' + xid + '_total').val().replaceAll(',', ''));
-				dpp  += parseFloat($('#transaksi_' + xid + '_harga').val().replaceAll('.', '') * $('#transaksi_' + xid + '_qty').val()) ;
 			}
-			
 		});
-        
-		
-
-		$('#dpp').val(formatnum(dpp));
-		$('#subtotal').val(formatnum(xttl));
-		$('#grandtotal').val(formatnum(xttl));
-		
+		if ($("#check").is(":checked") == true) {
+			vat = (xttl - $('#disnom').val()) * 11 / 100;
+		} else {
+			vat = 0;
+		}
+		disctotal = (xttl - $('#disnom').val());
+		grandtot = Number((xttl - $('#disnom').val())) + Number(vat)
+		totaldiscount = xttl - $('#disnom').val();
+		$("#ppn").val(formatnum(vat))
+		$("#subtotal").val(formatnum(xttl))
+		$("#distotal").val(formatnum(disctotal))
+		$("#totaldisc").val(formatnum(totaldiscount))
+		$("#grandtotal").val(formatnum(grandtot))
 	}
 
 	function addorder() {
 		var cx = $('#form').serialize();
-			$.post("<?php echo base_url('MasterDataControler/addpo') ?>", cx,
-				function(data) {
-					if (data == 'Success') {
-						alert('Input Data Berhasil');
-						cancelorder();
-					} else {
-						alert('Input Data Gagal. ' + data);
-					}
+		$.post("<?php echo base_url('MasterDataControler/editpo') ?>", cx,
+			function(data) {
+				if (data == 'Success') {
+					alert('Data Berhasil Diupdate');
+					cancelorder();
+				} else {
+					alert('Data Berhasil DiUpdate. ' + data);
+					cancelorder()
+				}
 			});
 	}
 
@@ -578,4 +721,52 @@
 		location.reload();
 	}
 
-	</script>
+	$(document).ready(function() {
+		var today = new Date();
+		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate()), 2);
+		if ($("#date1").val() == '') {
+			$("#date1").val(date);
+		}
+		var date = today.getFullYear() + '-' + Right('0' + (today.getMonth() + 1), 2) + '-' + Right('0' + (today.getDate() + 1), 2);
+		if ($("#tanggalpengiriman").val() == '') {
+			$("#tanggalpengiriman").val(date);
+		}
+	});
+
+	function printDiv(divName) {
+		var printContents = document.getElementById(divName).innerHTML;
+		var originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents;
+		window.print();
+		document.body.innerHTML = originalContents;
+		location.reload();
+	}
+
+	function formatnum(total) {
+		return total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+		var neg = false;
+		if (total < 0) {
+			neg = true;
+			total = Math.abs(total);
+		}
+		return parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "1,").toString();
+	}
+
+	function formatRupiah(angka, prefix) {
+		var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split = number_string.split(','),
+			sisa = split[0].length % 3,
+			rupiah = split[0].substr(0, sisa),
+			ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+		// tambahkan titik jika yang di input sudah menjadi angka ribuan
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
+		}
+
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	}
+</script>

@@ -11,7 +11,10 @@
     <div class="content bg-white mx-4">
         <div class="container-fluid">
             <div class="row no-gutters">
-                <?php echo $this->session->flashdata('message'); ?>
+                <?php
+                $pesan = "";
+                $pesan =  $this->session->flashdata('message');
+                echo $this->session->flashdata('message'); ?>
                 <?php $this->session->set_flashdata('message', ''); ?>
                 <div class="col-12 bays">
 
@@ -21,7 +24,7 @@
                             <div class="row mb-3">
                                 <div class="col-8">
                                     <label class="form-label">No. Quotation</label>
-                                    <input type="text" name="codequo" id="codequo" class="form-control" value="<?php echo $data1 ?>" autocomplete="off" readonly>
+                                    <input type="text" name="codequo" id="codequo" class="form-control" autocomplete="off" readonly>
                                 </div>
                                 <div class="col-4 mt-3">
                                     <p></p>
@@ -62,10 +65,20 @@
                         </div>
                         <div class="col-3">
                             <label class="mb-3 fs-5">Informasi Judul & Lainnya </label>
-                            <div class="row mb-3">
+                            <div class="row mb-1">
                                 <div class="col-10">
                                     <label for="exampleFormControlInput1" class="form-label">Judul Penawaran</label>
-                                    <textarea name="judulquo" id="judulquo" class="form-control" cols="20" rows="4" required></textarea>
+                                    <textarea name="judulquo" id="judulquo" class="form-control" cols="20" rows="1" required></textarea>
+                                    <div class="row text-end">
+                                        <span style="font-size: 10px;" class="text-muted">Maksimal 100 Karakter</span>
+                                    </div>
+                                </div>
+                                <div class="col-2"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-10">
+                                    <label for="exampleFormControlInput1" class="form-label">Remark</label>
+                                    <textarea name="remark" id="remark" class="form-control" cols="20" rows="1" required></textarea>
                                     <div class="row text-end">
                                         <span style="font-size: 10px;" class="text-muted">Maksimal 100 Karakter</span>
                                     </div>
@@ -106,7 +119,6 @@
                                 </select>
                             </div>
                             <div id="bank"></div>
-
                             <div class="row" id="action" style="display: none;">
                                 <label class="mb-3 fs-5">Cetak & Download</label>
                                 <div class="col-4">
@@ -118,7 +130,6 @@
                                 <div class="col-4">
                                     <a href="<?php echo base_url('QuotationController/addquot') ?>" class="btn"><i class='bx bx-reset'></i> Baru</a>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -370,7 +381,6 @@
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <datalist id="xcust">
-    <!--<option value="" disabled selected>Select Item</option>-->
     <?php
     if ($data != 'Not Found' || !empty($data)) {
         foreach ($data as $key) {
@@ -394,6 +404,20 @@
 </datalist>
 
 <script>
+    var pesan = <?php echo json_encode($pesan) ?>;
+    console.log(pesan);
+    if (pesan != "") {
+        pesan = pesan.replace('<div class="alert alert-primary" role="alert">Success dengan nomor quotation ', '')
+        detailquo(pesan.replace("</div>", ""))
+    }
+
+    var codequox = <?php echo json_encode($codequox) ?>;
+    console.log(codequox);
+    if (codequox != "") {
+        detailquo(codequox)
+    }
+
+
     function loaddata() {
         $.ajax({
             type: "POST",
@@ -411,7 +435,7 @@
                                     <td>` + hasil[i]["namecust"] + `</td>
                                     <td>` + hasil[i]["expquo"] + `</td>
                                     <td>` + hasil[i]["statusquo"] + `</td>
-                                    <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailquo(` + hasil[i]["idquo"] + `)">Pilih</a></td>
+                                    <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailquo('` + hasil[i]["codequo"] + `')">Pilih</a></td>
                                 </tr>`
                     }
                 }
@@ -450,6 +474,7 @@
                 $('#disnom').val(hasil["disc"]);
                 $('#expquo').val(hasil["expquo"]);
                 $('#norek').val(hasil["norek"]);
+                $('#remark').val(hasil["remark"]);
                 $('#action').show();
                 $('#detail').html("")
                 for (var a = 0; a < hasil["data"].length; a++) {
@@ -521,26 +546,32 @@
                         $('#transaksi_' + xid + '_discpercent').val(0);
                         $('#transaksi_' + xid + '_disnom').val(hasil["data"][i]["disc"]);
                         $('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["qty"] * hasil["data"][i]["disc"]);
-                        $('#transaksi_' + xid + '_total').val(hasil["data"][i]["totalprice"]);
-                        $('#transaksi_' + xid + '_sub').val(hasil["data"][i]["qty"] * hasil["data"][i]["price"]);
-
-                        document.getElementById('transaksi_' + xid + '_action').disabled = true;
-                        document.getElementById('transaksi_' + xid + '_sku').readOnly = true;
+                        $('#transaksi_' + xid + '_total').val(formatRupiah(hasil["data"][i]["totalprice"] + ""));
+                        $('#transaksi_' + xid + '_sub').val(formatRupiah(hasil["data"][i]["qty"] * hasil["data"][i]["price"] + ""));
+                        document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
+                        document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
+                        // document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
+                        document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
+                        // document.getElementById('transaksi_' + xid + '_action').disabled = true;
+                        // document.getElementById('transaksi_' + xid + '_sku').readOnly = true;
 
 
                     }
                     calc();
-                    document.getElementById('codequo').readOnly = true;
-                    document.getElementById('judulquo').readOnly = true;
-                    document.getElementById('startquo').readOnly = true;
-                    document.getElementById('expquo').readOnly = true;
-                    document.getElementById('norek').disabled = true;
-                    document.getElementById('disnom').disabled = true;
-                    document.getElementById('custname').disabled = true;
-                    $('#simpan').hide()
+                    // document.getElementById('codequo').readOnly = true;
+                    // document.getElementById('remark').readOnly = true;
+                    // document.getElementById('judulquo').readOnly = true;
+                    // document.getElementById('startquo').readOnly = true;
+                    // document.getElementById('expquo').readOnly = true;
+                    // document.getElementById('norek').disabled = true;
+                    // document.getElementById('disnom').disabled = true;
+                    // document.getElementById('custname').disabled = true;
+
                     if (hasil["statusquo"] == "Waiting") {
+                        $('#simpan').show()
                         $('#cancel').show()
                     } else {
+                        $('#simpan').hide()
                         $('#cancel').hide()
                     }
 
@@ -612,14 +643,14 @@
         lastid++;
         var tabel = '';
         tabel += '<tr class="result transaksi-row" style="border:none;"height:1px" id="transaksi-' + xid + '">';
-        tabel += '<td style="border:none"height:1px"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control iditem" name="iditem[]" /><input style="width:150px;text-align:center" type="text" class="form-control sku" objtype="sku" id="transaksi_' + xid + '_sku" name="sku[]" placeholder="Search" list="xitem" value="" required></td>';
+        tabel += '<td style="border:none"height:1px"><input type="hidden" id="transaksi_' + xid + '_iditem"  class="form-control iditem" name="iditem[]" /><input style="width:150px;text-align:center" type="text" class="form-control sku" objtype="sku" id="transaksi_' + xid + '_sku" name="sku[]" placeholder="Search" list="xitem" value="" autocomplete="off" required></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_nameitem"  class="form-control"name="nameitem[]" value=""/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_harga"  class="form-control"name="harga[]" oninput="cal(' + xid + ')" value=""/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_qty"  class="form-control"name="qty[]" value="" oninput="cal(' + xid + ')"/></td>';
         tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_disnom" oninput="discxx(' + xid + ')"  class="form-control"name="disnom[]" value="" oninput="disn(' + xid + ')"/></td>';
-        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_sub"  class="form-control"name="sub[]" value="" oninput="disn(' + xid + ')"/></td>';
-        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_totaldisc"  class="form-control"name="totaldisc[]" value="" oninput="disn(' + xid + ')"/></td>';
-        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="number" readonly id="transaksi_' + xid + '_total"  class="form-control"name="total[]" value=""/></td>';
+        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_sub"  class="form-control"name="sub[]" value="" oninput="disn(' + xid + ')"/></td>';
+        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_totaldisc"  class="form-control"name="totaldisc[]" value="" oninput="disn(' + xid + ')"/></td>';
+        tabel += '<td style="border:none"height:1px"><input style="width:100%"type="text" readonly id="transaksi_' + xid + '_total"  class="form-control"name="total[]" value=""/></td>';
         tabel += '<td style="border:none"height:1px" id="transaksi-tr-' + xid + '"><button style="width:60px" id="transaksi_' + xid + '_action" name="action" class="form-control" type="button" onclick="add_row_transaksi(' + xid + ')"><b>+</b></button></td>';
         tabel += '</tr>';
         //return tabel;
@@ -662,13 +693,13 @@
             $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
             $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
             $('#transaksi_' + xid + '_deskripsi').val(xobj.data('deskripsi'));
-            $('#transaksi_' + xid + '_harga').val(xobj.data('price'));
+            $('#transaksi_' + xid + '_harga').val(formatRupiah(xobj.data('price') + ""));
             $('#transaksi_' + xid + '_qty').val(1);
             $('#transaksi_' + xid + '_discpercent').val(0);
             $('#transaksi_' + xid + '_disnom').val(0);
             $('#transaksi_' + xid + '_totaldisc').val(0);
-            $('#transaksi_' + xid + '_total').val(xobj.data('price'));
-            $('#transaksi_' + xid + '_sub').val(xobj.data('price'));
+            $('#transaksi_' + xid + '_total').val(formatRupiah(xobj.data('price') + ""));
+            $('#transaksi_' + xid + '_sub').val(formatRupiah(xobj.data('price') + ""));
             document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
 
@@ -681,20 +712,27 @@
     function cal(x) {
         console.log($('#transaksi_' + x + '_qty').val() + " a " + $('#transaksi_' + x + '_harga').val() + " b " +
             $('#transaksi_' + x + '_disnom').val() + " c " + $('#transaksi_' + x + '_disnom').val() + " d ")
-        $('#transaksi_' + x + '_sub').val($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_harga').val())
-        $('#transaksi_' + x + '_totaldisc').val($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_disnom').val())
-        $('#transaksi_' + x + '_total').val($('#transaksi_' + x + '_sub').val() - $('#transaksi_' + x + '_totaldisc').val())
+        $('#transaksi_' + x + '_sub').val(formatRupiah($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_harga').val().replaceAll(".", "") + ""))
+        $('#transaksi_' + x + '_totaldisc').val(formatRupiah($('#transaksi_' + x + '_qty').val() * $('#transaksi_' + x + '_disnom').val().replaceAll(".", "") + ""))
+        $('#transaksi_' + x + '_total').val(formatRupiah($('#transaksi_' + x + '_sub').val().replaceAll(".", "") - $('#transaksi_' + x + '_totaldisc').val().replaceAll(".", "") + ""))
         calc();
     }
 
     function discx(xid) {
         console.log($('#transaksi_' + xid + '_discpercent').val() + " " + xid)
-        $('#transaksi_' + xid + '_disnom').val($('#transaksi_' + xid + '_harga').val() * $('#transaksi_' + xid + '_discpercent').val() / 100);
+        $('#transaksi_' + xid + '_disnom').val(formatRupiah($('#transaksi_' + xid + '_harga').val().replaceAll(".", "") * $('#transaksi_' + xid + '_discpercent').val() / 100 + ""));
         cal(xid)
     }
 
     function discxx(xid) {
+        console.log($('#transaksi_' + xid + '_disnom').val() + " " + $('#transaksi_' + xid + '_sub').val().replaceAll(".", ""))
         $('#transaksi_' + xid + '_discpercent').val(0)
+
+        if (Number($('#transaksi_' + xid + '_disnom').val()) > Number($('#transaksi_' + xid + '_sub').val().replaceAll(".", ""))) {
+            console.log("O")
+            alert("diskon melebihi total harga")
+            $('#transaksi_' + xid + '_disnom').val($('#transaksi_' + xid + '_sub').val().replaceAll(".", ""))
+        }
         cal(xid)
     }
 
@@ -705,17 +743,35 @@
         $('input[objtype=sku]').each(function(i, obj) {
             xid = $(this).attr('id').replace("transaksi_", "").replace("_sku", "");
             if ($('#transaksi_' + xid + '_iditem').val() != '') {
-                xttl += parseFloat($('#transaksi_' + xid + '_total').val().replaceAll(',', ''));
+                xttl += parseFloat($('#transaksi_' + xid + '_total').val().replaceAll('.', ''));
             }
         });
+
         if ($("#check").is(":checked") == true) {
-            vat = (xttl - $('#disnom').val()) * 11 / 100;
+            vat = (xttl - $('#disnom').val().replaceAll(".", "")) * 11 / 100;
         } else {
             vat = 0;
         }
-        grandtot = Number((xttl - $('#disnom').val())) + Number(vat)
-        $("#ppn").val(vat)
-        $("#subtotal").val(xttl)
-        $("#grandtotal").val(grandtot)
+        grandtot = Number((xttl - $('#disnom').val().replaceAll(".", ""))) + Number(vat)
+        $("#ppn").val(formatRupiah(vat + ""))
+        $("#subtotal").val(formatRupiah(xttl + ""))
+        $("#grandtotal").val(formatRupiah(grandtot + ""))
+    }
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
 </script>

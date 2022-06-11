@@ -4,7 +4,7 @@ class MQuotation extends CI_Model
 {
     function getquotationlast()
     {
-        $query = "SELECT * FROM tb_quotation ORDER BY codequo DESC LIMIT 1";
+        $query = "SELECT * FROM tb_quotation ORDER BY idquo DESC LIMIT 1";
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
             foreach ($eksekusi as $key) {
@@ -33,6 +33,7 @@ class MQuotation extends CI_Model
                 $f["expquo"] = $key->expquo;
                 $f["statusquo"] = $key->statusquo;
                 $f["totalquo"] = $key->totalquo;
+                $f["remark"] = $key->remark;
 
                 array_push($respon, $f);
             }
@@ -46,7 +47,7 @@ class MQuotation extends CI_Model
     function detailquo($idquo)
     {
         $data = array($idquo);
-        $query = "SELECT * FROM tb_quotation,tb_customer where tb_quotation.idcust = tb_customer.idcust  AND tb_quotation.idquo = ?";
+        $query = "SELECT * FROM tb_quotation,tb_customer where tb_quotation.idcust = tb_customer.idcust  AND tb_quotation.codequo = ?";
         $eksekusi = $this->db->query($query, $data)->result_object();
         if (count($eksekusi) > 0) {
 
@@ -65,6 +66,7 @@ class MQuotation extends CI_Model
                 $f["disc"] = $key->disc;
                 $f["totalquo"] = $key->totalquo;
                 $f["statusquo"] = $key->statusquo;
+                $f["remark"] = $key->remark;
                 $f["data"] = array();
                 $datax = array($key->codequo);
                 $queryx = "SELECT * FROM tb_quotationdetail,tb_item WHERE tb_quotationdetail.codequo = ? AND tb_quotationdetail.iditem = tb_item.iditem";
@@ -73,6 +75,7 @@ class MQuotation extends CI_Model
                     foreach ($eksekusix as $keyx) {
                         $g["sku"] = $keyx->sku;
                         $g["iditem"] = $keyx->iditem;
+                        $g["nameitem"] = $keyx->nameitem;
                         $g["qty"] = $keyx->qty;
                         $g["price"] = $keyx->price;
                         $g["disc"] = $keyx->disc;
@@ -150,7 +153,7 @@ class MQuotation extends CI_Model
 
     function getitem()
     {
-        $query = "SELECT * FROM tb_item WHERE jenisitem = 'non service'";
+        $query = "SELECT * FROM tb_item WHERE jenisitem = 'non service' AND status='1'";
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
             $respon = array();
@@ -172,51 +175,77 @@ class MQuotation extends CI_Model
         return $respon;
     }
 
-    function addquo($date, $iduser, $norek, $codequo, $idcust, $address, $judulquo, $startquo, $expquo, $subtotal, $disnoms, $ppn, $grandtotal, $iditem, $qty, $disnom, $harga, $total)
+    function addquo($date, $iduser, $norek, $codequo, $idcust, $address, $judulquo, $startquo, $expquo, $subtotal, $disnoms, $ppn, $grandtotal, $iditem, $qty, $disnom, $harga, $total, $remark)
     {
 
         $data = array($codequo);
         $query = "SELECT * FROM tb_quotation WHERE codequo = ?";
         $eksekusi = $this->db->query($query, $data)->result_object();
         if (count($eksekusi) > 0) {
-            $query = "SELECT * FROM tb_quotation ORDER BY codequo DESC LIMIT 1";
-            $eksekusi = $this->db->query($query)->result_object();
-            if (count($eksekusi) > 0) {
-                foreach ($eksekusi as $key) {
-                    $codequo =  "QUO-TRS-" . str_replace("QUO-TRS-", "", $key->codequo)  + 1;
+            $query1 = "DELETE FROM tb_quotationdetail WHERE codequo = ?";
+            $eksekusi1 = $this->db->query($query1, $data);
+            if ($eksekusi1 == true) {
+                $this->db->trans_begin();
+                $data1 = array(
+                    $judulquo, $idcust, 0, $startquo, $expquo, "B2B", "Transfer", $subtotal, $ppn, $norek, '0',
+                    $disnoms, $address, $grandtotal, 'Waiting', $date, $iduser, $remark, $codequo
+                );
+                $query2 = "UPDATE tb_quotation SET namequotation = ?,idcust=?,idcurrency=?,datequo=?
+                ,expquo=?,typequo=?,typepayment=?,pricetotal=?,VAT=?,norek=?,delivdate=?,disc=?,delivaddr=?,
+                totalquo=?,statusquo=?,madelog=?,madeuser=?,remark=? WHERE codequo = ?";
+                $eksekusi1 = $this->db->query($query2, $data1);
+                if ($eksekusi1 == true) {
+
+                    for ($i = 0; $i < count($iditem); $i++) {
+                        if ($iditem[$i] != "") {
+                            $datax = array($codequo, $iditem[$i], '0', $qty[$i], $harga[$i], $disnom[$i], '0', $total[$i]);
+                            $queryx = "INSERT INTO tb_quotationdetail (codequo,iditem,idunit,qty,price,disc,VAT,totalprice) VALUES(?,?,?,?,?,?,?,?)";
+                            $eksekusix = $this->db->query($queryx, $datax);
+                            if ($eksekusix == true) {
+                                $respon = "Success";
+                            } else {
+                                $respon = "Gagal Insert Quotation Detail pada item = " + $iditem[$i];
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    $respon = "Gagal Insert Header Quotation";
                 }
             } else {
-                $respon = "Error Last Code Quotation";
-                return $respon;
-            }
-        }
-        $this->db->trans_begin();
-        $data = array($codequo, $judulquo, $idcust, 0, $startquo, $expquo, "B2B", "Transfer", $subtotal, $ppn, $norek, '0', $disnoms, $address, $grandtotal, 'Waiting', $date, $iduser);
-        $query = "INSERT INTO tb_quotation (codequo,namequotation,idcust,idcurrency,datequo,expquo,typequo,typepayment,pricetotal,VAT,norek,delivdate,disc,delivaddr,
-        totalquo,statusquo,madelog,madeuser) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        $eksekusi = $this->db->query($query, $data);
-        if ($eksekusi == true) {
-
-            for ($i = 0; $i < count($iditem); $i++) {
-                if ($iditem[$i] != "") {
-                    $datax = array($codequo, $iditem[$i], '0', $qty[$i], $harga[$i], $disnom[$i], '0', $total[$i]);
-                    $queryx = "INSERT INTO tb_quotationdetail (codequo,iditem,idunit,qty,price,disc,VAT,totalprice) VALUES(?,?,?,?,?,?,?,?)";
-                    $eksekusix = $this->db->query($queryx, $datax);
-                    if ($eksekusix == true) {
-                        $respon = "Success";
-                    } else {
-                        $respon = "Gagal Insert Quotation Detail pada item = " + $iditem[$i];
-                        break;
-                    }
-                }
+                $respon = "Failed On Clean Detail Quotation";
             }
         } else {
-            $respon = "Gagal Insert Header Quotation";
+            $this->db->trans_begin();
+            $data1 = array($codequo, $judulquo, $idcust, 0, $startquo, $expquo, "B2B", "Transfer", $subtotal, $ppn, $norek, '0', $disnoms, $address, $grandtotal, 'Waiting', $date, $iduser, $remark);
+            $query1 = "INSERT INTO tb_quotation (codequo,namequotation,idcust,idcurrency,datequo,expquo,typequo,typepayment,pricetotal,VAT,norek,delivdate,disc,delivaddr,
+            totalquo,statusquo,madelog,madeuser,remark) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $eksekusi1 = $this->db->query($query1, $data1);
+            if ($eksekusi1 == true) {
+
+                for ($i = 0; $i < count($iditem); $i++) {
+                    if ($iditem[$i] != "") {
+                        $datax = array($codequo, $iditem[$i], '0', $qty[$i], $harga[$i], $disnom[$i], '0', $total[$i]);
+                        $queryx = "INSERT INTO tb_quotationdetail (codequo,iditem,idunit,qty,price,disc,VAT,totalprice) VALUES(?,?,?,?,?,?,?,?)";
+                        $eksekusix = $this->db->query($queryx, $datax);
+                        if ($eksekusix == true) {
+                            $respon = "Success";
+                        } else {
+                            $respon = "Gagal Insert Quotation Detail pada item = " + $iditem[$i];
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $respon = "Gagal Insert Header Quotation";
+            }
         }
+
 
         if ($respon != "Success") {
             $this->db->trans_rollback();
         } else {
+            $respon = "Success dengan nomor quotation " . $codequo;
             $this->db->trans_commit();
         }
 

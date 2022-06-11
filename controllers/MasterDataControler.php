@@ -220,6 +220,114 @@ class MasterDataControler extends CI_Controller
 	{
 		$f                     = $this->session->userdata("data");
 		$userid                = $this->input->post("userid");
+		$codein                = $this->MasterData->getinvinlast();
+		$tipeingoing           = $this->input->post("typein");
+		$idpo                  = $this->input->post("idpo");
+		$namesupp              = $this->input->post("idcust");
+		$namewarehouse         = $this->input->post("idwh1");
+		$datein                = $this->input->post("datein");
+		$currency              = $this->input->post("currency");
+		$nosuratjalan           = $this->input->post("nosuratjalan");
+		$transaksi_iditem      = $this->input->post("transaksi_iditem");
+		$transaksi_sku         = $this->input->post("transaksi_sku");
+		$transaksi_nameitem    = $this->input->post("transaksi_nameitem");
+		$transaksi_deskripsi   = $this->input->post("transaksi_deskripsi");
+		$transaksi_harga       = str_replace(".", "", $this->input->post("transaksi_harga"));
+		$transaksi_qtypo       = $this->input->post("transaksi_qtypo");
+		$transaksi_qtyin       = $this->input->post("transaksi_qtyin");
+		$transaksi_balance     = $this->input->post("transaksi_balance");
+		$transaksi_expiredate  = $this->input->post("transaksi_expiredate");
+
+		$idmove                 = $this->input->post("idinvout");
+		$codemove               = $this->input->post("codemove");
+		$idwh                   = $this->input->post("idwh");
+		$idwh2                  = $this->input->post("idwh2");
+		$datein1                = $this->input->post("datein1");
+		$currency1              = $this->input->post("currency1");
+		$transaksi_iditem1      = $this->input->post("transaksi_iditem1");
+		$transaksi_sku1         = $this->input->post("transaksi_sku1");
+		$transaksi_nameitem1    = $this->input->post("transaksi_nameitem1");
+		$transaksi_deskripsi1   = $this->input->post("transaksi_deskripsi1");
+		$transaksi_harga1       = str_replace(".", "", $this->input->post("transaksi_harga1"));
+		$transaksi_qtyout1       = $this->input->post("transaksi_qtyout1");
+		$transaksi_qtyin1       = $this->input->post("transaksi_qtyin1");
+		$transaksi_balance1     = $this->input->post("transaksi_balance1");
+		$transaksi_expiredate1  = $this->input->post("transaksi_expiredate1");
+
+		$namewarehouse2         = $this->input->post("namewarehouse2");
+		$datein2                = $this->input->post("datein2");
+		$currency2              = $this->input->post("currency2");
+		$transaksi_iditem2      = $this->input->post("transaksi_iditem2");
+		$transaksi_price2       = str_replace(".", "", $this->input->post("transaksi_price2"));
+		$transaksi_qtyin2       = $this->input->post("transaksi_qtyin2");
+		$transaksi_expiredate2  = $this->input->post("transaksi_expiredate2");
+
+		if ($tipeingoing == "supplier") {
+			$cek                   = $this->MasterData->newinvin(
+				$codein,
+				$tipeingoing,
+				$idpo,
+				$namesupp,
+				$namewarehouse,
+				$datein,
+				$currency,
+				$nosuratjalan,
+				$transaksi_iditem,
+				$transaksi_sku,
+				$transaksi_nameitem,
+				$transaksi_deskripsi,
+				$transaksi_harga,
+				$transaksi_qtypo,
+				$transaksi_qtyin,
+				$transaksi_balance,
+				$transaksi_expiredate,
+				$userid
+			);
+			echo $cek;
+		} elseif ($tipeingoing == "warehouse") {
+			$cek                   = $this->MasterData->newinvinmovewh(
+				$codein,
+				$codemove,
+				$tipeingoing,
+				$idmove,
+				$namesupp,
+				$idwh,
+				$idwh2,
+				$datein1,
+				$currency1,
+				$transaksi_iditem1,
+				$transaksi_sku1,
+				$transaksi_nameitem1,
+				$transaksi_deskripsi1,
+				$transaksi_harga1,
+				$transaksi_qtyout1,
+				$transaksi_qtyin1,
+				$transaksi_expiredate1,
+				$userid
+			);
+			echo $cek;
+		} elseif ($tipeingoing == "return") {
+			$cek                   = $this->MasterData->newinvinreturn(
+				$codein,
+				$tipeingoing,
+				$namesupp,
+				$namewarehouse2,
+				$datein2,
+				$currency2,
+				$transaksi_iditem2,
+				$transaksi_price2,
+				$transaksi_qtyin2,
+				$transaksi_expiredate2,
+				$userid
+			);
+			echo $cek;
+		}
+	}
+
+	function editinvin()
+	{
+		$f                     = $this->session->userdata("data");
+		$userid                = $this->input->post("userid");
 		$codein                = $this->input->post("codein");
 		$tipeingoing           = $this->input->post("typein");
 		$idpo                  = $this->input->post("idpo");
@@ -227,7 +335,8 @@ class MasterDataControler extends CI_Controller
 		$namewarehouse         = $this->input->post("idwh1");
 		$datein                = $this->input->post("datein");
 		$currency              = $this->input->post("currency");
-		$transaksi_iditem       = $this->input->post("transaksi_iditem");
+		$nosuratjalan           = $this->input->post("nosuratjalan");
+		$transaksi_iditem      = $this->input->post("transaksi_iditem");
 		$transaksi_sku         = $this->input->post("transaksi_sku");
 		$transaksi_nameitem    = $this->input->post("transaksi_nameitem");
 		$transaksi_deskripsi   = $this->input->post("transaksi_deskripsi");
@@ -262,7 +371,7 @@ class MasterDataControler extends CI_Controller
 		$transaksi_expiredate2  = $this->input->post("transaksi_expiredate2");
 
 		if ($tipeingoing == "supplier") {
-			$cek                   = $this->MasterData->newinvin(
+			$cek                   = $this->MasterData->editinvin(
 				$codein,
 				$tipeingoing,
 				$idpo,
@@ -270,6 +379,7 @@ class MasterDataControler extends CI_Controller
 				$namewarehouse,
 				$datein,
 				$currency,
+				$nosuratjalan,
 				$transaksi_iditem,
 				$transaksi_sku,
 				$transaksi_nameitem,
@@ -786,7 +896,8 @@ class MasterDataControler extends CI_Controller
 	function addpo()
 	{
 		$idpox                   = $this->input->post("idpo");
-		$codepo                  = $this->input->post("codepo");
+		$idso                    = $this->input->post("idso");
+		$codepo                  = $this->MasterData->getpolast();
 		$idreqpo                 = $this->input->post("idreqpo");
 		$codereqpo               = $this->input->post("codereqpo");
 		$supplier                = $this->input->post("idsupp");
@@ -796,28 +907,27 @@ class MasterDataControler extends CI_Controller
 		$matauang                = $this->input->post("matauang");
 		$exchange                = $this->input->post("exchange");
 		$norekening              = $this->input->post("norekening");
-		$subtotal                = str_replace(",", "", $this->input->post("subtotal"));
-		$distrans                = str_replace(",", "", $this->input->post("distrans"));
-		$ppn                     = str_replace(",", "", $this->input->post("ppn"));
-		$grandtotal              = str_replace(",", "", $this->input->post("grandtotal"));
+		$subtotal                = str_replace(".", "", $this->input->post("subtotal"));
+		$distrans                = str_replace(".", "", $this->input->post("distrans"));
+		$totaldis                = str_replace(".", "", $this->input->post("totaldis"));
+		$ppn                     = str_replace(".", "", $this->input->post("ppn"));
+		$grandtotal              = str_replace(".", "", $this->input->post("grandtotal"));
 
 		$iditem                  = $this->input->post("iditem");
 		$sku                     = $this->input->post("sku");
 		$nameitem                = $this->input->post("nameitem");
-		$harga                   = $this->input->post("harga");
+		$harga                   = str_replace(".", "", $this->input->post("harga"));
 		$qty                     = $this->input->post("qty");
 		$discpercent             = $this->input->post("discpercent");
-		$disnom                  = $this->input->post("disnom");
-		$sub                     = $this->input->post("sub");
-		$totaldisc               = $this->input->post("totaldisc");
-		$total                   = $this->input->post("total");
+		$disnom                  = str_replace(".", "", $this->input->post("disnom"));
+		$sub                     = str_replace(".", "", $this->input->post("sub"));
+		$totaldisc               = str_replace(".", "", $this->input->post("totaldisc"));
+		$total                   = str_replace(".", "", $this->input->post("total"));
 		$iduser                  = $this->input->post("userid");
-
-		// print_r($qty);
-
 
 		$cek                     = $this->MasterData->addpo(
 			$idpox,
+			$idso,
 			$codepo,
 			$idreqpo,
 			$codereqpo,
@@ -830,6 +940,7 @@ class MasterDataControler extends CI_Controller
 			$norekening,
 			$subtotal,
 			$distrans,
+			$totaldis,
 			$ppn,
 			$grandtotal,
 
@@ -848,9 +959,78 @@ class MasterDataControler extends CI_Controller
 		echo $cek;
 	}
 
+	function editpo()
+	{
+		$idpox                   = $this->input->post("idpo");
+		$codepo                  = $this->input->post("codepo");
+		$idreqpo                 = $this->input->post("idreqpo");
+		$codereqpo               = $this->input->post("codereqpo");
+		$supplier                = $this->input->post("idsupp");
+		$judulpurchase           = $this->input->post("judulpurchase");
+		$datepo                  = $this->input->post("datepo");
+		$delivedate              = $this->input->post("delivedate");
+		$matauang                = $this->input->post("matauang");
+		$exchange                = $this->input->post("exchange");
+		$norekening              = $this->input->post("norekening");
+		$subtotal                = str_replace(",", "", $this->input->post("subtotal"));
+		$distrans                = str_replace(",", "", $this->input->post("distrans"));
+		$totaldis                = str_replace(",", "", $this->input->post("totaldis"));
+		$ppn                     = str_replace(",", "", $this->input->post("ppn"));
+		$grandtotal              = str_replace(",", "", $this->input->post("grandtotal"));
+
+		$iditem                  = $this->input->post("iditem");
+		$sku                     = $this->input->post("sku");
+		$nameitem                = $this->input->post("nameitem");
+		$harga                   = str_replace(".", "", $this->input->post("harga"));
+		$qty                     = $this->input->post("qty");
+		$discpercent             = $this->input->post("discpercent");
+		$disnom                  = str_replace(".", "", $this->input->post("disnom"));
+		$sub                     = str_replace(".", "", $this->input->post("sub"));
+		$totaldisc               = str_replace(".", "", $this->input->post("totaldisc"));
+		$total                   = str_replace(".", "", $this->input->post("total"));
+		$iduser                  = $this->input->post("userid");
+
+
+
+		$cek                     = $this->MasterData->editpo(
+			$idpox,
+			$codepo,
+			$idreqpo,
+			$codereqpo,
+			$supplier,
+			$judulpurchase,
+			$datepo,
+			$delivedate,
+			$matauang,
+			$exchange,
+			$norekening,
+			$subtotal,
+			$distrans,
+			$totaldis,
+			$ppn,
+			$grandtotal,
+
+			$iditem,
+			$sku,
+			$nameitem,
+			$harga,
+			$qty,
+			$disnom,
+			$discpercent,
+			$sub,
+			$totaldisc,
+			$total,
+			$iduser
+		);
+		// echo $cek;
+	}
+
+
 	function addporeq()
 	{
-		$codereqpo               = $this->input->post("codereqpo");
+		$idreqpo                    = $this->input->post("idporeq");
+		$idso                    = $this->input->post("idso");
+		$codereqpo               = $this->MasterData->getreqpolast();
 		$date                    = $this->input->post("date");
 		$desc                    = $this->input->post("desc");
 		$subtotal                = str_replace(",", "", $this->input->post("subtotal"));
@@ -858,13 +1038,16 @@ class MasterDataControler extends CI_Controller
 		$iditem                  = $this->input->post("iditem");
 		$sku                     = $this->input->post("sku");
 		$nameitem                = $this->input->post("nameitem");
-		$harga                   = $this->input->post("harga");
+		$harga                   = str_replace(".", "", $this->input->post("harga"));
 		$qty                     = $this->input->post("qty");
-		$total                   = $this->input->post("total");
+		$total                   = str_replace(".", "", $this->input->post("total"));
 		$iduser                  = $this->input->post("userid");
 
 
+
 		$cek                     = $this->MasterData->addporeq(
+			$idreqpo,
+			$idso,
 			$codereqpo,
 			$date,
 			$desc,
@@ -884,9 +1067,9 @@ class MasterDataControler extends CI_Controller
 	function getdatapobyid()
 	{
 		$this->load->model("MasterData");
-		$id           = $this->input->get("id");
+		$idpo         = $this->input->post("idpox");
 		$f            = $this->session->userdata("data");
-		$f["title"]   = "Register Purchase Order";
+		$f["title"]   = "Edit Purchase Order";
 		$f["data"]    = $this->MasterData->getitemmaterial();
 		$f["data1"]   = $this->MasterData->getwarehouse();
 		$f["data2"]   = $this->MasterData->getcurrency();
@@ -894,17 +1077,35 @@ class MasterDataControler extends CI_Controller
 		$f["data4"]   = $this->MasterData->getlistpo();
 		$f["data5"]   = $this->MasterData->getsupplier();
 		$f["data6"]   = $this->MasterData->getcompany();
-		$f["data7"]   = $this->MasterData->getdatapobyid($id);
+		$f["data7"]   = $this->MasterData->getpobyid($idpo);
 
-		$f["stat"] = "";
-		$f["headertrans"] = "Not Found";
-		$f["detailtrans"] = "Not Found";
 
 		$this->load->view("Superadmin/Header");
 		$this->load->view("PO/EditPurchaseOrder", $f);
 		$this->load->view("SuperAdmin/Footer");
 		$f = $this->session->userdata("data");
 		$this->load->view("xfooter");
+	}
+
+	function getdatainvinbyid()
+	{
+		$this->load->model("MasterData");
+		$f            = $this->session->userdata("data");
+		$idin         = $this->input->post("idin");
+		$f["title"]   = "Update Inventory In";
+		$f["data"]    = $this->MasterData->getitemmaterialinvin();
+		$f["data1"]   = $this->MasterData->getcurrency();
+		$f["data2"]   = $this->MasterData->getwarehouse();
+		$f["data3"]   = $this->MasterData->getlistinvin();
+		$f["data4"]   = $this->MasterData->getcustomerinvin();
+		$f["data6"]   = $this->MasterData->getlistinvin();
+		$f["data7"]   = $this->MasterData->getlistpo();
+		$f["data8"]   = $this->MasterData->getinvinlast();
+		$f["data9"]   = $this->MasterData->getinvinbyid($idin);
+		$f["order"]   = $this->MasterData->getlistpoheader();
+		$this->load->view("Superadmin/Header");
+		$this->load->view("Inventory/EditInventoryIn", $f);
+		$this->load->view("SuperAdmin/Footer");
 	}
 
 	function additem()
@@ -914,11 +1115,15 @@ class MasterDataControler extends CI_Controller
 		$sku                 = $this->input->post("sku");
 		$jenisitem           = $this->input->post("jenisitem");
 		$stockmin            = $this->input->post("stokmin");
+		$pricebuy            = $this->input->post("pricebuy");
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
 		$userid              = $this->input->post("userid");
 		$unit                = $this->input->post("unit");
+		$images              = $_FILES["images"]["tmp_name"];
+		$image               = array();
+		array_push($image, $images);
 		$transaksi_iditembom = $this->input->post("transaksi_iditembom");
 		$transaksi_sku       = $this->input->post("transaksi_sku");
 		$transaksi_nameitem  = $this->input->post("transaksi_nameitem");
@@ -932,9 +1137,10 @@ class MasterDataControler extends CI_Controller
 				$sku,
 				$jenisitem,
 				$stockmin,
+				$pricebuy,
 				$price,
 				$deskripsi,
-				$status,
+				$images,
 				$userid
 			);
 			echo $cek;
@@ -945,9 +1151,10 @@ class MasterDataControler extends CI_Controller
 				$sku,
 				$unit,
 				$stockmin,
+				$pricebuy,
 				$price,
 				$deskripsi,
-				$status,
+				$images,
 				$userid
 			);
 			echo $cek;
@@ -957,9 +1164,10 @@ class MasterDataControler extends CI_Controller
 				$nameitem,
 				$sku,
 				$jenisitem,
+				$pricebuy,
 				$price,
 				$deskripsi,
-				$status,
+				$images,
 				$userid,
 				$transaksi_iditembom,
 				$transaksi_sku,
@@ -1001,7 +1209,8 @@ class MasterDataControler extends CI_Controller
 				$price,
 				$deskripsi,
 				$status,
-				$userid
+				$userid,
+				$id
 
 			);
 			echo $cek;
@@ -1015,11 +1224,12 @@ class MasterDataControler extends CI_Controller
 				$price,
 				$deskripsi,
 				$status,
-				$userid
+				$userid,
+				$id
 			);
 			echo $cek;
 		} elseif ($itemgroup == "usebom") {
-			$cek                   = $this->MasterData->additemusebom(
+			$cek                   = $this->MasterData->edititemusebom(
 				$itemgroup,
 				$nameitem,
 				$sku,
@@ -1090,6 +1300,13 @@ class MasterDataControler extends CI_Controller
 	}
 
 
+	function getlastsalesorder()
+	{
+		$cek = $this->MasterData->getlastsalesorder();
+
+		return $cek;
+	}
+
 	function addsalesorder()
 	{
 		$f = $this->session->userdata("data");
@@ -1097,6 +1314,9 @@ class MasterDataControler extends CI_Controller
 		$idwh                  = $this->input->post("idwh");
 		$idso                  = $this->input->post("idso");
 		$codeso                  = $this->input->post("codeso");
+		if (!isset($codeso) || $codeso == "") {
+			$codeso = $this->getlastsalesorder();
+		}
 		$statusso                  = $this->input->post("statusso");
 		$idquo                   = $this->input->post("idquo");
 		$tipeorder               = $this->input->post("tipeorder");
@@ -1144,24 +1364,24 @@ class MasterDataControler extends CI_Controller
 			$delivaddr,
 			$paymentmethod,
 			$norekening,
-			$subtotal,
-			$disnom,
-			$disper,
-			$totaldisc,
-			$vat,
-			$ongkir,
-			$grandtotaldetail,
+			str_replace(",", "", $subtotal),
+			str_replace(",", "", $disnom),
+			str_replace(",", "", $disper),
+			str_replace(",", "", $totaldisc),
+			str_replace(",", "", $vat),
+			str_replace(",", "", $ongkir),
+			str_replace(",", "", $grandtotaldetail),
 
 			$transaksi_iditem,
 			$transaksi_sku,
 			$transaksi_nameitem,
 			$transaksi_deskripsi,
-			$transaksi_price,
+			str_replace(".", "", $transaksi_price),
 			$transaksi_qty,
-			$transaksi_total,
-			$transaksi_discnominal,
-			$transaksi_discpersen,
-			$transaksi_grandtotal,
+			str_replace(".", "", $transaksi_total),
+			str_replace(".", "", $transaksi_discnominal),
+			str_replace(".", "", $transaksi_discpersen),
+			str_replace(".", "", $transaksi_grandtotal),
 			$iduser
 		);
 

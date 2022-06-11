@@ -9,8 +9,13 @@ class backgroundservice extends CI_Model
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
             foreach ($eksekusi as $key) {
-                $respon["idshop"] = $key->idkmotion;
-                $respon["idwh"] = $key->idwh;
+
+                if ($key->idkmotion != "") {
+                    $respon["idshop"] = $key->idkmotion;
+                    $respon["idwh"] = $key->idwh;
+                } else {
+                    $respon = "Tidak Konek K-Motion";
+                }
             }
         } else {
             $respon = "Tidak Konek K-Motion";
@@ -22,6 +27,17 @@ class backgroundservice extends CI_Model
 
     function syncitem($idshop)
     {
+
+        // //Load codeigniter FTP class
+        // $this->load->library('ftp');
+
+        // //FTP configuration
+        // $ftp_config['hostname'] = '192.168.1.56';
+        // $ftp_config['username'] = 'admin';
+        // $ftp_config['password'] = 'yubi1234';
+        // $ftp_config['debug']    = TRUE;
+        // $this->ftp->connect($ftp_config);
+
         $respon = "";
         $data = array($idshop);
         $query = "SELECT * FROM tb_item WHERE sync = 'n' AND bom = 'n'";
@@ -31,7 +47,7 @@ class backgroundservice extends CI_Model
             foreach ($eksekusi as $key) {
                 $typeqty = "";
                 if ($key->jenisqty == "non stock") {
-                    $jenisqty = "Service";
+                    $typeqty = "Service";
                 } else {
                     $typeqty = "Stock";
                 }
@@ -41,11 +57,32 @@ class backgroundservice extends CI_Model
                 } else {
                     $status = "No-Active";
                 }
+
+                // if ($key->gambar != "") {
+                //     if (!file_exists("../K-Motion/assets/img/item/" . $idshop)) {
+                //         mkdir("../K-Motion/assets/img/item/" . $idshop);
+                //     }
+                // }
+
+
+
                 $data1 = array($idshop, $key->iditem, $key->sku);
                 $query1 = "SELECT * FROM tb_item where idtoko = ? AND iditemserp = ? AND sku = ?";
                 $eksekusi1 = $db->query($query1, $data1)->result_object();
                 if (count($eksekusi1) > 0) {
                     foreach ($eksekusi1 as $key1) {
+                        $query2;
+                        $data2;
+                        // if ($key->gambar != "") {
+                        //     $photo = "/./assets/img/item/" . $idshop . "/" . $key->nameitem . "0.jpg";
+                        //     $data2 = array($key->nameitem, $key->price, $typeqty, $key->deskripsi, $status, $photo, $idshop, $key->iditem, $key->sku);
+                        //     $query2 = "UPDATE tb_item set nameitem = ? , price = ? , typeqty = ?, dsc = ?,status = ? , img = ? WHERE idtoko = ? 
+                        //     AND iditemserp = ? AND sku = ?";
+                        // } else {
+                        //     $data2 = array($key->nameitem, $key->price, $typeqty, $key->deskripsi, $status, $idshop, $key->iditem, $key->sku);
+                        //     $query2 = "UPDATE tb_item set nameitem = ? , price = ? , typeqty = ?, dsc = ?,status = ? WHERE idtoko = ? AND iditemserp = ? AND sku = ?";
+                        // }
+
                         $data2 = array($key->nameitem, $key->price, $typeqty, $key->deskripsi, $status, $idshop, $key->iditem, $key->sku);
                         $query2 = "UPDATE tb_item set nameitem = ? , price = ? , typeqty = ?, dsc = ?,status = ? WHERE idtoko = ? AND iditemserp = ? AND sku = ?";
                         $eksekusi2 = $db->query($query2, $data2);
@@ -63,10 +100,54 @@ class backgroundservice extends CI_Model
                             $respon = "Failed";
                             break;
                         }
+
+
+                        // if ($key->gambar != "") {
+
+                        //     $dataxx = array($key1->iditem);
+                        //     $queryxx = "SELECT * FROM tb_imageitem WHERE iditem = ?";
+                        //     $eksekusixx = $db->query($queryxx, $dataxx)->result_object();
+                        //     if (count($eksekusixx) > 0) {
+
+                        //         foreach ($eksekusixx as $keyxx) {
+                        //             $filename = $keyxx->image;
+                        //             if (file_exists($filename)) {
+                        //                 unlink($filename);
+                        //             }
+                        //         }
+
+                        //         $datax = array($key1->iditem);
+                        //         $queryx = "DELETE FROM tb_imageitem WHERE iditem = ?";
+                        //         $eksekusix = $db->query($queryx, $datax);
+                        //         if ($eksekusix == true) {
+                        //             if ($key->gambar != "") {
+                        //                 for ($i = 0; $i < 1; $i++) {
+                        //                     $photo = "/./assets/img/item/" . $idshop . "/" . $key->nameitem  . "" . $i . ".jpg";
+                        //                     $dataxx = array($key1->iditem, $photo);
+                        //                     $queryxx = "INSERT INTO tb_imageitem(iditem,image)VALUES(?,?)";
+                        //                     $eksekusixx = $db->query($queryxx, $dataxx);
+                        //                     // file_put_contents($photo, file_get_contents($key->gambar));
+                        //                     $this->ftp->upload($key->gambar, "." . $photo);
+                        //                 }
+                        //             }
+                        //         }
+                        //     } else {
+                        //         if ($key->gambar != "") {
+                        //             for ($i = 0; $i < 1; $i++) {
+                        //                 $photo = "/./assets/img/item/" . $idshop . "/" . $key->nameitem  . "" . $i . ".jpg";
+                        //                 $dataxx = array($key1->iditem, $photo);
+                        //                 $queryxx = "INSERT INTO tb_imageitem(iditem,image)VALUES(?,?)";
+                        //                 $eksekusixx = $db->query($queryxx, $dataxx);
+                        //                 // file_put_contents($photo, file_get_contents($key->gambar));
+                        //                 $this->ftp->upload($key->gambar, "." . $photo);
+                        //             }
+                        //         }
+                        //     }
+                        // }
                     }
                 } else {
-                    $data2 = array($idshop, $key->nameitem, $key->price, $typeqty, $key->deskripsi, $status, $key->iditem, $key->sku);
-                    $query2 = "INSERT INTO tb_item(idtoko,category,nameitem,price,qty,typeqty,dsc,status,iditemserp,sku)VALUES(?,1,?,?,0,?,?,?,?,?)";
+                    $data2 = array($idshop, $key->nameitem, $key->price, $typeqty, $key->deskripsi, $status, $key->iditem, $key->sku, $key->gambar);
+                    $query2 = "INSERT INTO tb_item(idtoko,category,nameitem,price,qty,typeqty,dsc,status,iditemserp,sku,img)VALUES(?,1,?,?,0,?,?,?,?,?,?)";
                     $eksekusi2 = $db->query($query2, $data2);
                     if ($eksekusi2 == true) {
                         $data3 = array($key->iditem, $key->sku);
@@ -82,10 +163,29 @@ class backgroundservice extends CI_Model
                         $respon = "Failed";
                         break;
                     }
+
+                    // if ($key->gambar != "") {
+                    //     $data1 = array($idshop, $key->iditem, $key->sku);
+                    //     $query1 = "SELECT * FROM tb_item where idtoko = ? AND iditemserp = ? AND sku = ?";
+                    //     $eksekusi1 = $db->query($query1, $data1)->result_object();
+                    //     if (count($eksekusi1) > 0) {
+                    //         foreach ($eksekusi1 as $key1) {
+                    //             for ($i = 0; $i < 1; $i++) {
+                    //                 $photo = "/./assets/img/item/" . $idshop . "/" . $key->nameitem  . "" . $i . ".jpg";
+                    //                 $dataxx = array($key1->iditem, $photo);
+                    //                 $queryxx = "INSERT INTO tb_imageitem(iditem,image)VALUES(?,?)";
+                    //                 $eksekusixx = $db->query($queryxx, $dataxx);
+                    //                 // file_put_contents($photo, file_get_contents($key->gambar));
+                    //                 $this->ftp->upload($key->gambar, "." . $photo);
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
         }
-
+        // $this->ftp->upload(base_url() . "/assets/img/1.jpg", '/./assets/img/item/' . $idshop . "/", 'ascii', 0775);
+        // $respon = $this->ftp->list_files('/./assets/img/item/' . $idshop . "/mieayam0.jpg");
         return $respon;
     }
 
@@ -94,7 +194,7 @@ class backgroundservice extends CI_Model
     {
         $respon = "";
         $data = array($idwh);
-        $query = " 	SELECT * FROM invin LEFT JOIN invindet ON invin.idin = invindet.idin LEFT JOIN tb_customer ON invin.idcust = tb_customer.idcust WHERE invin.sync = 'n' AND invin.idwh = '2'";
+        $query = " 	SELECT * FROM invin LEFT JOIN invindet ON invin.idin = invindet.idin LEFT JOIN tb_customer ON invin.idcust = tb_customer.idcust WHERE invin.sync = 'n' AND invin.idwh = ?";
         $eksekusi = $this->db->query($query, $data)->result_object();
         $db =  $this->load->database('kmotion', TRUE);
         if (count($eksekusi) > 0) {
@@ -213,7 +313,7 @@ class backgroundservice extends CI_Model
     {
         $respon = "";
         $data = array($idwh);
-        $query = "SELECT *,invout.qtyout as qtyouts, invout.qtyout as qtyoutx FROM invout LEFT JOIN invoutdet ON invout.codeinvout = invoutdet.codeinvout LEFT JOIN tb_customer ON invout.idsupp = tb_customer.idcust WHERE invout.sync = 'n' AND invout.idwh = '2'";
+        $query = "SELECT *,invout.qtyout as qtyouts, invout.qtyout as qtyoutx FROM invout LEFT JOIN invoutdet ON invout.codeinvout = invoutdet.codeinvout LEFT JOIN tb_customer ON invout.idsupp = tb_customer.idcust WHERE invout.sync = 'n' AND invout.idwh = ?";
         $eksekusi = $this->db->query($query, $data)->result_object();
         $db =  $this->load->database('kmotion', TRUE);
         if (count($eksekusi) > 0) {
