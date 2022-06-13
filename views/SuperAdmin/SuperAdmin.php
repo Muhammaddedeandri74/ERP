@@ -73,7 +73,7 @@
 								<div class="card-body">
 									<div class="row no-gutters align-items-center">
 										<div class="col mr-2">
-											<a href="<?php echo base_url('SuperAdminControler/addsupplier') ?>">
+											<a href="<?php echo base_url('SuperAdminControler/addcustomer') ?>">
 												<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 													<img style="height: 56px; object-fit: cover;" src="<?php echo base_url('assets/icon/register_customer.png') ?>" alt="">
 												</div>

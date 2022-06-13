@@ -185,14 +185,15 @@ class MasterDataControler extends CI_Controller
 	{
 		$id              = $this->input->post("id");
 		$userid          = $this->input->post("userid");
-		$codecustomer    = $this->input->post("codecustomer");
+		$codecustomer    = $this->input->post("codecust");
 		$email           = $this->input->post("email");
 		$type            = $this->input->post("typecust");
-		$phonecustomer   = $this->input->post("telepon");
+		$phonecustomer   = $this->input->post("notelp");
 		$namecustomer    = $this->input->post("namecust");
-		$contact         = $this->input->post("contact");
+		$contact         = $this->input->post("nocontact");
 		$addresscustomer = $this->input->post("alamat");
-		$cek = $this->MasterData->editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $userid);
+		$status          = $this->input->post("status");
+		$cek = $this->MasterData->editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $status, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/customer');
 	}
@@ -518,13 +519,13 @@ class MasterDataControler extends CI_Controller
 	function addwarehouse()
 	{
 		$userid = $this->input->post("userid");
-		$codewarehouse = $this->input->post("codewarehouse");
-		$namewarehouse = $this->input->post("namewarehouse");
-		$addresswarehouse = $this->input->post("addresswarehouse");
-		$phonewarehouse = $this->input->post("phonewarehouse");
+		$codewarehouse = $this->input->post("codewh");
+		$namewarehouse = $this->input->post("namewh");
+		$addresswarehouse = $this->input->post("alamatwh");
+		$phonewarehouse = $this->input->post("notelpwh");
 		$cek = $this->MasterData->addwarehouse($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('SuperAdminControler/addwarehouse');
+		redirect('SuperAdminControler/warehouse');
 	}
 
 	function editcurrency()
@@ -673,14 +674,14 @@ class MasterDataControler extends CI_Controller
 	function editwarehouse()
 	{
 		$id = $this->input->post("id");
-		$codewarehouse = $this->input->post("codewarehouse");
-		$userid = $this->input->post("userid");
-		$namewarehouse = $this->input->post("namewarehouse");
-		$addresswarehouse = $this->input->post("addresswarehouse");
-		$phonewarehouse = $this->input->post("phonewarehouse");
-		$cek = $this->MasterData->editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid);
+		$idwarehouse = $this->input->post("idwarehouse");
+		$codewarehouse = $this->input->post("codewh");
+		$namewarehouse = $this->input->post("namewh");
+		$addresswarehouse = $this->input->post("alamatwh");
+		$phonewarehouse = $this->input->post("notelpwh");
+		$cek = $this->MasterData->editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('MasterDataControler/getdatawarehousebyid?id=' . base64_encode($codewarehouse));
+		redirect('MasterDataControler/warehouse');
 	}
 
 
@@ -775,9 +776,10 @@ class MasterDataControler extends CI_Controller
 
 	function getdatawarehousebyid()
 	{
-		$id = $this->input->get("id");
+		$idwarehouse = $this->input->get("id");
 		$f  = $this->session->userdata("data");
-		$f["data"] = $this->MasterData->getdatawarehousebyid($id);
+		$f["data"] = $this->MasterData->getdatawarehousebyid($idwarehouse);
+		$f["data2"]   =  $this->MasterData->getwarehouse();
 		$this->load->view("SuperAdmin/Header", $f);
 		$this->load->view("SuperAdmin/EditWarehouse", $f);
 	}
@@ -1274,11 +1276,12 @@ class MasterDataControler extends CI_Controller
 		$email        = $this->input->post("email");
 		$notelp       = $this->input->post("notelp");
 		$alamat       = $this->input->post("alamat");
+		$status       = $this->input->post("status");
 		$namabank     = $this->input->post("namabank");
 		$norekening   = $this->input->post("norekening");
 		$beneficiary  = $this->input->post("beneficiary");
 		$userid       = $this->input->post("userid");
-		$cek          = $this->MasterData->newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary);
+		$cek          = $this->MasterData->newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $status, $userid, $namabank, $norekening, $beneficiary);
 		echo $cek;
 	}
 

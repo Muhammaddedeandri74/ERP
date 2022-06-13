@@ -88,7 +88,7 @@ class SuperAdminControler extends CI_Controller
 		$this->load->view("SuperAdmin/Footer");
 	}
 
-	function addsupplier()
+	function addcustomer()
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
@@ -96,7 +96,7 @@ class SuperAdminControler extends CI_Controller
 		$f["data2"]   = $this->MasterData->getcustomer();
 		$this->load->model("MasterData");
 		$this->load->view("SuperAdmin/Header", $f);
-		$this->load->view("SuperAdmin/AddSupplier", $f);
+		$this->load->view("SuperAdmin/AddCustomer", $f);
 		$f = $this->session->userdata("data");
 		$this->MasterData->userlog($f["iduser"], "addsupplier");
 	}
@@ -132,6 +132,7 @@ class SuperAdminControler extends CI_Controller
 		$f = $this->session->userdata("data");
 		$f["title"] = "warehouse";
 		$f["data"] = $this->MasterData->getwarehouse();
+		$f["data1"]   =  $this->MasterData->getwarehouselast();
 		$this->load->view("SuperAdmin/Header");
 		$this->load->view("SuperAdmin/Warehouse", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -166,16 +167,13 @@ class SuperAdminControler extends CI_Controller
 		$this->MasterData->userlog($f["iduser"], "customer manage dashboard");
 	}
 
-	function addcustomer()
+	function getlistcustomer()
 	{
-		$this->load->Model("MasterData");
-		$f = $this->session->userdata("data");
-		$f["data"] = $this->MasterData->getcustomer();
-		$this->load->model("MasterData");
-		$this->load->view("SuperAdmin/Header", $f);
-		$this->load->view("SuperAdmin/AddCustomer", $f);
-		$f = $this->session->userdata("data");
-		$this->MasterData->userlog($f["iduser"], "addcustomer");
+		$filter = $this->input->post("filter");
+		$search = $this->input->post("search");
+		$status = $this->input->post("status");
+		$cek =  $this->MasterData->getlistcustomer($filter, $search, $status);
+		echo json_encode($cek);
 	}
 
 	function bundling()

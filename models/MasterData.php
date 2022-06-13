@@ -369,6 +369,7 @@ class MasterData extends CI_Model
 				$f["email"]         =  $key->email;
 				$f["nocontact"]     =  $key->nocontact;
 				$f["addresscust"]   =  $key->addresscust;
+				$f["status"]        =  $key->status;
 				$f["madelog"]       =  $key->madelog;
 				$f["madeuser"]      =  $key->madeuser;
 				$f["data"] = array();
@@ -1050,6 +1051,21 @@ class MasterData extends CI_Model
 			}
 		} else {
 			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getwarehouselast()
+	{
+		$query = "SELECT * FROM tb_warehouse ORDER BY idwarehouse DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$respon =   "WH-" . str_replace("WH-", "", $key->codewarehouse)  + 1;
+			}
+		} else {
+			$respon = "WH-1";
 		}
 
 		return $respon;
@@ -2526,11 +2542,11 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	function editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $userid)
+	function editcustomer($id, $codecustomer, $email, $type, $phonecustomer, $namecustomer, $contact, $addresscustomer, $status, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data  = array($codecustomer, $email, $type, $phonecustomer, $contact, $namecustomer, $addresscustomer,  date('Y-m-d H:i:s'), $userid, $id);
-		$query = "UPDATE tb_customer SET codecust = ? , email = ? , typecust = ?, phonecust = ?, nocontact = ?,namecust = ?,addresscust = ?,madelog =?,madeuser = ? WHERE idcust = ?";
+		$data  = array($codecustomer, $email, $type, $phonecustomer, $contact, $namecustomer, $addresscustomer, $status,  date('Y-m-d H:i:s'), $userid, $id);
+		$query = "UPDATE tb_customer SET codecust = ? , email = ? , typecust = ?, phonecust = ?, nocontact = ?,namecust = ?,addresscust = ?,status =?,madelog =?,madeuser = ? WHERE idcust = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -3107,11 +3123,11 @@ class MasterData extends CI_Model
 	}
 
 
-	function editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid)
+	function editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($namewarehouse, $addresswarehouse, $phonewarehouse, $userid, date('Y-m-d H:i:s'), $id);
-		$query = "UPDATE tb_warehouse SET namewarehouse = ? , addresswarehouse = ? , phonewarehouse = ?, madeuser = ? , madelog = ?  WHERE idwarehouse = ?";
+		$data = array($namewarehouse, $addresswarehouse, $phonewarehouse, date('Y-m-d H:i:s'), $id);
+		$query = "UPDATE tb_warehouse SET namewarehouse = ? , addresswarehouse = ? , phonewarehouse = ?, madelog = ?  WHERE idwarehouse = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -3183,6 +3199,7 @@ class MasterData extends CI_Model
 				$f["email"]         =  $key->email;
 				$f["nocontact"]     =  $key->nocontact;
 				$f["addresscust"]   =  $key->addresscust;
+				$f["status"]        =  $key->status;
 				$f["madelog"]       =  $key->madelog;
 				$f["madeuser"]      =  $key->madeuser;
 			}
@@ -3190,6 +3207,29 @@ class MasterData extends CI_Model
 		} else {
 			$respon = "Not Found";
 		}
+		return $respon;
+	}
+
+	function getlistcustomer($filter, $search, $status)
+	{
+		$data = array("%" . $search . "%", "%" . $status . "%");
+		$query = "SELECT * FROM(SELECT * FROM tb_customer) AS t where  t." . $filter . " LIKE ? AND t.status LIKE  ? ";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idcust"] = $key->idcust;
+				$f["codecust"] = $key->codecust;
+				$f["namecust"] = $key->namecust;
+				$f["typecust"] = $key->typecust;
+				$f["phonecust"] = $key->phonecust;
+				$f["addresscust"] = $key->addresscust;
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
 		return $respon;
 	}
 
@@ -4317,7 +4357,7 @@ class MasterData extends CI_Model
 		}
 	}
 
-	function newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $userid, $namabank, $norekening, $beneficiary)
+	function newcustomer($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $status, $userid, $namabank, $norekening, $beneficiary)
 	{
 		date_default_timezone_set('Asia/Jakarta');
 		$fail      = 0;
@@ -4328,8 +4368,8 @@ class MasterData extends CI_Model
 			$respon = "Code Cust telah terdaftar";
 		} else {
 			$this->db->trans_begin();
-			$data     = array($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_customer(codecust,typecust,namecust,nocontact,email,phonecust,addresscust,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?)";
+			$data     = array($codecust, $typecust, $namecomp, $nocontact, $email, $notelp, $alamat, $status, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_customer(codecust,typecust,namecust,nocontact,email,phonecust,addresscust,status,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				$datax = array($codecust);

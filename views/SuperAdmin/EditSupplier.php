@@ -164,12 +164,12 @@
 							</div>
 							<div class="col-2">
 								<label class="switch">
-									<?php if ($data['isactive'] == "1"){ ?>
+									<?php if ($data['isactive'] == "1") { ?>
 										<input type="checkbox" checked name="status">
-									<?php }else{ ?>
-										<input type="checkbox"  name="status">
-									<?php } ?>	
-									
+									<?php } else { ?>
+										<input type="checkbox" name="status">
+									<?php } ?>
+
 									<span class="slider round"></span>
 								</label>
 							</div>
