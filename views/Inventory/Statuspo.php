@@ -22,14 +22,12 @@
                                 <label for="exampleFormControlInput1" class="form-label">Pencarian</label>
                                 <div class="input-group">
                                     <div class="col-4">
-                                        <select name="filter" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filter">
-                                            <option value="codequo">No.Quotation</option>
-                                            <option value="namequotation">Nama Quotation</option>
-                                            <option value="namecust">Nama Customer</option>
+                                        <select name="filters" value="" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filters">
+                                            <option value="codereqpo">No.Request PO</option>
                                         </select>
                                     </div>
                                     <div class="col-8">
-                                        <input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+                                        <input type="text" id="searchs" class="form-control" placeholder="Cari Berdasarkan Code Request PO">
                                     </div>
                                 </div>
                             </div>
@@ -40,8 +38,8 @@
                                 <div class="col-3">
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Status</label>
-                                        <select class="form-select" id="statusquo" aria-label="Default select example">
-                                            <option value="">Pilih Status Quotation</option>
+                                        <select class="form-select" id="statusreqpos" aria-label="Default select example">
+                                            <option value="">Pilih Status</option>
                                             <option value="Waiting">Waiting</option>
                                             <option value="Process">Process</option>
                                             <option value="Finish">Finish</option>
@@ -52,18 +50,18 @@
                                 <div class="col-3">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Mulai Dari</label>
-                                        <input type="date" class="form-control" name="" id="datestart" value="<?php echo date('Y-m-01') ?>">
+                                        <input type="date" class="form-control" name="" id="datestarts" value="<?php echo date('Y-m-01') ?>">
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Sampai Dengan</label>
-                                        <input type="date" class="form-control" name="" id="finishdate" value="<?php echo date('Y-m-d') ?>">
+                                        <input type="date" class="form-control" name="" id="finishdates" value="<?php echo date('Y-m-d') ?>">
                                     </div>
                                 </div>
                                 <div class="col-3 mt-3">
                                     <p></p>
-                                    <a href="" class="btn btn-primary">Terapkan</a>
+                                    <a href="#" class="btn btn-primary" onclick="loaddatax()">Terapkan</a>
                                 </div>
                             </div>
                         </div>
@@ -73,18 +71,15 @@
                     <table class="table table-bordered " id="table-user">
                         <thead class="text-white" style="background:#1143d8">
                             <tr>
-                                <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                <td>No. Request PO</td>
-                                <td>Due Date <i class='bx bx-down-arrow-alt'></i></td>
-                                <td>Qty Item</td>
-                                <td>Total Amount <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>No. Request PO <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Tgl Request Po <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Deskripsi <i class='bx bx-down-arrow-alt'></i></td>
+                                <td>Total <i class='bx bx-down-arrow-alt'></i></td>
                                 <td>Status <i class='bx bx-down-arrow-alt'></i></td>
-                                <td>Action</td>
                             </tr>
                         </thead>
                         <tbody id="detailx">
                             <tr>
-                                <td>as</td>
                                 <td>as</td>
                                 <td>as</td>
                                 <td>as</td>
@@ -116,8 +111,14 @@
                                 </td>
                                 <td>
                                     <div class="row">
-                                        <label for=""><i style="color: yellow" class='bx bxs-circle'></i> Total Request PO Pending</label>
+                                        <label for=""><i style="color: yellow" class='bx bxs-circle'></i> Total Request PO Waiting</label>
                                         <p id="waiting">Rp. 12.000.000,00</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <label for=""><i style="color: req" class='bx bxs-circle'></i> Total Request PO Process</label>
+                                        <p id="process">Rp. 12.000.000,00</p>
                                     </div>
                                 </td>
                                 <td>
@@ -136,61 +137,58 @@
 </form>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
-    loaddata()
+    loaddatax()
 
-    function loaddata() {
+    function loaddatax() {
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('QuotationController/getlistquo') ?>",
-            data: "filter=" + $('#filter').val() + "&search=" + $('#search').val() + "&statusquo=" + $('#statusquo').val() + "&datestart=" + $('#datestart').val() + "&finishdate=" + $('#finishdate').val(),
+            url: "<?php echo base_url('InventoryController/getlistrequestpo') ?>",
+            data: "filters=" + $('#filters').val() + "&searchs=" + $('#searchs').val() + "&statusreqpos=" + $('#statusreqpos').val() + "&datestarts=" + $('#datestarts').val() + "&finishdates=" + $('#finishdates').val(),
             dataType: "JSON",
             success: function(hasil) {
-
-                console.log(hasil)
                 var baris = ""
+                var bar = ""
+                grandtotal = 0
+                waiting = 0
+                finish = 0
+                cancel = 0
+                process = 0
                 if (hasil != "Not Found") {
-                    totalquo = 0
-                    waiting = 0
-                    finish = 0
-                    cancel = 0
-                    process = 0;
+
                     for (let i = 0; i < hasil.length; i++) {
-
-
                         baris += `  <tr>
-                                            <td>` + hasil[i]["codequo"] + `</td>
-                                            <td>` + hasil[i]["namequotation"] + `</td>
-                                            <td>` + hasil[i]["namecust"] + `</td>
-                                            <td>` + hasil[i]["expquo"] + `</td>
-                                            <td>` + formatRupiah(hasil[i]["totalquo"], "Rp.") + `</td>
-                                            <td>` + hasil[i]["statusquo"] + `</td>
-                                           
+                                            <td>` + hasil[i]["codereqpo"] + `</td>
+                                            <td>` + hasil[i]["datereqpo"] + `</td>
+                                            <td>` + hasil[i]["deskripsi"] + `</td>
+                                            <td>Rp. ` + formatnum(parseFloat(hasil[i]["grandtotal"]).toFixed(0)) + `</td>
+											<td>` + hasil[i]["statusreqpo"] + `</td>
                                         </tr>`
 
-                        totalquo = Number(totalquo) + Number(hasil[i]["totalquo"])
+                        grandtotal = Number(grandtotal) + Number(hasil[i]["grandtotal"])
 
-                        if (hasil[i]["statusquo"] == "Waiting") {
-                            waiting = Number(waiting) + Number(hasil[i]["totalquo"])
+                        if (hasil[i]["statusreqpo"] == "Waiting") {
+                            waiting = Number(waiting) + Number(hasil[i]["grandtotal"])
                         }
 
-                        if (hasil[i]["statusquo"] == "Process") {
-                            process = Number(process) + Number(hasil[i]["totalquo"])
+                        if (hasil[i]["statusreqpo"] == "Process") {
+                            process = Number(process) + Number(hasil[i]["grandtotal"])
                         }
 
-                        if (hasil[i]["statusquo"] == "Cancel") {
-                            cancel = Number(cancel) + Number(hasil[i]["totalquo"])
+                        if (hasil[i]["statureqspo"] == "Cancel") {
+                            cancel = Number(cancel) + Number(hasil[i]["grandtotal"])
                         }
-                        if (hasil[i]["statusquo"] == "Finish") {
-                            finish = Number(finish) + Number(hasil[i]["totalquo"])
+                        if (hasil[i]["statusreqpo"] == "Finish") {
+                            finish = Number(finish) + Number(hasil[i]["grandtotal"])
                         }
                     }
-
-
                 }
                 $('#detailx').html(baris)
-                $('#total').html(totalquo)
-                $('#all').html(totalquo)
-                $('#waiting').html(waiting)
+                $('#total').html(formatRupiah(grandtotal + " ", "Rp."))
+                $('#all').html(formatRupiah(grandtotal + " ", "Rp."))
+                $('#waiting').html(formatRupiah(waiting + "", "Rp."))
+                $('#process').html(formatRupiah(process + "", "Rp."))
+                $('#finish').html(formatRupiah(finish + "", "Rp."))
+                $('#cancel').html(formatRupiah(cancel + "", "Rp."))
             }
 
         });

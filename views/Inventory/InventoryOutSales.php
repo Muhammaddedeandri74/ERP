@@ -1525,4 +1525,10 @@
 	function cancelorder() {
 		location.reload();
 	}
+
+	function reorder() {
+		$('input[objtype=nourut]').each(function(i, obj) {
+			$(this).val(i + 1);
+		});
+	}
 </script>

@@ -47,6 +47,7 @@
 							<th>Nama Item</th>
 							<th>SKU</th>
 							<th>Item Group</th>
+							<th>Spesifikasi</th>
 							<th>Deskripsi</th>
 							<th>Harga</th>
 							<th>Jenis QTY</th>
@@ -63,6 +64,7 @@
 									<td><?php echo $key["nameitem"] ?></td>
 									<td><?php echo $key["sku"] ?></td>
 									<td><?php echo $key["itemgroup"] ?></td>
+									<td><?php echo $key["spec"] ?></td>
 									<td><?php echo $key["deskripsi"] ?></td>
 									<td><?php echo number_format($key['price'], 0, '.', ',') ?></td>
 									<td><?php echo $key["jenisqty"] ?></td>

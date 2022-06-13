@@ -149,8 +149,6 @@
 
 	}
 
-	// add_row_transaksi(0);
-
 
 	function add_row_transaksi(xxid) {
 		var lastid = 0;

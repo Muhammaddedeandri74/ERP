@@ -523,7 +523,8 @@ class MasterDataControler extends CI_Controller
 		$namewarehouse = $this->input->post("namewh");
 		$addresswarehouse = $this->input->post("alamatwh");
 		$phonewarehouse = $this->input->post("notelpwh");
-		$cek = $this->MasterData->addwarehouse($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid);
+		$status = $this->input->post("status");
+		$cek = $this->MasterData->addwarehouse($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $status, $userid);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
 		redirect('SuperAdminControler/warehouse');
 	}
@@ -679,9 +680,10 @@ class MasterDataControler extends CI_Controller
 		$namewarehouse = $this->input->post("namewh");
 		$addresswarehouse = $this->input->post("alamatwh");
 		$phonewarehouse = $this->input->post("notelpwh");
-		$cek = $this->MasterData->editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse);
+		$status = $this->input->post("status");
+		$cek = $this->MasterData->editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse, $status);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">' . $cek . '</div>');
-		redirect('MasterDataControler/warehouse');
+		redirect('MasterDataControler/getdatawarehousebyid?id=' . base64_encode($idwarehouse));
 	}
 
 
@@ -1115,6 +1117,7 @@ class MasterDataControler extends CI_Controller
 		$itemgroup           = $this->input->post("itemgroup");
 		$nameitem            = $this->input->post("nameitem");
 		$sku                 = $this->input->post("sku");
+		$spec                = $this->input->post("spec");
 		$jenisitem           = $this->input->post("jenisitem");
 		$stockmin            = $this->input->post("stokmin");
 		$pricebuy            = $this->input->post("pricebuy");
@@ -1137,6 +1140,7 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$jenisitem,
 				$stockmin,
 				$pricebuy,
@@ -1151,6 +1155,7 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$unit,
 				$stockmin,
 				$pricebuy,
@@ -1165,6 +1170,7 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$jenisitem,
 				$pricebuy,
 				$price,
@@ -1188,8 +1194,10 @@ class MasterDataControler extends CI_Controller
 		$itemgroup           = $this->input->post("itemgroup");
 		$nameitem            = $this->input->post("nameitem");
 		$sku                 = $this->input->post("sku");
+		$spec                = $this->input->post("spec");
 		$jenisitem           = $this->input->post("jenisitem");
 		$stockmin            = $this->input->post("stokmin");
+		$pricebuy            = $this->input->post("pricebuy");
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
@@ -1206,6 +1214,7 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$jenisitem,
 				$stockmin,
 				$price,
@@ -1221,6 +1230,7 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$unit,
 				$stockmin,
 				$price,
@@ -1235,17 +1245,15 @@ class MasterDataControler extends CI_Controller
 				$itemgroup,
 				$nameitem,
 				$sku,
+				$spec,
 				$jenisitem,
+				$stockmin,
+				$pricebuy,
 				$price,
 				$deskripsi,
 				$status,
 				$userid,
-				$transaksi_iditembom,
-				$transaksi_sku,
-				$transaksi_nameitem,
-				$transaksi_deskripsi,
-				$transaksi_qty
-
+				$id,
 			);
 			echo $cek;
 		}

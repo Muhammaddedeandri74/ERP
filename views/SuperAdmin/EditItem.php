@@ -57,6 +57,15 @@
 										</div>
 										<div class="col-2"></div>
 									</div>
+									<div class="row mb-3">
+										<div class="col-10">
+											<label for="" class="form-label">Spesifikasi</label>
+											<div class="col">
+												<input name="spec" type="text" id="spec" value="<?php echo $data["spec"] ?>" class="form-control" autocomplete="off" required>
+											</div>
+										</div>
+										<div class="col-2"></div>
+									</div>
 									<div id="nonbom"></div>
 									<div id="usebom"></div>
 									<div class="row mb-3" id="bom" style="display: none;">

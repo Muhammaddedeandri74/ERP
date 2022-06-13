@@ -351,7 +351,6 @@
         if (hasil != "Not Found") {
           for (let i = 0; i < hasil.length; i++) {
 
-
             baris += `  <tr>
                                             <td>` + hasil[i]["codepo"] + `</td>
                                             <td>` + hasil[i]["namecust"] + `</td>

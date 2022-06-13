@@ -315,7 +315,7 @@ class MasterData extends CI_Model
 
 	function getcustomer()
 	{
-		$query = "SELECT * FROM tb_customer ";
+		$query = "SELECT * FROM tb_customer WHERE status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -398,7 +398,7 @@ class MasterData extends CI_Model
 
 	function getsupplier()
 	{
-		$query = "SELECT * FROM tb_customer WHERE typecust = 'Supplier'";
+		$query = "SELECT * FROM tb_customer WHERE typecust = 'Supplier' AND status='1'";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -532,7 +532,7 @@ class MasterData extends CI_Model
 
 	function getcustomerso()
 	{
-		$query = "SELECT *,tb_customer.idcust AS idcustomer FROM tb_customer LEFT JOIN tb_customerdet ON tb_customer.idcust = tb_customerdet.idcust   group by namecust";
+		$query = "SELECT *,tb_customer.idcust AS idcustomer FROM tb_customer LEFT JOIN tb_customerdet ON tb_customer.idcust = tb_customerdet.idcust WHERE status='1' GROUP BY namecust";
 		$eksekusi = $this->db->query($query)->result_object();
 		if (count($eksekusi) > 0) {
 			$respon = array();
@@ -614,6 +614,7 @@ class MasterData extends CI_Model
 			foreach ($eksekusi as $key) {
 				$f["iditem"]        =  $key->iditem;
 				$f["nameitem"]      =  $key->nameitem;
+				$f["spec"]      =  $key->spec;
 				$f["price"]     =  $key->price;
 				$f["status"]        =  $key->status;
 				$f["sku"]           =  $key->sku;
@@ -1047,6 +1048,7 @@ class MasterData extends CI_Model
 				$f["namewarehouse"] =  $key->namewarehouse;
 				$f["addresswarehouse"] =  $key->addresswarehouse;
 				$f["phonewarehouse"] =  $key->phonewarehouse;
+				$f["status"]         =  $key->status;
 				array_push($respon, $f);
 			}
 		} else {
@@ -2561,6 +2563,7 @@ class MasterData extends CI_Model
 		$itemgroup,
 		$nameitem,
 		$sku,
+		$spec,
 		$jenisitem,
 		$stockmin,
 		$pricebuy,
@@ -2587,8 +2590,8 @@ class MasterData extends CI_Model
 			}
 
 
-			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisitem,jenisqty,minstock,pricebuy,price,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'stock',?,?,?,?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisitem,jenisqty,minstock,pricebuy,price,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,?,'stock',?,?,?,?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 
@@ -2613,6 +2616,7 @@ class MasterData extends CI_Model
 		$itemgroup,
 		$nameitem,
 		$sku,
+		$spec,
 		$jenisitem,
 		$pricebuy,
 		$price,
@@ -2640,8 +2644,8 @@ class MasterData extends CI_Model
 				}
 				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
 			}
-			$data     = array($itemgroup, $nameitem, $sku, $jenisitem, $pricebuy, $price, $deskripsi,  $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,'non stock',?,?,?,'n','y',?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $pricebuy, $price, $deskripsi,  $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'non stock',?,?,?,'n','y',?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				if ($images != "") {
@@ -2691,6 +2695,7 @@ class MasterData extends CI_Model
 		$itemgroup,
 		$nameitem,
 		$sku,
+		$spec,
 		$unit,
 		$stockmin,
 		$pricebuy,
@@ -2714,8 +2719,8 @@ class MasterData extends CI_Model
 				}
 				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
 			}
-			$data     = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,jenisqty,jenisitem,idunit,minstock,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,'stock','non service',?,?,?,?,'y','n',?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $unit, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,idunit,minstock,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'stock','non service',?,?,?,?,'y','n',?,?,1,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 
@@ -2739,6 +2744,7 @@ class MasterData extends CI_Model
 		$itemgroup,
 		$nameitem,
 		$sku,
+		$spec,
 		$jenisitem,
 		$stockmin,
 		$price,
@@ -2747,8 +2753,34 @@ class MasterData extends CI_Model
 		$userid,
 		$id
 	) {
-		$data  = array($itemgroup, $nameitem, $sku, $jenisitem, $stockmin, $price, $deskripsi, $status, $id);
-		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?, jenisitem = ?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
+		$data  = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $stockmin, $price, $deskripsi, $status, $id);
+		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?,spec =?, jenisitem = ?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
+		$eksekusi = $this->db->query($query, $data);
+		if ($eksekusi == true) {
+			$respon = "Success";
+		} else {
+			$respon = "Failed";
+		}
+
+		return $respon;
+	}
+
+	function edititemusebom(
+		$itemgroup,
+		$nameitem,
+		$sku,
+		$spec,
+		$jenisitem,
+		$stockmin,
+		$pricebuy,
+		$price,
+		$deskripsi,
+		$status,
+		$userid,
+		$id
+	) {
+		$data  = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $status, $id);
+		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?,spec =?, jenisitem = ?,minstock = ?,pricebuy =?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -2763,6 +2795,7 @@ class MasterData extends CI_Model
 		$itemgroup,
 		$nameitem,
 		$sku,
+		$spec,
 		$unit,
 		$stockmin,
 		$price,
@@ -2772,7 +2805,7 @@ class MasterData extends CI_Model
 		$id
 	) {
 		$data  = array($itemgroup, $nameitem, $sku, $unit, $stockmin, $price, $deskripsi, $status, $id);
-		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?, idunit =?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
+		$query = "UPDATE tb_item SET itemgroup = ? , nameitem = ? , sku = ?,spec =?, idunit =?, minstock = ?,price = ?,deskripsi = ? ,status = ? WHERE iditem = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -2928,27 +2961,12 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	// function addcustomer($addresscustomer,$namecustomer,$contact,$phonecustomer, $type,$email, $codecustomer, $userid)
-	// {
-	// 	date_default_timezone_set('Asia/Jakarta');
-	// 	$data = array('2', $addresscustomer,$namecustomer,$contact,$phonecustomer, $type,$email, $codecustomer, date('Y-m-d H:i:s'), $userid);
-	// 	$query = "INSERT INTO common_detail (idgroup,attrib1,namecomm,attrib5,attrib2,attrib4,attrib3,codecomm,madelog,madeuser)VALUES(?,?,?,?,?,?,?,?,?,?)";
-	// 	$eksekusi = $this->db->query($query, $data);
-	// 	if ($eksekusi == true) {
-	// 		$respon = "Success";
-	// 	} else {
-	// 		$respon = "Failed";
-	// 	}
 
-	// 	return $respon;
-	// }
-
-
-	function addwarehouse($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid)
+	function addwarehouse($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $status, $userid)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, date('Y-m-d H:i:s'), $userid);
-		$query = "INSERT INTO tb_warehouse (codewarehouse,namewarehouse,addresswarehouse,phonewarehouse,madelog,madeuser)VALUES(?,?,?,?,?,?)";
+		$data = array($codewarehouse, $namewarehouse, $addresswarehouse, $phonewarehouse, $status, date('Y-m-d H:i:s'), $userid);
+		$query = "INSERT INTO tb_warehouse (codewarehouse,namewarehouse,addresswarehouse,phonewarehouse,status,madelog,madeuser)VALUES(?,?,?,?,?,?,?)";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -3030,28 +3048,6 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
-	// function editcustomer($id, $namewarehouse, $addresswarehouse, $phonewarehouse, $userid, $status)
-	// {
-	// 	$data;
-	// 	$status;
-	// 	$query;
-	// 	if ($status != "") {
-	// 		$status = 1;
-	// 	} else {
-	// 		$status = 0;
-	// 	}
-	// 	date_default_timezone_set('Asia/Jakarta');
-	// 	$data = array($namewarehouse, $addresswarehouse, $phonewarehouse, $userid, $status, date('Y-m-d H:i:s'), $id);
-	// 	$query = "UPDATE common_detail SET namecomm = ? , attrib1 = ? , attrib2 = ?, upduser = ? , isactive = ?, updlog = ?  WHERE idcomm = ?";
-	// 	$eksekusi = $this->db->query($query, $data);
-	// 	if ($eksekusi == true) {
-	// 		$respon = "Success";
-	// 	} else {
-	// 		$respon = "Failed";
-	// 	}
-
-	// 	return $respon;
-	// }
 
 	function editlockitem($id, $codecomm, $namecomm, $attrib1, $attrib2, $attrib3, $attrib4, $userid)
 	{
@@ -3123,11 +3119,11 @@ class MasterData extends CI_Model
 	}
 
 
-	function editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse)
+	function editwarehouse($id, $namewarehouse, $addresswarehouse, $phonewarehouse, $status)
 	{
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array($namewarehouse, $addresswarehouse, $phonewarehouse, date('Y-m-d H:i:s'), $id);
-		$query = "UPDATE tb_warehouse SET namewarehouse = ? , addresswarehouse = ? , phonewarehouse = ?, madelog = ?  WHERE idwarehouse = ?";
+		$data = array($namewarehouse, $addresswarehouse, $phonewarehouse, $status, date('Y-m-d H:i:s'), $id);
+		$query = "UPDATE tb_warehouse SET namewarehouse = ? , addresswarehouse = ? , phonewarehouse = ?,status =?, madelog = ?  WHERE idwarehouse = ?";
 		$eksekusi = $this->db->query($query, $data);
 		if ($eksekusi == true) {
 			$respon = "Success";
@@ -3269,6 +3265,7 @@ class MasterData extends CI_Model
 				$f["iditem"] = $key->iditem;
 				$f["idunit"] = $key->idunit;
 				$f["sku"] = $key->sku;
+				$f["spec"] = $key->spec;
 				$f["nameitem"] = $key->nameitem;
 				$f["jenisitem"] = $key->jenisitem;
 				$f["jenisqty"] = $key->jenisqty;
@@ -3365,6 +3362,7 @@ class MasterData extends CI_Model
 				$f["namewarehouse"]    = $key->namewarehouse;
 				$f["addresswarehouse"] = $key->addresswarehouse;
 				$f["phonewarehouse"]   = $key->phonewarehouse;
+				$f["status"]   = $key->status;
 			}
 			$respon = $f;
 		} else {
@@ -3946,6 +3944,7 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+
 	function detailreqpo($idreqpo)
 	{
 		$data = array($idreqpo);
@@ -4256,6 +4255,8 @@ class MasterData extends CI_Model
 				$f["datereqpo"]   = $key->datereqpo;
 				$f["deskripsi"]   = $key->deskripsi;
 				$f["statusreqpo"] = $key->statusreqpo;
+				$f["subtotal"] = $key->subtotal;
+				$f["grandtotal"] = $key->grandtotal;
 
 				array_push($respon, $f);
 			}
@@ -4266,6 +4267,31 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistrequestpo($filter, $search, $statusreqpo, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusreqpo . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT * FROM tb_requestpo) AS t WHERE  t." . $filter . " LIKE ? AND t.statusreqpo LIKE  ? AND 
+        t.datereqpo BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idreqpo"]     = $key->idreqpo;
+				$f["codereqpo"]   = $key->codereqpo;
+				$f["datereqpo"]   = $key->datereqpo;
+				$f["deskripsi"]   = $key->deskripsi;
+				$f["statusreqpo"] = $key->statusreqpo;
+				$f["subtotal"] = $key->subtotal;
+				$f["grandtotal"] = $key->grandtotal;
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
 	function getlistsodetail($filter, $search, $statusso, $startdate, $datefinish)
 	{
 		$data = array("%" . $search . "%", "%" . $statusso . "%", $startdate, $datefinish);

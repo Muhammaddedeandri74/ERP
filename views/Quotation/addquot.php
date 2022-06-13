@@ -34,7 +34,7 @@
                             <div class="row mb-3">
                                 <div class="col-8">
                                     <label for="custname" class="form-label">Customer</label>
-                                    <input type="text" id="custname" class="form-control" objectype="cust" list="xcust" name="namecust" required>
+                                    <input type="text" id="custname" class="form-control" objectype="cust" list="xcust" name="namecust" autocomplete="off" required>
                                     <input type="hidden" id="idcust" name="idcust">
                                 </div>
                                 <div class="col-4"></div>

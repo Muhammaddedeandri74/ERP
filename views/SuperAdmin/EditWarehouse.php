@@ -51,6 +51,27 @@
 							</div>
 							<div class="col-1"></div>
 						</div>
+						<div class="row mb-3">
+							<div class="col-10">
+								<div class="row">
+									<div class="col-4">
+										<p style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</p>
+									</div>
+									<div class="col-8">
+										<?php if ($data["status"] == 0) : ?>
+											<div class="form-check form-switch">
+												<input name="status" class="form-check-input" type="checkbox" id="check">
+											</div>
+										<?php else : ?>
+											<div class="form-check form-switch">
+												<input name="status" class="form-check-input" type="checkbox" id="check" checked>
+											</div>
+										<?php endif ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-2"></div>
+						</div>
 						<div class="text-center mb-2">
 							<button type="submit" class="btn btn-primary px-5">Simpan</button>
 						</div>
@@ -69,6 +90,7 @@
 							<th>Name Warehouse</th>
 							<th>No Telepon Warehouse</th>
 							<th>Alamat Warehouse</th>
+							<th>Status</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -82,6 +104,11 @@
 									<td><?php echo $key["namewarehouse"] ?></td>
 									<td><?php echo $key["phonewarehouse"] ?></td>
 									<td><?php echo $key["addresswarehouse"] ?></td>
+									<?php if ($key["status"] == "1") : ?>
+										<td>Aktif</td>
+									<?php else : ?>
+										<td>Tidak Aktif</td>
+									<?php endif ?>
 									<td><a href="<?php echo base_url('MasterDataControler/getdatawarehousebyid?id=' . base64_encode($key['idwarehouse'])) ?>" class="btn btn-primary">Edit</a>
 									</td>
 								</tr>
@@ -93,7 +120,7 @@
 		</div>
 	</div>
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	function hide1() {
 		var x = document.getElementById("myInput1");
@@ -128,6 +155,17 @@
 			"info": true,
 			"autoWidth": false,
 			"responsive": true,
+		});
+	});
+
+	$(function() {
+		$("#check").click(function() {
+			if ($(this).is(":checked")) {
+				$("#check").val(1);
+			} else {
+				$("#check").val(0);
+			}
+			calc();
 		});
 	});
 </script>

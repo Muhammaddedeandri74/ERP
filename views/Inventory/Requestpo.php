@@ -543,13 +543,11 @@
                     $('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
                     $('#transaksi_' + xid + '_sku').val(xobj.data('sku'));
                     $('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
-                    $('#transaksi_' + xid + '_harga').val(hasil["data"][i]["price"]);
+                    $('#transaksi_' + xid + '_harga').val(formatRupiah(hasil["data"][i]["price"]) + "");
                     $('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qty"]);
-                    $('#transaksi_' + xid + '_discpercent').val(hasil["data"][i]["disnomdet"]);
-                    $('#transaksi_' + xid + '_disnom').val(hasil["data"][i]["disnomdet"]);
-                    $('#transaksi_' + xid + '_sub').val(hasil["data"][i]["totalso"]);
                     $('#transaksi_' + xid + '_totaldisc').val(hasil["data"][i]["totaldisc"]);
-                    $('#transaksi_' + xid + '_total').val(hasil["data"][i]["grandtotaldet"]);
+                    $('#transaksi_' + xid + '_total').val(formatRupiah(hasil["data"][i]["grandtotaldet"]) + "");
+
                     calc();
 
                 }

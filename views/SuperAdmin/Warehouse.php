@@ -50,6 +50,21 @@
 							</div>
 							<div class="col-1"></div>
 						</div>
+						<div class="row mb-3">
+							<div class="col-12">
+								<div class="row">
+									<div class="col-4">
+										<label for="" class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</label>
+									</div>
+									<div class="col-8">
+										<div class="form-check form-switch">
+											<input name="status" id="check" class="form-check-input" type="checkbox">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-2"></div>
+						</div>
 						<div class="text-center mb-2">
 							<button type="submit" class="btn btn-primary px-5">Simpan</button>
 						</div>
@@ -68,6 +83,7 @@
 							<th>Name Warehouse</th>
 							<th>No Telepon Warehouse</th>
 							<th>Alamat Warehouse</th>
+							<th>Status</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -81,6 +97,11 @@
 									<td><?php echo $key["namewarehouse"] ?></td>
 									<td><?php echo $key["phonewarehouse"] ?></td>
 									<td><?php echo $key["addresswarehouse"] ?></td>
+									<?php if ($key["status"] == "1") : ?>
+										<td>Aktif</td>
+									<?php else : ?>
+										<td>Tidak Aktif</td>
+									<?php endif ?>
 									<td><a href="<?php echo base_url('MasterDataControler/getdatawarehousebyid?id=' . base64_encode($key['codewarehouse'])) ?>" class="btn btn-primary">Edit</a>
 									</td>
 								</tr>
@@ -92,7 +113,7 @@
 		</div>
 	</div>
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	function hide1() {
 		var x = document.getElementById("myInput1");
@@ -113,20 +134,13 @@
 	}
 
 	$(function() {
-		$("#table-user").DataTable({
-			"responsive": true,
-			"lengthChange": false,
-			"autoWidth": false,
-			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-		}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-		$('#example2').DataTable({
-			"paging": true,
-			"lengthChange": false,
-			"searching": false,
-			"ordering": true,
-			"info": true,
-			"autoWidth": false,
-			"responsive": true,
+		$("#check").click(function() {
+			if ($(this).is(":checked")) {
+				$("#check").val(1);
+			} else {
+				$("#check").val(0);
+			}
+			calc();
 		});
 	});
 </script>
