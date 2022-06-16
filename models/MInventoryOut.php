@@ -19,7 +19,7 @@ class MInventoryOut extends CI_Model
         return $respon;
     }
 
-    function outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty)
+    function outsales($idso, $nopes, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty)
     {
 
         $data1 = array($noinvout);
@@ -98,8 +98,8 @@ class MInventoryOut extends CI_Model
                 $eksekusi2 = $this->db->query($query2, $data2);
                 if ($eksekusi2 == true) {
                     $this->db->trans_begin();
-                    $data = array($idso, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout), $noinvout);
-                    $query = "UPDATE invout SET idso = ?,idwh = ?,dateout = ?,nodo=?,statusout='Process',typeout = 'Sales',qtyout = ?  WHERE codeinvout = ?";
+                    $data = array($idso, $nopes, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout), $noinvout);
+                    $query = "UPDATE invout SET idso = ?,nopes =?,idwh = ?,dateout = ?,nodo=?,statusout='Process',typeout = 'Sales',qtyout = ?  WHERE codeinvout = ?";
                     $eksekusi = $this->db->query($query, $data);
                     if ($eksekusi == true) {
                         for ($i = 0; $i < count($iditem); $i++) {
@@ -217,8 +217,8 @@ class MInventoryOut extends CI_Model
             }
         } else {
             $this->db->trans_begin();
-            $data = array($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout));
-            $query = "INSERT INTO invout (idso,codeinvout,idwh,dateout,nodo,statusout,typeout,qtyout) VALUES(?,?,?,?,?,'Process','Sales',?);";
+            $data = array($idso, $nopes, $noinvout, $idwhsales, $dateoutsales, $nodeliv, array_sum($qtyout));
+            $query = "INSERT INTO invout (idso,nopes,codeinvout,idwh,dateout,nodo,statusout,typeout,qtyout) VALUES(?,?,?,?,?,?,'Process','Sales',?);";
             $eksekusi = $this->db->query($query, $data);
             if ($eksekusi == true) {
                 for ($i = 0; $i < count($iditem); $i++) {

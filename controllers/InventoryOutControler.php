@@ -34,11 +34,12 @@ class InventoryOutControler extends CI_Controller
 
 
         $idso = $this->input->post('idso');
+        $nopes = $this->input->post('nopes');
         $idwhsales = $this->input->post('idwhsales');
         $dateoutsales = $this->input->post('dateoutsales');
         $nodeliv = $this->input->post('nodeliv');
 
-        $cek = $this->MInventoryOut->outsales($idso, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty);
+        $cek = $this->MInventoryOut->outsales($idso, $nopes, $noinvout, $idwhsales, $dateoutsales, $nodeliv, $iditem, $qtyout, $expdate, $nameitem, $typeqty);
         echo $cek;
     }
 

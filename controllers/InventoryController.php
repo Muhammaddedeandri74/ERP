@@ -225,14 +225,14 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
-	function getlistinvinincoice()
-	{
-		$search     = $this->input->post("search");
-		$datestart  = $this->input->post("datestart");
-		$finishdate = $this->input->post("finishdate");
-		$cek        =  $this->MasterData->getlistinvininvoice($search, $datestart, $finishdate);
-		echo json_encode($cek);
-	}
+	// function getlistinvinincoice()
+	// {
+	// 	$search     = $this->input->post("search");
+	// 	$datestart  = $this->input->post("datestart");
+	// 	$finishdate = $this->input->post("finishdate");
+	// 	$cek        =  $this->MasterData->getlistinvininvoice($search, $datestart, $finishdate);
+	// 	echo json_encode($cek);
+	// }
 
 
 
@@ -262,6 +262,17 @@ class InventoryController extends CI_Controller
 		$datestart  = $this->input->post("datestart");
 		$finishdate = $this->input->post("finishdate");
 		$cek        =  $this->MasterData->getlistpodet($filter, $search, $statuspo, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function getlistIO()
+	{
+		$filter     = $this->input->post("filterout");
+		$search     = $this->input->post("searchout");
+		$statusout  = $this->input->post("statusout");
+		$datestart  = $this->input->post("datestartout");
+		$finishdate = $this->input->post("finishdateout");
+		$cek        =  $this->MasterData->getlistIO($filter, $search, $statusout, $datestart, $finishdate);
 		echo json_encode($cek);
 	}
 
@@ -330,6 +341,22 @@ class InventoryController extends CI_Controller
 		echo json_encode($cek);
 	}
 
+	function detailIO()
+	{
+		$idinvout = $this->input->post("idinvout");
+
+		$cek  = $this->MasterData->detailIO($idinvout);
+		echo json_encode($cek);
+	}
+
+	function detailinvoice()
+	{
+		$idinv = $this->input->post("idinv");
+
+		$cek  = $this->MasterData->detailinvoice($idinv);
+		echo json_encode($cek);
+	}
+
 	function detailmove()
 	{
 		$idinvout = $this->input->post("idinvout");
@@ -363,6 +390,28 @@ class InventoryController extends CI_Controller
 		$datestart = $this->input->post("datestart");
 		$finishdate = $this->input->post("finishdate");
 		$cek =  $this->MasterData->getlistinvinstatus($filter, $search, $statusin, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function getlistinvoice()
+	{
+		$filter = $this->input->post("filter");
+		$search = $this->input->post("search");
+		$statusinv = $this->input->post("statusinv");
+		$datestart = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek =  $this->MasterData->getlistinvoice($filter, $search, $statusinv, $datestart, $finishdate);
+		echo json_encode($cek);
+	}
+
+	function getlistinvoicedetail()
+	{
+		$filter = $this->input->post("filter");
+		$search = $this->input->post("search");
+		$statusinv = $this->input->post("statusinv");
+		$datestart = $this->input->post("datestart");
+		$finishdate = $this->input->post("finishdate");
+		$cek =  $this->MasterData->getlistinvoicedet($filter, $search, $statusinv, $datestart, $finishdate);
 		echo json_encode($cek);
 	}
 
@@ -459,6 +508,13 @@ class InventoryController extends CI_Controller
 		$f["data1"] = $this->MasterData->getcurrency();
 		$f["data2"] = $this->MasterData->getlistinvininvoice();
 		$f["data3"] = $this->MasterData->getitemmaterialpo();
+		$f["data4"] = $this->MasterData->getcodeinvoice();
+
+		$f["codeinvz"] = $this->input->post("codeinvz");
+
+		if (!isset($f["codeinvz"])) {
+			$f["codeinvz"] = "";
+		}
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("Invoice/Purchaseinvoice", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -468,7 +524,8 @@ class InventoryController extends CI_Controller
 	{
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
-		$this->load->view("SuperAdmin/header");
+		$f["data"] = $this->MasterData->getlistinvoicedetail();
+		$this->load->view("SuperAdmin/Header");
 		$this->load->view("Invoice/RequestInvoice", $f);
 		$this->load->view("SuperAdmin/Footer");
 	}

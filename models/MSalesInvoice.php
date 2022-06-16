@@ -182,8 +182,7 @@ class MSalesInvoice extends CI_Model
 
     function getlistsalesorder()
     {
-        $query = "
-        SELECT DISTINCT tb_salesorder.codeso, tb_salesorder.idso,tb_customer.namecust FROM tb_salesorder,tb_salesorderdetail,invout,invoutdet,tb_item,tb_customer WHERE tb_salesorder.idso = tb_salesorderdetail.idso AND tb_salesorder.idso = invout.idso AND invout.codeinvout
+        $query = "SELECT DISTINCT tb_salesorder.codeso, tb_salesorder.idso,tb_customer.namecust FROM tb_salesorder,tb_salesorderdetail,invout,invoutdet,tb_item,tb_customer WHERE tb_salesorder.idso = tb_salesorderdetail.idso AND tb_salesorder.idso = invout.idso AND invout.codeinvout
                = invoutdet.codeinvout AND invoutdet.iditem= tb_salesorderdetail.iditem AND invout.statusinvoice != 'Ready' AND  tb_salesorderdetail.iditem = tb_item.iditem AND invoutdet.noinvoice = 0 AND tb_salesorder.idcust = tb_customer.idcust ";
         $eksekusi = $this->db->query($query)->result_object();
         if (count($eksekusi) > 0) {
@@ -282,6 +281,99 @@ class MSalesInvoice extends CI_Model
             $this->db->trans_commit();
         }
 
+        return $respon;
+    }
+
+    function getlistinvoice($filter, $search, $statusinvoice, $startdate, $datefinish)
+    {
+        $data = array("%" . $search . "%", "%" . $statusinvoice . "%", $startdate, $datefinish);
+        $query = "SELECT * FROM(SELECT tb_invoicesalesheader.*,tb_customer.namecust FROM tb_invoicesalesheader,tb_customer WHERE tb_invoicesalesheader.idcust = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ?
+         AND t.statusinvoice LIKE  ? AND t.dateinvoice BETWEEN ? AND ?";
+        $eksekusi = $this->db->query($query, $data)->result_object();
+        if (count($eksekusi) > 0) {
+            $respon = array();
+            foreach ($eksekusi as $key) {
+                $f["idinvoice"]         = $key->idinvoice;
+                $f["codeinvoice"]       = $key->codeinvoice;
+                $f["noinvoice"]       = $key->noinvoice;
+                $f["idcust"]       = $key->idcust;
+                $f["namecust"]     = $key->namecust;
+                $f["idcust"]        = $key->idcust;
+                $f["idcur"]        = $key->idcur;
+                $f["dateinvoice"]        = $key->dateinvoice;
+                $f["expinvoice"]       = $key->expinvoice;
+                $f["rate"]   = $key->rate;
+                $f["title"]     = $key->title;
+                $f["subtotal"]   = $key->subtotal;
+                $f["ppn"]   = $key->ppn;
+                $f["grandtotal"]   = $key->grandtotal;
+                $f["statusinvoice"]   = $key->statusinvoice;
+
+
+                array_push($respon, $f);
+            }
+        } else {
+            $respon = "Not Found";
+        }
+
+        return $respon;
+    }
+
+    function getlistinvoicedetail()
+    {
+        $query = "SELECT * FROM tb_invoicesalesheader,tb_customer WHERE tb_invoicesalesheader.idcust = tb_customer.idcust";
+        $eksekusi = $this->db->query($query)->result_object();
+        if (count($eksekusi) > 0) {
+            $respon = array();
+            foreach ($eksekusi as $key) {
+                $f["idinvoice"]         = $key->idinvoice;
+                $f["codeinvoice"]       = $key->codeinvoice;
+                $f["noinvoice"]       = $key->noinvoice;
+                $f["idcust"]       = $key->idcust;
+                $f["namecust"]     = $key->namecust;
+                $f["idcust"]        = $key->idcust;
+                $f["idcur"]        = $key->idcur;
+                $f["disnoms"]        = $key->disnoms;
+                $f["dateinvoice"]        = $key->dateinvoice;
+                $f["expinvoice"]       = $key->expinvoice;
+                $f["rate"]   = $key->rate;
+                $f["title"]     = $key->title;
+                $f["subtotal"]   = $key->subtotal;
+                $f["ppn"]   = $key->ppn;
+                $f["grandtotal"]   = $key->grandtotal;
+                $f["statusinvoice"]   = $key->statusinvoice;
+
+
+                $data = array($f["codeinvoice"]);
+                $query1 = "SELECT * FROM tb_invoicesalesdetail,tb_invoicesalesheader,tb_item  WHERE tb_invoicesalesdetail.iditem = tb_item.iditem AND tb_invoicesalesheader.codeinvoice = tb_invoicesalesdetail.codeinvoice AND tb_invoicesalesdetail.codeinvoice = ?";
+                $eksekusi1 = $this->db->query($query1, $data)->result_object();
+                if (count($eksekusi1) > 0) {
+                    $f["data"] = array();
+                    foreach ($eksekusi1 as $keyx) {
+                        $g["codeinvoice"] = $keyx->codeinvoice;
+                        $g["sku"] = $keyx->sku;
+                        $g["nameitem"]  = $keyx->nameitem;
+                        $g["sku"]       = $keyx->sku;
+                        $g["price"] = $keyx->pricebuy;
+                        $g["qty"] = $keyx->qty;
+                        $g["ppn"] = $keyx->ppn;
+                        $g["disnom"] = $keyx->disnom;
+                        $g["spec"] = $keyx->spec;
+                        $g["deskripsi"] = $keyx->deskripsi;
+                        $g["total"] = $keyx->total;
+
+
+                        array_push($f["data"], $g);
+                    }
+                } else {
+                    $f["data"] = "Not Found";
+                }
+
+                array_push($respon, $f);
+            }
+        } else {
+            $respon = "Not Found";
+        }
         return $respon;
     }
 }

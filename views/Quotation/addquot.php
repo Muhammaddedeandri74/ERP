@@ -412,7 +412,7 @@
     }
 
     var codequox = <?php echo json_encode($codequox) ?>;
-    console.log(codequox);
+    // console.log(codequox);
     if (codequox != "") {
         detailquo(codequox)
     }
@@ -550,23 +550,10 @@
                         $('#transaksi_' + xid + '_sub').val(formatRupiah(hasil["data"][i]["qty"] * hasil["data"][i]["price"] + ""));
                         document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
                         document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
-                        // document.getElementById('transaksi_' + xid + '_discpercent').readOnly = false;
                         document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
-                        // document.getElementById('transaksi_' + xid + '_action').disabled = true;
-                        // document.getElementById('transaksi_' + xid + '_sku').readOnly = true;
-
 
                     }
                     calc();
-                    // document.getElementById('codequo').readOnly = true;
-                    // document.getElementById('remark').readOnly = true;
-                    // document.getElementById('judulquo').readOnly = true;
-                    // document.getElementById('startquo').readOnly = true;
-                    // document.getElementById('expquo').readOnly = true;
-                    // document.getElementById('norek').disabled = true;
-                    // document.getElementById('disnom').disabled = true;
-                    // document.getElementById('custname').disabled = true;
-
                     if (hasil["statusquo"] == "Waiting") {
                         $('#simpan').show()
                         $('#cancel').show()
@@ -702,7 +689,6 @@
             $('#transaksi_' + xid + '_sub').val(formatRupiah(xobj.data('price') + ""));
             document.getElementById('transaksi_' + xid + '_qty').readOnly = false;
             document.getElementById('transaksi_' + xid + '_harga').readOnly = false;
-
             document.getElementById('transaksi_' + xid + '_disnom').readOnly = false;
         }
         calc();

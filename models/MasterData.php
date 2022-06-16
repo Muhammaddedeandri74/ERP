@@ -283,6 +283,21 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getcodeinvoice()
+	{
+		$query = "SELECT * FROM tb_salesinvoice ORDER BY idinv DESC LIMIT 1";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$respon =   "INV-TRS-" . str_replace("INV-TRS-", "", $key->codeinv)  + 1;
+			}
+		} else {
+			$respon = "INV-TRS-1";
+		}
+
+		return $respon;
+	}
+
 	function getreqpolast()
 	{
 		$query = "SELECT * FROM tb_requestpo ORDER BY idreqpo DESC LIMIT 1";
@@ -1970,6 +1985,58 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistinvoice($filter, $search, $statusinv, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusinv . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT tb_salesinvoice.*,tb_customer.namecust FROM tb_salesinvoice,tb_customer WHERE tb_salesinvoice.idcust = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ? AND t.statusinv LIKE  ? AND 
+        t.dateinv BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idinv"] = $key->idinv;
+				$f["codeinv"] = $key->codeinv;
+				$f["dateinv"] = $key->dateinv;
+				$f["namecust"] = $key->namecust;
+				$f["exchangerate"] = $key->exchangerate;
+				$f["statusinv"] = $key->statusinv;
+				$f["grandtotal"] = $key->grandtotal;
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function getlistinvoicedet($filter, $search, $statusinv, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusinv . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT tb_salesinvoice.*,tb_customer.namecust FROM tb_salesinvoice,tb_customer WHERE tb_salesinvoice.idcust = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ? AND t.statusinv LIKE  ? AND 
+        t.dateinv BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idinv"] = $key->idinv;
+				$f["codeinv"] = $key->codeinv;
+				$f["dateinv"] = $key->dateinv;
+				$f["namecust"] = $key->namecust;
+				$f["exchangerate"] = $key->exchangerate;
+				$f["statusinv"] = $key->statusinv;
+				$f["grandtotal"] = $key->grandtotal;
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 	function getlistpodetail($codepo, $namesupp, $filter, $date1, $date2, $status)
 	{
 		$data  = "";
@@ -2115,6 +2182,57 @@ class MasterData extends CI_Model
 						$g["grandtotalx"] = $keyx->grandtotal;
 						$g["disctrans"]      = $key->disctrans;
 
+
+						array_push($f["data"], $g);
+					}
+				} else {
+					$f["data"] = "Not Found";
+				}
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+		return $respon;
+	}
+
+	function getlistinvoicedetail()
+	{
+
+		$query = "SELECT * FROM tb_salesinvoice,tb_customer WHERE tb_salesinvoice.idcust = tb_customer.idcust";
+		$eksekusi = $this->db->query($query)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idinv"]	    = $key->idinv;
+				$f["codeinv"]	    = $key->codeinv;
+				$f["namecust"]	    = $key->namecust;
+				$f["dateinv"]	    = $key->dateinv;
+				$f["subtotal"]	    = $key->subtotal;
+				$f["distrans"]	    = $key->distrans;
+				$f["vat"]	        = $key->vat;
+				$f["grandtotal"]    = $key->grandtotal;
+				$f["statusinv"]	    = $key->statusinv;
+
+				$data = array($f["codeinv"]);
+				$query1 = "SELECT * FROM tb_salesinvoice,tb_salesinvoicedetail,tb_item  WHERE tb_salesinvoice.codeinv = tb_salesinvoicedetail.codeinv AND tb_salesinvoicedetail.iditem = tb_item.iditem AND tb_salesinvoicedetail.codeinv = ?";
+				$eksekusi1 = $this->db->query($query1, $data)->result_object();
+				if (count($eksekusi1) > 0) {
+					$f["data"] = array();
+					foreach ($eksekusi1 as $keyx) {
+						$g["idinv"] = $keyx->idinv;
+						$g["codeinv"] = $keyx->codeinv;
+						$g["dateinv"] = $keyx->dateinv;
+						$g["iditem"] = $keyx->iditem;
+						$g["nameitem"]  = $keyx->nameitem;
+						$g["sku"]       = $keyx->sku;
+						$g["spec"]       = $keyx->spec;
+						$g["price"] = $keyx->pricebuy;
+						$g["qty"] = $keyx->qty;
+						$g["vat"] = $keyx->vat;
+						$g["disnom"] = $keyx->disnom;
+						$g["grandtotal"] = $keyx->grandtotal;
 
 						array_push($f["data"], $g);
 					}
@@ -2569,6 +2687,8 @@ class MasterData extends CI_Model
 		$pricebuy,
 		$price,
 		$deskripsi,
+		$status,
+		$exp,
 		$images,
 		$userid
 	) {
@@ -2590,8 +2710,8 @@ class MasterData extends CI_Model
 			}
 
 
-			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisitem,jenisqty,minstock,pricebuy,price,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,?,'stock',?,?,?,?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $stockmin, $pricebuy, $price, $deskripsi, $status, $exp, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisitem,jenisqty,minstock,pricebuy,price,deskripsi,status,useexp,gambar,madelog,madeuser)VALUES(?,?,?,?,?,'stock',?,?,?,?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 
@@ -2621,6 +2741,8 @@ class MasterData extends CI_Model
 		$pricebuy,
 		$price,
 		$deskripsi,
+		$status,
+		$exp,
 		$images,
 		$userid,
 		$transaksi_iditembom,
@@ -2644,8 +2766,8 @@ class MasterData extends CI_Model
 				}
 				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
 			}
-			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $pricebuy, $price, $deskripsi,  $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'non stock',?,?,?,'n','y',?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $jenisitem, $pricebuy, $price, $deskripsi, $status, $exp,  $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,pricebuy,price,bom,usebom,deskripsi,status,useexp,gambar,madelog,madeuser)VALUES(?,?,?,?,'non stock',?,?,?,'n','y',?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 				if ($images != "") {
@@ -2701,6 +2823,8 @@ class MasterData extends CI_Model
 		$pricebuy,
 		$price,
 		$deskripsi,
+		$status,
+		$exp,
 		$images,
 		$userid
 	) {
@@ -2719,8 +2843,8 @@ class MasterData extends CI_Model
 				}
 				$photo = "./assets/img/Produk/" . $nameitem . ".jpg";
 			}
-			$data     = array($itemgroup, $nameitem, $sku, $spec, $unit, $stockmin, $pricebuy, $price, $deskripsi, $photo, date('Y-m-d H:i:s'), $userid);
-			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,idunit,minstock,pricebuy,price,bom,usebom,deskripsi,gambar,status,madelog,madeuser)VALUES(?,?,?,?,'stock','non service',?,?,?,?,'y','n',?,?,1,?,?)";
+			$data     = array($itemgroup, $nameitem, $sku, $spec, $unit, $stockmin, $pricebuy, $price, $deskripsi, $status, $exp, $photo, date('Y-m-d H:i:s'), $userid);
+			$query    = "INSERT INTO tb_item (itemgroup,nameitem,sku,spec,jenisqty,jenisitem,idunit,minstock,pricebuy,price,bom,usebom,deskripsi,status,useexp,gambar,madelog,madeuser)VALUES(?,?,?,?,'stock','non service',?,?,?,?,'y','n',?,?,?,?,?,?)";
 			$eksekusi = $this->db->query($query, $data);
 			if ($eksekusi == true) {
 
@@ -3944,6 +4068,33 @@ class MasterData extends CI_Model
 		return $respon;
 	}
 
+	function getlistIO($filter, $search, $statusout, $startdate, $datefinish)
+	{
+		$data = array("%" . $search . "%", "%" . $statusout . "%", $startdate, $datefinish);
+		$query = "SELECT * FROM(SELECT invout.*,tb_customer.namecust FROM invout,tb_customer WHERE invout.idsupp = tb_customer.idcust) AS t WHERE  t." . $filter . " LIKE ? AND t.statusout LIKE  ? AND 
+        t.dateout BETWEEN ? AND ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$respon = array();
+			foreach ($eksekusi as $key) {
+				$f["idinvout"]      = $key->idinvout;
+				$f["codeinvout"]       = $key->codeinvout;
+				$f["typeout"]       = $key->typeout;
+				$f["dateout"]       = $key->dateout;
+				$f["namecust"]      = $key->namecust;
+				$f["qtyout"]        = $key->qtyout;
+				$f["statusout"]     = $key->statusout;
+
+
+				array_push($respon, $f);
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
 
 	function detailreqpo($idreqpo)
 	{
@@ -4038,7 +4189,7 @@ class MasterData extends CI_Model
 	function detailinvin($idin)
 	{
 		$data = array($idin);
-		$query = "SELECT * FROM invin,tb_customer WHERE  invin.idcust = tb_customer.idcust AND idin = ?";
+		$query = "SELECT * FROM invin,tb_customer WHERE  invin.idcust = tb_customer.idcust AND codein = ?";
 		$eksekusi = $this->db->query($query, $data)->result_object();
 		if (count($eksekusi) > 0) {
 			foreach ($eksekusi as $key) {
@@ -4052,7 +4203,7 @@ class MasterData extends CI_Model
 
 				$f["data"] = array();
 				$datax = array($key->idin);
-				$queryx = "SELECT * FROM invindet,tb_item WHERE invindet.idin = ? AND invindet.iditem = tb_item.iditem";
+				$queryx = "SELECT * FROM invin,invindet,tb_item WHERE invindet.idin = ? AND invin.idin = invindet.idin AND invindet.iditem = tb_item.iditem";
 				$eksekusix = $this->db->query($queryx, $datax)->result_object();
 				if (count($eksekusix) > 0) {
 					foreach ($eksekusix as $keyx) {
@@ -4067,7 +4218,109 @@ class MasterData extends CI_Model
 						$g["price"] = $keyx->price;
 						$g["balance"] = $keyx->balance;
 						$g["expdate"] = $keyx->expdate;
+						$g["total"] = $keyx->total;
 
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function detailIO($idinvout)
+	{
+		$data = array($idinvout);
+		$query = "SELECT * FROM invout,tb_customer WHERE invout.idsupp = tb_customer.idcust AND codeinvout = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$f["idinvout"] = $key->idinvout;
+				$f["codeinvout"] = $key->codeinvout;
+				$f["dateout"] = $key->dateout;
+				$f["nodo"] = $key->nodo;
+				$f["idwh"] = $key->idwh;
+				$f["qtyout"] = $key->qtyout;
+				$f["statusout"] = $key->statusout;
+				$f["idcust"] = $key->idcust;
+				$f["namecust"] = $key->namecust;
+
+				$f["data"] = array();
+				$datax = array($key->codeinvout);
+				$queryx = "SELECT * FROM invoutdet,tb_item WHERE invoutdet.iditem = tb_item.iditem AND codeinvout = ?";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["sku"] = $keyx->sku;
+						$g["nameitem"] = $keyx->nameitem;
+						$g["deskripsi"] = $keyx->deskripsi;
+						$g["price"] = $keyx->price;
+						$g["qtyout"] = $keyx->qtyout;
+						$g["expdate"] = $keyx->expdate;
+						array_push($f["data"], $g);
+					}
+				} else {
+					$respon = "Detail Error";
+					break;
+				}
+
+
+				$respon = $f;
+			}
+		} else {
+			$respon = "Not Found";
+		}
+
+		return $respon;
+	}
+
+	function detailinvoice($idinv)
+	{
+		$data = array($idinv);
+		$query = "SELECT * FROM tb_salesinvoice,tb_customer WHERE  tb_salesinvoice.idcust = tb_customer.idcust AND codeinv = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			foreach ($eksekusi as $key) {
+				$f["idinv"] = $key->idinv;
+				$f["idin"] = $key->idin;
+				$f["idpo"] = $key->idpo;
+				$f["codeinv"] = $key->codeinv;
+				$f["dateinv"] = $key->dateinv;
+				$f["idcurr"] = $key->idcurr;
+				$f["idcust"] = $key->idcust;
+				$f["namecust"] = $key->namecust;
+				$f["remark"] = $key->remark;
+				$f["dateinv"] = $key->dateinv;
+				$f["delivedate"] = $key->delivedate;
+				$f["exchangerate"] = $key->exchangerate;
+				$f["statusinv"] = $key->statusinv;
+				$f["data"] = array();
+				$datax = array($key->codeinv);
+				$queryx = "SELECT * FROM tb_salesinvoicedetail,tb_item WHERE tb_salesinvoicedetail.codeinv = ? AND  tb_salesinvoicedetail.iditem = tb_item.iditem";
+				$eksekusix = $this->db->query($queryx, $datax)->result_object();
+				if (count($eksekusix) > 0) {
+					foreach ($eksekusix as $keyx) {
+						$g["sku"] = $keyx->sku;
+						$g["iditem"] = $keyx->iditem;
+						$g["sku"] = $keyx->sku;
+						$g["price"] = $keyx->price;
+						$g["nameitem"] = $keyx->nameitem;
+						$g["qty"] = $keyx->qty;
+						$g["disper"] = $keyx->disper;
+						$g["disnom"] = $keyx->disnom;
+						$g["subtotal"] = $keyx->subtotal;
+						$g["grandtot"] = $keyx->grandtot;
 						array_push($f["data"], $g);
 					}
 				} else {
@@ -4841,6 +5094,100 @@ class MasterData extends CI_Model
 				$respon = "Purchase Order Tidak Ditemukan";
 			}
 		}
+		return $respon;
+	}
+
+	function addpoinvoice(
+		$idinv,
+		$codeinv,
+		$idsupp,
+		$remark,
+		$dateinv,
+		$duedate,
+		$idcurr,
+		$exchangerate,
+		$idpo,
+		$idin,
+		$idinvout,
+		$userid,
+		$iditem,
+		$qty,
+		$price,
+		$disper,
+		$disnom,
+		$sub,
+		$totaldisc,
+		$total,
+		$subtotal,
+		$distrans,
+		$ppn,
+		$grandtotal
+	) {
+
+		$data = array($codeinv);
+		$query = "SELECT * FROM tb_salesinvoice WHERE codeinv = ?";
+		$eksekusi = $this->db->query($query, $data)->result_object();
+		if (count($eksekusi) > 0) {
+			$query1 = "DELETE FROM tb_salesinvoicedetail WHERE codeinv = ?";
+			$eksekusi1 = $this->db->query($query1, $data);
+			if ($eksekusi1 == true) {
+				$this->db->trans_begin();
+				$data1 = array($idsupp, $remark, $dateinv, $duedate, $idcurr, $exchangerate, $idpo, $idin, $idinvout, $userid, date('Y-m-d H:i:s'), $subtotal, $distrans, $ppn, $grandtotal, $codeinv);
+				$query2 = "UPDATE tb_salesinvoice SET idcust = ?,remark = ?,dateinv=?,delivedate=?,idcurr=?,exchangerate=?,idpo=?,idin=?,idinvout=?,madeuser=?,madelog =?,subtotal=?,distrans=?,vat=?,grandtotal=? WHERE codeinv = ?";
+				$eksekusi1 = $this->db->query($query2, $data1);
+				if ($eksekusi1 == true) {
+					for ($i = 0; $i < count($iditem); $i++) {
+						if ($iditem[$i] != "") {
+							$datax = array($codeinv, $iditem[$i], $qty[$i], $price[$i], $disper[$i], $disnom[$i], $sub[$i], $totaldisc[$i], $total[$i], $userid, date('Y-m-d H:i:s'));
+							$queryx = "INSERT INTO tb_salesinvoicedetail (codeinv,iditem,qty,price,disper,disnom,subtotal,totaldisc,grandtot,madeuser,madelog) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+							$eksekusix = $this->db->query($queryx, $datax);
+							if ($eksekusix == true) {
+								$respon = "Success";
+							} else {
+								$respon = "Gagal Insert Invoice Detail pada item = " + $iditem[$i];
+								break;
+							}
+						}
+					}
+				} else {
+					$respon = "Gagal Insert Header Invoice";
+				}
+			} else {
+				$respon = "Failed On Clean Detail Invoice";
+			}
+		} else {
+			$this->db->trans_begin();
+			$data1 = array($codeinv, $idsupp, $remark, $dateinv, $duedate, $idcurr, $exchangerate, $idpo, $idin, $idinvout, $userid, date('Y-m-d H:i:s'), $subtotal, $distrans, $ppn, $grandtotal);
+			$query1 = "INSERT INTO tb_salesinvoice (codeinv,idcust,remark,dateinv,delivedate,idcurr,exchangerate,idpo,idin,idinvout,madeuser,madelog,subtotal,distrans,vat,grandtotal,statusinv) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Unpaid')";
+			$eksekusi1 = $this->db->query($query1, $data1);
+			if ($eksekusi1 == true) {
+
+				for ($i = 0; $i < count($iditem); $i++) {
+					if ($iditem[$i] != "") {
+						$datax = array($codeinv, $iditem[$i], $qty[$i], $price[$i], $disper[$i], $disnom[$i], $sub[$i], $totaldisc[$i], $total[$i], $userid, date('Y-m-d H:i:s'));
+						$queryx = "INSERT INTO tb_salesinvoicedetail (codeinv,iditem,qty,price,disper,disnom,subtotal,totaldisc,grandtot,madeuser,madelog) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+						$eksekusix = $this->db->query($queryx, $datax);
+						if ($eksekusix == true) {
+							$respon = "Success";
+						} else {
+							$respon = "Gagal Insert Invoice Detail pada item = " + $iditem[$i];
+							break;
+						}
+					}
+				}
+			} else {
+				$respon = "Gagal Insert Header Invoice";
+			}
+		}
+
+
+		if ($respon != "Success") {
+			$this->db->trans_rollback();
+		} else {
+			$respon = "Success dengan nomor Invoice " . $codeinv;
+			$this->db->trans_commit();
+		}
+
 		return $respon;
 	}
 

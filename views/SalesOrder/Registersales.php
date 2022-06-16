@@ -402,8 +402,6 @@
     </div>
 </div>
 
-
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <datalist id="xcust">
     <!--<option value="" disabled selected>Select Item</option>-->
@@ -475,7 +473,6 @@
                         $('#subtotal_' + xid).val(formatRupiah(hasil[i]["subtotal"] * hasil[i]["qtyout"] + ""))
                         $('#disnom_' + xid).val(formatRupiah(hasil[i]["disnomdet"] * hasil[i]["qtyout"] + ""))
                         $('#total_' + xid).val(formatRupiah(hasil[i]["grandtotal"] * hasil[i]["qtyout"] + ""))
-
                     }
 
                     calc()

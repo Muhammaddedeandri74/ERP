@@ -157,6 +157,7 @@ class SalesinvoiceControler extends CI_Controller
 		$this->load->Model("MasterData");
 		$f = $this->session->userdata("data");
 		$f["data"] = $this->MSalesInvoice->getuser();
+		$f["data1"] = $this->MSalesInvoice->getlistinvoicedetail();
 		$this->load->view("SuperAdmin/header");
 		$this->load->view("SalesOrder/Salesinvoice", $f);
 		$this->load->view("SuperAdmin/Footer");
@@ -257,6 +258,19 @@ class SalesinvoiceControler extends CI_Controller
 			str_replace(".", "", $total)
 		);
 
-		echo $cek;
+		// echo $cek;
+		$this->session->set_flashdata('message', '<div class="alert alert-primary" role="alert">' . $cek . '</div>');
+		redirect("SalesinvoiceControler/Registersales");
+	}
+
+	function getlistinvoice()
+	{
+		$filter          = $this->input->post("filter");
+		$search          = $this->input->post("search");
+		$statusinvoice   = $this->input->post("statusinvoice");
+		$datestart       = $this->input->post("datestart");
+		$finishdate      = $this->input->post("finishdate");
+		$cek             =  $this->MSalesInvoice->getlistinvoice($filter, $search, $statusinvoice, $datestart, $finishdate);
+		echo json_encode($cek);
 	}
 }

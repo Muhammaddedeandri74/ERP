@@ -189,11 +189,26 @@
 						<div class="col-10">
 							<div class="row">
 								<div class="col-4">
-									<p style="font-size: 16px">Status</p>
+									<p class="form-label" style="font-size: 16px">Status</p>
 								</div>
 								<div class="col-8">
 									<div class="form-check form-switch">
 										<input name="status" id="check" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-10">
+							<div class="row">
+								<div class="col-4">
+									<p class="form-label" style="font-size: 16px">Tanggal Expaired</p>
+								</div>
+								<div class="col-8">
+									<div class="form-check form-switch">
+										<input name="exp" id="exp" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
 									</div>
 								</div>
 							</div>
@@ -330,6 +345,17 @@
 				$("#check").val(1);
 			} else {
 				$("#check").val(0);
+			}
+			calc();
+		});
+	});
+
+	$(function() {
+		$("#exp").click(function() {
+			if ($(this).is(":checked")) {
+				$("#exp").val("y");
+			} else {
+				$("#exp").val("n");
 			}
 			calc();
 		});

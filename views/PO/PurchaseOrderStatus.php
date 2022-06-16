@@ -207,7 +207,6 @@
                 <td>Spesifikasi</td>
                 <td>Harga</td>
                 <td>QTY</td>
-                <!-- <td>VAT</td> -->
                 <td>Diskon</td>
                 <td>Total</td>
               </tr>
@@ -478,10 +477,10 @@
           baris += '<td>' + data[i]["data"][a]["sku"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["nameitem"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
-          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["price"]).toFixed(0)) + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
           baris += '<td>' + data[i]["data"][a]["qty"] + '</td>';
-          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["disctrans"]).toFixed(0)) + '</td>';
-          baris += '<td>' + formatnum(parseFloat(data[i]["data"][a]["grandtotalx"]).toFixed(0)) + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
+          baris += '<td>' + data[i]["data"][a]["deskripsi"] + '</td>';
           baris += '</tr>';
         }
         break;

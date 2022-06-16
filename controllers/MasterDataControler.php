@@ -899,6 +899,7 @@ class MasterDataControler extends CI_Controller
 
 	function addpo()
 	{
+
 		$idpox                   = $this->input->post("idpo");
 		$idso                    = $this->input->post("idso");
 		$codepo                  = $this->MasterData->getpolast();
@@ -960,6 +961,66 @@ class MasterDataControler extends CI_Controller
 			$total,
 			$iduser
 		);
+		echo $cek;
+	}
+
+	function addpoinvoice()
+	{
+		$codeinv = $this->input->post('codeinv');
+		if (!isset($codeinv) || $codeinv == "") {
+			$codeinv = $this->MasterData->getcodeinvoice();
+		}
+
+		$idinv     = $this->input->post("idinv");
+		$idsupp    = $this->input->post("idsupp");
+		$remark    = $this->input->post("remark");
+		$dateinv   = $this->input->post("dateinvoice");
+		$duedate   = $this->input->post("duedate");
+		$idcurr    = $this->input->post("idcurr");
+		$exchangerate = $this->input->post("exchangerate");
+		$idpo      = $this->input->post("idpo");
+		$idin      = $this->input->post("idin");
+		$idinvout      = $this->input->post("idinvout");
+		$userid    = $this->input->post("userid");
+		$iditem    = $this->input->post("iditem");
+		$qty       = $this->input->post("qty");
+		$price     = str_replace(".", "", $this->input->post("harga"));
+		$disper    = $this->input->post("discpercent");
+		$disnom    = str_replace(".", "", $this->input->post("disnom"));
+		$sub       = str_replace(".", "", $this->input->post("sub"));
+		$totaldisc = str_replace(".", "", $this->input->post("totaldisc"));
+		$total     = str_replace(".", "", $this->input->post("total"));
+		$subtotal  = str_replace(".", "", $this->input->post("subtotal"));
+		$distrans  = str_replace(".", "", $this->input->post("distrans"));
+		$ppn       = str_replace(".", "", $this->input->post("ppn"));
+		$grandtotal = str_replace(".", "", $this->input->post("grandtotal"));
+		$cek = $this->MasterData->addpoinvoice(
+			$idinv,
+			$codeinv,
+			$idsupp,
+			$remark,
+			$dateinv,
+			$duedate,
+			$idcurr,
+			$exchangerate,
+			$idpo,
+			$idin,
+			$idinvout,
+			$userid,
+			$iditem,
+			$qty,
+			$price,
+			$disper,
+			$disnom,
+			$sub,
+			$totaldisc,
+			$total,
+			$subtotal,
+			$distrans,
+			$ppn,
+			$grandtotal
+		);
+
 		echo $cek;
 	}
 
@@ -1124,6 +1185,7 @@ class MasterDataControler extends CI_Controller
 		$price               = $this->input->post("price");
 		$deskripsi           = $this->input->post("deskripsi");
 		$status              = $this->input->post("status");
+		$exp              = $this->input->post("exp");
 		$userid              = $this->input->post("userid");
 		$unit                = $this->input->post("unit");
 		$images              = $_FILES["images"]["tmp_name"];
@@ -1146,6 +1208,8 @@ class MasterDataControler extends CI_Controller
 				$pricebuy,
 				$price,
 				$deskripsi,
+				$status,
+				$exp,
 				$images,
 				$userid
 			);
@@ -1161,6 +1225,8 @@ class MasterDataControler extends CI_Controller
 				$pricebuy,
 				$price,
 				$deskripsi,
+				$status,
+				$exp,
 				$images,
 				$userid
 			);
@@ -1175,6 +1241,8 @@ class MasterDataControler extends CI_Controller
 				$pricebuy,
 				$price,
 				$deskripsi,
+				$status,
+				$exp,
 				$images,
 				$userid,
 				$transaksi_iditembom,

@@ -19,7 +19,7 @@
 				<div class="col-4">
 					<label for="" class="form-label fs-3 mb-3">Informasi Dasar</label>
 					<div class="row mb-3">
-						<div class="col-5">
+						<div class="col-6">
 							<div class="row">
 								<div class="col">
 									<label for="" class="form-label">No. Transaksi</label>
@@ -28,6 +28,13 @@
 							</div>
 						</div>
 						<div class="col-5">
+							<p></p>
+							<a href="" data-mdb-toggle="modal" data-mdb-target="#exampleModalIO" class="btn btn-primary mt-3" onclick="loaddataIO()">Cari Data</a>
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
 							<label for="" class="form-label">Tipe Outgoing</label>
 							<select name="tipeingoing" id="tipeingoing" class="form-select" onchange="ubah(this.value)">
 								<option value="Sales" selected>Sales</option>
@@ -40,7 +47,7 @@
 					</div>
 					<div id="sales">
 						<div class="row mb-3">
-							<div class="col-5">
+							<div class="col-6">
 								<label for="" class="form-label">No. Sales Order</label>
 								<input type="text" class="form-control" id="codeso" readonly>
 								<input type="hidden" class="form-control" id="idso" name="idso" readonly>
@@ -59,7 +66,7 @@
 							</div>
 							<div class="col-5">
 								<label for="" class="form-label">No. Pesanan (E-Commerce)</label>
-								<input type="text" class="form-control" id="nopesanan" placeholder="SLS-1231-001">
+								<input type="text" class="form-control" id="nopesanan" name="nopesanan" placeholder="SLS-1231-001">
 							</div>
 							<div class="col-2"></div>
 						</div>
@@ -202,8 +209,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-4" id="other" style="display: none;">
-					<label for="" class="form-label fs-3 mb-3">Cetak & Download</label>
+				<div class="col-4" id="other">
+					<label for="" class=" form-label fs-3 mb-3">Cetak & Download</label>
 					<div class="row">
 						<div class="col-3">
 							<button class="btn btn-light"><i class='bx bxs-download'>Download</i></button>
@@ -474,7 +481,80 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="modal fade" id="exampleModalIO" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<!-- <form action="<?php echo base_url('MasterDataControler/newcustomer') ?>" method="POST" enctype="multipart/form-data" id="forms"> -->
+				<div class="modal-header" style="background:#1143d8;color:white;">
+					<h5 class="modal-title" id="exampleModalLabel">List Inventory Out</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" style="background:#1143d8;color:white;">X</button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-4">
+						<div class="col-6">
+							<div class="row">
+								<div class="col-8">
+									<label for="" class="form-label">Pencarian</label>
+									<div class="input-group">
+										<select name="filterout" class="form-select form-control bg-primary text-white" aria-label="Default select example" id="filterout">
+											<option value="codeinvout">No.Inventory Out</option>
+										</select>
+										<input type="text" id="searchout" class="form-control" placeholder="Cari Berdasarkan code quotation, judul quotation, nama customer">
+									</div>
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Status</label>
+									<select class="form-select" id="statusout" aria-label="Default select example">
+										<option value="">Pilih Status</option>
+										<option value="Waiting">Waiting</option>
+										<option value="Process">Process</option>
+										<option value="Finish">Finish</option>
+										<option value="Cancel">Cancel</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-1"></div>
+						<div class="col-5">
+							<div class="row">
+								<div class="col-4">
+									<label for="" class="form-label">Mulai Dari</label>
+									<input type="date" class="form-control" name="" id="datestartout" value="<?php echo date('Y-m-01') ?>">
+								</div>
+								<div class="col-4">
+									<label for="" class="form-label">Sampai Dengan</label>
+									<input type="date" class="form-control" name="" id="finishdateout" value="<?php echo date('Y-m-t') ?>">
+								</div>
+								<div class="col-4">
+									<p></p>
+									<a href="#" class="btn btn-primary mt-3" onclick="loaddataIO()">Terapkan</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>No. Inventory Out</th>
+										<th>Tanggal Out</th>
+										<th>Type Out</th>
+										<th>Nama Supplier</th>
+										<th>Qty Out</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody id="detailout">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" id="modalsales" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
@@ -887,6 +967,102 @@
 		});
 	}
 
+	function loaddataIO() {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo base_url('InventoryController/getlistIO') ?>",
+			data: "filterout=" + $('#filterout').val() + "&searchout=" + $('#searchout').val() + "&statusout=" + $('#statusout').val() + "&datestartout=" + $('#datestartout').val() + "&finishdateout=" + $('#finishdateout').val(),
+			dataType: "JSON",
+			success: function(hasil) {
+				console.log(hasil)
+				var baris = ""
+				if (hasil != "Not Found") {
+
+					for (let i = 0; i < hasil.length; i++) {
+
+
+						baris += `  <tr>
+                                            <td>` + hasil[i]["codeinvout"] + `</td>
+                                            <td>` + hasil[i]["dateout"] + `</td>
+                                            <td>` + hasil[i]["typeout"] + `</td>
+                                            <td>` + hasil[i]["namecust"] + `</td>
+											<td>` + hasil[i]["qtyout"] + `</td>
+											<td>` + hasil[i]["statusout"] + `</td>
+                                            <td><a href="#" class="btn btn-outline-primary" data-mdb-dismiss="modal" onclick="detailIO('` + hasil[i]["codeinvout"] + `')">Pilih</a></td>
+                                        </tr>`
+					}
+				}
+				$('#detailout').html(baris)
+			}
+
+		});
+	}
+
+	function detailIO(x) {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo base_url('InventoryController/detailIO') ?>",
+			data: "idinvout=" + x,
+			dataType: "JSON",
+			success: function(hasil) {
+				console.log(hasil)
+				$('#notransaksi').val(hasil["codeinvout"]);
+				$('#idinvout').val(hasil["idinvout"]);
+				$('#idcust').val(hasil["idcust"]);
+				$('#namecust').val(hasil["namecust"]);
+				$('#dateinvoice').val(hasil["dateout"]);
+				$('#dateoutsales').val(hasil["dateout"]);
+				$('#nodeliv').val(hasil["nodo"]);
+				$('#idwhsales').val(hasil["idwh"]);
+				$('#bodysales').html("");
+				$('#addorder').hide("");
+
+				var baris = ""
+				var dataitem = <?php echo json_encode($data) ?>;
+				for (let i = 0; i < hasil["data"].length; i++) {
+					for (let b = 0; b < dataitem.length; b++) {
+						if (dataitem[b]["iditem"] == hasil["data"][i]["iditem"]) {
+							baris += `<option value="` + dataitem[b]["sku"] + `" price="` + dataitem[b]["price"] + `" data-typeqty="` + dataitem[b]["jenisqty"] + `" data-iditem="` + dataitem[b]["iditem"] + `" data-price="` + dataitem[b]["price"] + `" data-nameitem="` + dataitem[b]["nameitem"] + `" data-sku="` + dataitem[b]["sku"] + `" data-price="` + dataitem[b]["price"] + `" data-deskripsi="` + dataitem[b]["deskripsi"] + `" data-qty="` + hasil["data"][i]["qty"] + `">` + dataitem[b]["nameitem"] + ` - Rp. ` + dataitem[b]["price"] + `</option>`
+						}
+					}
+					add_item(i)
+					var xid = Number(i) + Number(1)
+					$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qty"])
+					$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+					var val = hasil["data"][i]["sku"];
+					var xobj = $('#xitem option').filter(function() {
+						return this.value == val;
+					});
+					$('#transaksi_' + xid + '_sku').val(hasil["data"][i]["sku"]);
+					$('#transaksi_' + xid + '_iditem').val(xobj.data('iditem'));
+					$('#transaksi_' + xid + '_nameitem').val(xobj.data('nameitem'));
+					$('#transaksi_' + xid + '_typeqty').val(xobj.data('typeqty'));
+					$('#transaksi_' + xid + '_qtysox').val(hasil["data"][i]["qtyout"]);
+					$('#transaksi_' + xid + '_qty').val(hasil["data"][i]["qtyout"]);
+					$('#transaksi_' + xid + '_expdate').val(hasil["data"][i]["expdate"]);
+
+					document.getElementById('tipeingoing').readOnly = true;
+					document.getElementById('delivaddr').disabled = true;
+					document.getElementById('idwhsales').disabled = true;
+					document.getElementById('dateoutsales').disabled = true;
+					document.getElementById('nodeliv').disabled = true;
+					document.getElementById('nopesanan').disabled = true;
+					document.getElementById('transaksi_' + xid + '_sku').disabled = true;
+					document.getElementById('transaksi_' + xid + '_qty').disabled = true;
+					document.getElementById('transaksi_' + xid + '_expdate').readOnly = true;
+					document.getElementById('transaksi_' + xid + '_action').readOnly = true;
+					// count(xid)
+					calc();
+
+
+
+
+				}
+
+			}
+		});
+	}
+
 
 	function cekdetail(x) {
 
@@ -897,7 +1073,7 @@
 			data: "idso=" + x,
 			dataType: "JSON",
 			success: function(hasil) {
-				console.log(hasil)
+				// console.log(hasil)
 				$('#codeso').val(hasil["codeso"]);
 				$('#disnoms').val(hasil["disnomdet"]);
 				$('#check').val(hasil["vat"]);
@@ -1463,7 +1639,6 @@
 			xask = "Ubah Transaksi?";
 		}
 		if (confirm(xask)) {
-
 			if ($('#tipeingoing').val() == "Sales") {
 				if (validasisales()) {
 					var cx = $('#form').serialize();
